@@ -16,13 +16,13 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="banner-text">
-                        <h2 style="margin-bottom: 50px">Sign in</h2>
+                        <h2 style="margin-bottom: 50px">Reset password</h2>
                         <form class="login-form" action="<c:url value="/login"/>" method="post">
                             <label style="display: block;">
                                 <input type="text" name="username" placeholder="username">
                             </label>
                             <label style="display: block;">
-                                <input type="password" name="password" placeholder="password">
+                                <input type="password" name="password" placeholder="email">
                             </label>
                             <div>
                                 <button type="submit" name="login-submit-btn">Sign in</button>

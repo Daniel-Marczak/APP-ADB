@@ -40,7 +40,7 @@ a {
 .banner {
     background-attachment: fixed;
     background-color: #645862;
-    background-image: url(../webapp/resources/img/background.jpg);
+    background-image: url(/resources/img/background.jpg);
     background-position: top center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -261,7 +261,7 @@ a {
 .call-to-action {
     background-attachment: fixed;
     background-color: #645862;
-    background-image: url(../webapp/resources/img/background.jpg);
+    background-image: url(/resources/img/background.jpg);
     background-position: top center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -390,19 +390,19 @@ a {
     border-bottom: 2px solid #242424;
 }
 
-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+div.contact input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
     color: #242424 !important;
 }
 
-input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
+div.contact input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
     color: #242424 !important;
 }
 
-input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 19+ */
+div.contact input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 19+ */
     color: #242424 !important;
 }
 
-input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+div.contact input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     color: #242424 !important;
 }
 
@@ -512,44 +512,132 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
 }
 
 /* MY CSS CLASSES*/
+.login-form {
+    margin: auto;
+    width: 300px;
+    display: inline-block;
+}
 
 .login-form input {
     border: rgba(204, 204, 204, 0.18) 1px solid;
     padding: 12px 35px;
-    color: rgb(0, 0, 0);
+    color: #ccc;
     text-decoration: none;
-    display: inline-block;
+    display: block;
     border-radius: 25px 25px 25px 25px;
     font-size: 15px;
-    margin-top: 50px;
+    margin-top: 25px;
     /*-----------------*/
-    margin-left: 50px;
-    width: 250px;
+    transition-duration: 0.5s;
+    width: 300px;
     outline: none;
     text-align: center;
     font-weight: 600;
+    background: none;
 
 }
 
-.login-form input:hover {
+.login-form input:hover, .registration-form input:hover {
     background-color: #ccc;
     text-decoration: none;
     color: rgb(0, 0, 0);
 }
 
-.login-form button {
+.login-form input::-webkit-input-placeholder, .registration-form input::-webkit-input-placeholder {
+    color: #ccc !important;
+    font-weight: 400;
+}
+
+.login-form input:-moz-placeholder, .registration-form input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
+    color: #ccc !important;
+    font-weight: 400;
+}
+
+.login-form input::-moz-placeholder, .registration-form input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 19+ */
+    color: #ccc !important;
+    font-weight: 400;
+}
+
+.login-form input:-ms-input-placeholder, .registration-form input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+    color: #ccc !important;
+    font-weight: 400;
+}
+
+.login-form button, .registration-form button {
     border: rgba(204, 204, 204, 0.18) 1px solid;
     padding: 12px 35px;
-    color: rgb(0, 0, 0);
+    color: #ccc;
     text-decoration: none;
     display: inline-block;
     border-radius: 25px 25px 25px 25px;
     font-size: 15px;
     margin-top: 50px;
+    margin-bottom: 50px;
+    background: none;
     /*-----------------*/
-    margin-left: 50px;
+    transition-duration: 0.5s;
     width: 140px;
+}
+
+.login-form button:hover, .registration-form button:hover {
+    background-color: #ccc;
+    text-decoration: none;
+    color: #000;
+}
+
+.registration-form input {
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    padding: 12px 35px;
+    color: #ccc;
+    text-decoration: none;
+    display: block;
+    border-radius: 25px 25px 25px 25px;
+    font-size: 15px;
+    /*-----------------*/
+    margin: 25px auto auto;
+    width: 300px;
+    outline: none;
+    text-align: center;
     font-weight: 600;
+    background: none;
+    transition-duration: 0.5s;
+}
+
+.form-error-box {
+    display: block;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    border-radius: 25px 25px 25px 25px;
+    margin: 5px auto;
+    padding-top: 2px;
+    width: 300px;
+    height: 25px;
+    color: red;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.link-box {
+    display: inline-block;
+    margin: 50px auto;
+    width: 300px;
+}
+
+.registration-link {
+    float: left;
+    color: rgb(100, 100, 100);
+    text-decoration: underline;
+    transition-duration: 0.5s;
+}
+
+.reset-password-link {
+    float: right;
+    color: rgb(100, 100, 100);
+    text-decoration: underline;
+    transition-duration: 0.5s;
+}
+
+.reset-password-link:hover, .registration-link:hover {
+    color: rgb(255, 255, 255);
 }
 
 

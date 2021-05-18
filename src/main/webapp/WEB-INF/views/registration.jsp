@@ -11,21 +11,58 @@
 
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 <%@include file="/WEB-INF/views/jspf/navbar.jspf"%>
-<div class="banner" id="banner" style="height: 90%">
-    <div class="bg-overlay" style="height: 100%">
+<div class="banner" id="banner" style="min-height: 100%">
+    <div class="bg-overlay" style="min-height: content-box">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="banner-text">
-                        <h2>Sign in</h2>
-                        <form:form id="registration-form" modelAttribute="">
-                            <form:input path="username" type="text" cssClass="register-input"/>
-                            <form:input path="email" type="email" cssClass="register-input"/>
-                            <form:input path="password" type="password" cssClass="register-input"/>
-                            <label>
-                                <input type="password" name="confirmPassword">
+                        <h2 style="margin-bottom: 50px">Registration</h2>
+                        <form:form cssClass="registration-form" modelAttribute="newUser">
+                            <form:input path="username" type="text" placeholder="username"/>
+                            <c:if test="${!empty param.test.equals('test')}">
+                                <div class="form-error-box">
+                                    Incorrect username format.
+                                </div>
+                            </c:if>
+                            <c:if test="${!empty param.test.equals('test')}">
+                                <div class="form-error-box">
+                                    This username has already been taken.
+                                </div>
+                            </c:if>
+                            <form:input path="email" type="email" placeholder="email"/>
+                            <c:if test="${!empty param.test.equals('test')}">
+                                <div class="form-error-box">
+                                    Incorrect email format.
+                                </div>
+                            </c:if>
+                            <c:if test="${!empty param.test.equals('test')}">
+                                <div class="form-error-box">
+                                    This email has already been taken.
+                                </div>
+                            </c:if>
+                            <form:input path="password" type="password" placeholder="password"/>
+                            <c:if test="${!empty param.test.equals('test')}">
+                                <div class="form-error-box">
+                                    Password does not meet requirements.
+                                </div>
+                            </c:if>
+                            <label style="margin: 0">
+                                <input type="password" name="confirmPassword" placeholder="confirm password">
                             </label>
+                            <c:if test="${!empty param.test.equals('test')}">
+                                <div class="form-error-box">
+                                    The passwords do not match.
+                                </div>
+                            </c:if>
+                            <div>
+                                <button type="submit" name="login-submit-btn">Register</button>
+                            </div>
                         </form:form>
+                        <div class="link-box">
+                            <a href="<c:url value="/registration"/>" class="registration-link">Sign in</a>
+                            <a href="<c:url value="/reset-password"/>" class="reset-password-link">Reset password</a>
+                        </div>
                     </div>
                 </div>
             </div>
