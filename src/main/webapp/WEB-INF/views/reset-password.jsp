@@ -16,27 +16,27 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="banner-text">
-                        <h2 style="margin-bottom: 50px">Reset password</h2>
+                        <h2 style="margin-bottom: 50px">Password reset</h2>
+                        <p>
+                            Enter your email and we'll send you a link with instructions how to get back into your account.
+                        </p>
                         <form class="login-form" action="<c:url value="/login"/>" method="post">
-                            <label style="display: block;">
-                                <input type="text" name="username" placeholder="username">
-                            </label>
                             <label style="display: block;">
                                 <input type="password" name="password" placeholder="email">
                             </label>
+                            <c:if test="${!empty param.test.equals('test')}">
+                                <div class="form-error-box">
+                                    Incorrect email format.
+                                </div>
+                            </c:if>
                             <div>
-                                <button type="submit" name="login-submit-btn">Sign in</button>
+                                <button style="width: 300px; padding-left: 5px; padding-right: 5px" type="submit" name="login-submit-btn">Send me the password reset email</button>
                             </div>
                         </form>
-                        <c:if test="${!empty param.test.equals('test')}">
-                            <div class="form-error-box">
-                                Incorrect username or password.
-                            </div>
-                        </c:if>
                     </div>
                     <div class="link-box">
-                        <a href="<c:url value="/registration"/>" class="registration-link">Registration</a>
-                        <a href="<c:url value="/reset-password"/>" class="reset-password-link">Forgot password</a>
+                        <a href="<c:url value="/login"/>" class="registration-link">Sign in</a>
+                        <a href="<c:url value="/registration"/>" class="reset-password-link">Registration</a>
                     </div>
                 </div>
             </div>

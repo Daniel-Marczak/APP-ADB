@@ -36,7 +36,7 @@
                     </div>
                     <div class="link-box">
                         <a href="<c:url value="/registration"/>" class="registration-link">Registration</a>
-                        <a href="<c:url value="/reset-password"/>" class="reset-password-link">Forgot password</a>
+                        <a href="<c:url value="/reset-password"/>" class="reset-password-link">Reset my password</a>
                     </div>
                 </div>
             </div>
