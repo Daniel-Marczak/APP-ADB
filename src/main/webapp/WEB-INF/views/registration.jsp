@@ -6,6 +6,8 @@
 <head>
     <meta charset="utf-8">
     <title>Accommodation Cloud</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <%@include file="/WEB-INF/views/jspf/header.jspf"%>
 </head>
 
@@ -18,7 +20,7 @@
                 <div class="col-md-12">
                     <div class="banner-text">
                         <h2 style="margin-bottom: 50px">Registration</h2>
-                        <form:form cssClass="registration-form" modelAttribute="newUser">
+                        <form:form cssClass="registration-form" modelAttribute="newUser" action="/registration">
                             <form:input path="username" type="text" placeholder="username"/>
                             <c:if test="${!empty param.test.equals('test')}">
                                 <div class="form-error-box">
@@ -47,14 +49,19 @@
                                     Password does not meet requirements.
                                 </div>
                             </c:if>
-                            <label style="margin: 0">
-                                <input type="password" name="confirmPassword" placeholder="confirm password">
-                            </label>
+                            <div>
+                                <label style="margin: 0">
+                                    <input type="password" name="confirmPassword" placeholder="confirm password">
+                                </label>
+                            </div>
                             <c:if test="${!empty param.test.equals('test')}">
                                 <div class="form-error-box">
                                     The passwords do not match.
                                 </div>
                             </c:if>
+                            <div style="margin: 25px auto; width: 300px">
+                                <div class="g-recaptcha" data-theme="dark"  data-sitekey="6LeK3OkaAAAAAHMJXvPWVGX13y8hPugCQLbYAtwe"></div>
+                            </div>
                             <div>
                                 <button type="submit" name="login-submit-btn">Register</button>
                             </div>
@@ -89,6 +96,8 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
+
+
 
 </body>
 </html>
