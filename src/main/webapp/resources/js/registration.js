@@ -13,28 +13,57 @@ const regInputs = $.makeArray($('.registration-form input'));
 
 
 const usernameInput = $('.username-input');
-const errUsernameFmt = $('.error-username-fmt');
-const errUsernameTkn = $('.error-username-tkn');
-const errEmailFmt = $('.error-email-fmt');
-const errPassword = $('.error-password');
-const errPassConf = $('.error-password-conf');
+const errUsernameFmtDiv = $('.error-username-fmt');
+const errUsernameTknDiv = $('.error-username-tkn');
+const errEmailFmtDiv = $('.error-email-fmt');
+const errEmailTknDiv = $('.error-email-tkn');
+const errPasswordDiv = $('.error-password');
+const errPassConfDiv = $('.error-password-conf');
+
+let isUsernameFmtCorrect = false;
+let isUsernameAvailable = false;
+let isEmailFmtCorrect = false;
+let isEmailAvailable = false;
+let isPasswordFmtCorrect = false;
+let isConfPasswordCorrect = false;
+
+function hideAllErrorDivs(){
+    errUsernameFmtDiv.hide();
+    errUsernameTknDiv.hide();
+    errEmailFmtDiv.hide();
+    errEmailTknDiv.hide();
+    errPasswordDiv.hide();
+    errPassConfDiv.hide();
+}
+hideAllErrorDivs();
 
 
 
-function validateUsernameFormat(){
+function checkIsUsernameFmtCorrect(){
     const USERNAME_REGEX = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){1,13}[a-zA-Z0-9]$/;
-    if (USERNAME_REGEX.test(String(usernameInput.val()))){
-        console.log("ok");
+    const username = String(usernameInput.val());
+    if (!USERNAME_REGEX.test(username)){
+        errUsernameFmtDiv.fadeIn(500);
+    }
+    if (USERNAME_REGEX.test(username)){
+        errUsernameFmtDiv.fadeOut(500)
     }
 }
+
 function checkIsUsernameAvailable(){
-    const USERNAME_REGEX = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){1,13}[a-zA-Z0-9]$/;
-    if (USERNAME_REGEX.test(String(usernameInput.val()))){
-        console.log("ok");
-    }
+    const username = String(usernameInput.val());
+    $.get(`http://localhost:8080/reg/is-username-available?username=${username}`, function (data) {
+       if (data === true){
+           isUsernameAvailable = true
+       }
+       if (data === false){
+           isUsernameAvailable = false;
+       }
+    });
 }
 
-usernameInput.on("change", validateUsernameFormat)
+usernameInput.on('change', checkIsUsernameFmtCorrect)
+usernameInput.on('change', checkIsUsernameAvailable)
 
 
 function validateEmail(){

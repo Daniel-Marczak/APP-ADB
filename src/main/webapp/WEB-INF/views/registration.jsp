@@ -28,10 +28,10 @@
                             <form:input path="username" type="text" placeholder="username" class="username-input"/>
                             <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -55px">&check;</div><br>
                             <form:errors path="username" cssClass="form-error-box error-username-fmt-form"/>
-                            <div class="form-error-box error-username-fmt ">
+                            <div class="form-error-box error-username-fmt">
                                 Incorrect username format.
                             </div>
-                            <div class="form-error-box error-username-tkn ">
+                            <div class="form-error-box error-username-tkn">
                                 This username has already been taken.
                             </div>
 
