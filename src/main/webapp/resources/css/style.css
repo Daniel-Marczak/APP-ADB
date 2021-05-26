@@ -571,7 +571,7 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     display: inline-block;
     border-radius: 25px 25px 25px 25px;
     font-size: 15px;
-    margin-top: 50px;
+    margin-top: 25px;
     margin-bottom: 50px;
     background: none;
     /*-----------------*/
@@ -590,7 +590,7 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     padding: 12px 35px;
     color: #ccc;
     text-decoration: none;
-    display: block;
+    display: inline-block;
     border-radius: 25px 25px 25px 25px;
     font-size: 15px;
     /*-----------------*/
@@ -639,6 +639,7 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
 .reset-password-link:hover, .registration-link:hover {
     color: rgb(255, 255, 255);
 }
+
 
 
 

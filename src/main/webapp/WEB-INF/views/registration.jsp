@@ -7,12 +7,15 @@
     <meta charset="utf-8">
     <title>Accommodation Cloud</title>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="<c:url value="/resources/js/jquery.min.js"/>"></script>
 
     <%@include file="/WEB-INF/views/jspf/header.jspf"%>
 </head>
 
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
 <%@include file="/WEB-INF/views/jspf/navbar.jspf"%>
+
 <div class="banner" id="banner" style="min-height: 100%">
     <div class="bg-overlay" style="min-height: content-box">
         <div class="container">
@@ -20,50 +23,51 @@
                 <div class="col-md-12">
                     <div class="banner-text">
                         <h2 style="margin-bottom: 50px">Registration</h2>
-                        <form:form cssClass="registration-form" modelAttribute="newUser" action="/registration">
-                            <form:input path="username" type="text" placeholder="username"/>
-                            <c:if test="${!empty param.test.equals('test')}">
-                                <div class="form-error-box">
-                                    Incorrect username format.
-                                </div>
-                            </c:if>
-                            <c:if test="${!empty param.test.equals('test')}">
-                                <div class="form-error-box">
-                                    This username has already been taken.
-                                </div>
-                            </c:if>
+                        <form:form class="registration-form" modelAttribute="newUser" action="/registration">
+
+                            <form:input path="username" type="text" placeholder="username" class="username-input"/>
+                            <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -50px">&check;</div>
+                            <br>
+                            <form:errors path="username" cssClass="form-error-box error-username-fmt-form"/>
+                            <div class="form-error-box error-username-fmt ">
+                                Incorrect username format.
+                            </div>
+                            <div class="form-error-box error-username-tkn ">
+                                This username has already been taken.
+                            </div>
+
+
                             <form:input path="email" type="email" placeholder="email"/>
-                            <c:if test="${!empty param.test.equals('test')}">
-                                <div class="form-error-box">
-                                    Incorrect email format.
-                                </div>
-                            </c:if>
-                            <c:if test="${!empty param.test.equals('test')}">
-                                <div class="form-error-box">
-                                    This email has already been taken.
-                                </div>
-                            </c:if>
+                            <form:errors path="email"/>
+                            <div class="form-error-box error-email-fmt ">
+                                Incorrect email format.
+                            </div>
+                            <div class="form-error-box error-email-tkn ">
+                                This email has already been taken.
+                            </div>
+
                             <form:input path="password" type="password" placeholder="password"/>
-                            <c:if test="${!empty param.test.equals('test')}">
-                                <div class="form-error-box">
-                                    Password does not meet requirements.
-                                </div>
-                            </c:if>
+                            <form:errors path="password"/>
+                            <div class="form-error-box error-password ">
+                                Password does not meet requirements.
+                            </div>
+
+
                             <div>
                                 <label style="margin: 0">
                                     <input type="password" name="confirmPassword" placeholder="confirm password">
                                 </label>
                             </div>
-                            <c:if test="${!empty param.test.equals('test')}">
-                                <div class="form-error-box">
-                                    The passwords do not match.
-                                </div>
-                            </c:if>
+
+                            <div class="form-error-box error-password-conf  ">
+                                The passwords do not match.
+                            </div>
+
                             <div style="margin: 25px auto; width: 300px">
-                                <div class="g-recaptcha" data-theme="dark"  data-sitekey="6LeK3OkaAAAAAHMJXvPWVGX13y8hPugCQLbYAtwe"></div>
+                                <div class="g-recaptcha" data-theme="dark" data-callback="recaptchaCallback" data-sitekey="6LeK3OkaAAAAAHMJXvPWVGX13y8hPugCQLbYAtwe"></div>
                             </div>
                             <div>
-                                <button type="submit" name="login-submit-btn">Register</button>
+                                <button type="submit" id="registration-submit-btn">Register</button>
                             </div>
                         </form:form>
                         <div class="link-box">
@@ -96,6 +100,7 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
+<script src="<c:url value="/resources/js/registration.js"/>" async defer></script>
 
 
 
