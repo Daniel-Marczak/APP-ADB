@@ -26,8 +26,7 @@
                         <form:form class="registration-form" modelAttribute="newUser" action="/registration">
 
                             <form:input path="username" type="text" placeholder="username" class="username-input"/>
-                            <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -50px">&check;</div>
-                            <br>
+                            <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -55px">&check;</div><br>
                             <form:errors path="username" cssClass="form-error-box error-username-fmt-form"/>
                             <div class="form-error-box error-username-fmt ">
                                 Incorrect username format.
@@ -38,6 +37,7 @@
 
 
                             <form:input path="email" type="email" placeholder="email"/>
+                            <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -55px">&check;</div><br>
                             <form:errors path="email"/>
                             <div class="form-error-box error-email-fmt ">
                                 Incorrect email format.
@@ -47,6 +47,7 @@
                             </div>
 
                             <form:input path="password" type="password" placeholder="password"/>
+                            <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -55px">&check;</div><br>
                             <form:errors path="password"/>
                             <div class="form-error-box error-password ">
                                 Password does not meet requirements.
@@ -57,6 +58,7 @@
                                 <label style="margin: 0">
                                     <input type="password" name="confirmPassword" placeholder="confirm password">
                                 </label>
+                                <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -55px">&check;</div>
                             </div>
 
                             <div class="form-error-box error-password-conf  ">

@@ -21,14 +21,20 @@ const errPassConf = $('.error-password-conf');
 
 
 
-function validateUsername(){
+function validateUsernameFormat(){
+    const USERNAME_REGEX = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){1,13}[a-zA-Z0-9]$/;
+    if (USERNAME_REGEX.test(String(usernameInput.val()))){
+        console.log("ok");
+    }
+}
+function checkIsUsernameAvailable(){
     const USERNAME_REGEX = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){1,13}[a-zA-Z0-9]$/;
     if (USERNAME_REGEX.test(String(usernameInput.val()))){
         console.log("ok");
     }
 }
 
-usernameInput.on("change", validateUsername)
+usernameInput.on("change", validateUsernameFormat)
 
 
 function validateEmail(){
