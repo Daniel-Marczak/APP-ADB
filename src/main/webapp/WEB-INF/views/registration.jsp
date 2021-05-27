@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <title>Accommodation Cloud</title>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="<c:url value="https://www.google.com/recaptcha/api.js"/>" async defer></script>
     <%@include file="/WEB-INF/views/jspf/header.jspf"%>
 </head>
 
@@ -23,7 +23,7 @@
                         <h2 style="margin-bottom: 50px">Registration</h2>
                         <form:form class="registration-form" modelAttribute="newUser" action="/registration">
 
-                            <form:input path="username" type="text" placeholder="username" class="username-input"/>
+                            <form:input path="username" type="text" placeholder="username" cssClass="username-input"/>
                             <div class="username-checkmark hidden">&check;</div><br>
                             <form:errors path="username" cssClass="form-error-box error-username-fmt-form"/>
                             <div class="form-error-box error-username-fmt hidden">
@@ -33,7 +33,7 @@
                                 This username has already been taken.
                             </div>
 
-                            <form:input path="email" type="email" placeholder="email" class="email-input"/>
+                            <form:input path="email" type="email" placeholder="email" cssClass="email-input"/>
                             <div class="email-checkmark hidden">&check;</div><br>
                             <form:errors path="email"/>
                             <div class="form-error-box error-email-fmt hidden">
@@ -43,7 +43,7 @@
                                 This email has already been taken.
                             </div>
 
-                            <form:input path="password" type="password" placeholder="password" class="password-input"/>
+                            <form:input path="password" type="password" placeholder="password" cssClass="password-input"/>
                             <div class="password-checkmark hidden">&check;</div><br>
                             <form:errors path="password"/>
                             <div class="form-error-box error-password hidden">
@@ -56,6 +56,7 @@
                                 </label>
                                 <div class="confpass-checkmark hidden">&check;</div>
                             </div>
+
                             <div class="form-error-box error-password-conf hidden">
                                 The passwords do not match.
                             </div>

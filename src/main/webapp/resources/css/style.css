@@ -602,6 +602,9 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     background: none;
     transition-duration: 0.5s;
 }
+.username-input[title]:hover::after{
+    border-radius: 10px;
+}
 
 .form-error-box {
     display: block;

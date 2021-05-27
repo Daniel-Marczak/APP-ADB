@@ -200,7 +200,7 @@ passwordInput.on('keyup change blur', validatePassword);
 confPassInput.on('keyup change blur', validateConfirmPassword);
 
 
-// REGISTRATION FORM VALIDATION & RECAPTCHA VISIBILITY--------------------------------------------------------
+// REGISTRATION FORM VALIDATION & RECAPTCHA VISIBILITY------------------------------------------------------------------
 
 function validateForm(){
     if (isUsernameFmtCorrect && isUsernameAvailable && isEmailFmtCorrect && isEmailAvailable
@@ -215,6 +215,8 @@ function validateForm(){
         recaptchaContainer.fadeOut(500);
     }
 }
+
+// TOOLTIPS ------------------------------------------------------------------------------------------------------------
 
 
 
