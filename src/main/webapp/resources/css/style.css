@@ -640,6 +640,21 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     color: rgb(255, 255, 255);
 }
 
+.username-checkmark,
+.email-checkmark,
+.password-checkmark,
+.confpass-checkmark {
+    display: inline-block;
+    width: 50px;
+    font-size: 30px;
+    margin-right: -55px
+}
+
+.recaptcha-wrapper {
+    margin: 25px auto;
+    width: 300px
+}
+
 
 
 

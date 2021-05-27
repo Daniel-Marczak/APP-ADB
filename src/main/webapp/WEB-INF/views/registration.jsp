@@ -7,8 +7,6 @@
     <meta charset="utf-8">
     <title>Accommodation Cloud</title>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script src="<c:url value="/resources/js/jquery.min.js"/>"></script>
-
     <%@include file="/WEB-INF/views/jspf/header.jspf"%>
 </head>
 
@@ -26,50 +24,47 @@
                         <form:form class="registration-form" modelAttribute="newUser" action="/registration">
 
                             <form:input path="username" type="text" placeholder="username" class="username-input"/>
-                            <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -55px">&check;</div><br>
+                            <div class="username-checkmark hidden">&check;</div><br>
                             <form:errors path="username" cssClass="form-error-box error-username-fmt-form"/>
-                            <div class="form-error-box error-username-fmt">
+                            <div class="form-error-box error-username-fmt hidden">
                                 Incorrect username format.
                             </div>
-                            <div class="form-error-box error-username-tkn">
+                            <div class="form-error-box error-username-tkn hidden">
                                 This username has already been taken.
                             </div>
 
-
-                            <form:input path="email" type="email" placeholder="email"/>
-                            <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -55px">&check;</div><br>
+                            <form:input path="email" type="email" placeholder="email" class="email-input"/>
+                            <div class="email-checkmark hidden">&check;</div><br>
                             <form:errors path="email"/>
-                            <div class="form-error-box error-email-fmt ">
+                            <div class="form-error-box error-email-fmt hidden">
                                 Incorrect email format.
                             </div>
-                            <div class="form-error-box error-email-tkn ">
+                            <div class="form-error-box error-email-tkn hidden">
                                 This email has already been taken.
                             </div>
 
-                            <form:input path="password" type="password" placeholder="password"/>
-                            <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -55px">&check;</div><br>
+                            <form:input path="password" type="password" placeholder="password" class="password-input"/>
+                            <div class="password-checkmark hidden">&check;</div><br>
                             <form:errors path="password"/>
-                            <div class="form-error-box error-password ">
+                            <div class="form-error-box error-password hidden">
                                 Password does not meet requirements.
                             </div>
 
-
                             <div>
                                 <label style="margin: 0">
-                                    <input type="password" name="confirmPassword" placeholder="confirm password">
+                                    <input type="password" name="confirmPassword" placeholder="confirm password" class="confpass-input">
                                 </label>
-                                <div style="display: inline-block; width: 50px; font-size: 30px; margin-right: -55px">&check;</div>
+                                <div class="confpass-checkmark hidden">&check;</div>
                             </div>
-
-                            <div class="form-error-box error-password-conf  ">
+                            <div class="form-error-box error-password-conf hidden">
                                 The passwords do not match.
                             </div>
 
-                            <div style="margin: 25px auto; width: 300px">
+                            <div class="recaptcha-wrapper hidden">
                                 <div class="g-recaptcha" data-theme="dark" data-callback="recaptchaCallback" data-sitekey="6LeK3OkaAAAAAHMJXvPWVGX13y8hPugCQLbYAtwe"></div>
                             </div>
                             <div>
-                                <button type="submit" id="registration-submit-btn">Register</button>
+                                <button class="hidden" type="submit" id="registration-submit-btn">Register</button>
                             </div>
                         </form:form>
                         <div class="link-box">
