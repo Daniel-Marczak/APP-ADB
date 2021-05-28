@@ -1,12 +1,13 @@
-function recaptchaCallback() {
-    $('#registration-submit-btn').removeClass('hidden');
-}
 
 const recaptchaContainer = $('.recaptcha-wrapper');
 const reCaptcha = $('.g-recaptcha');
 const registerBtn = $("#registration-submit-btn");
 const regInputs = $.makeArray($('.registration-form input'));
 
+const tooltipUsername = $('.t-username');
+const tooltipEmail = $('.t-email');
+const tooltipPassword = $('.t-password');
+const tooltipCOnfPass = $('.t-confpass');
 
 const usernameInput = $('.username-input');
 const emailInput = $('.email-input');
@@ -71,7 +72,7 @@ function checkIsUsernameAvailable() {
 
 function validateUsername() {
     checkIsUsernameFmtCorrect();
-    if (isUsernameFmtCorrect){
+    if (isUsernameFmtCorrect) {
         $.when(checkIsUsernameAvailable()).done(function () {
             if (isUsernameFmtCorrect && isUsernameAvailable) {
                 if (usernameCheckmarkDiv.hasClass('hidden')) {
@@ -83,11 +84,11 @@ function validateUsername() {
                 usernameCheckmarkDiv.fadeOut(500);
             }
         });
+    } else {
+        usernameCheckmarkDiv.fadeOut(500);
     }
     validateForm();
 }
-
-usernameInput.on('keyup change blur', validateUsername);
 
 
 // EMAIL VALIDATION ----------------------------------------------------------------------------------------------------
@@ -129,7 +130,7 @@ function checkIsEmailAvailable() {
 
 function validateEmail() {
     checkIsEmailFmtCorrect();
-    if (isEmailFmtCorrect){
+    if (isEmailFmtCorrect) {
         $.when(checkIsEmailAvailable()).done(function () {
             if (isEmailFmtCorrect && isEmailAvailable) {
                 if (emailCheckmarkDiv.hasClass('hidden')) {
@@ -141,11 +142,11 @@ function validateEmail() {
                 emailCheckmarkDiv.fadeOut(500);
             }
         });
+    } else {
+        emailCheckmarkDiv.fadeOut(500);
     }
     validateForm();
 }
-
-emailInput.on('keyup change blur', validateEmail)
 
 
 // PASSWORD VALIDATION -------------------------------------------------------------------------------------------------
@@ -153,7 +154,7 @@ emailInput.on('keyup change blur', validateEmail)
 function validatePassword() {
     const PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&])(?=\S+$).{8,50}$/;
     const password = passwordInput.val();
-    if (!PASSWORD_REGEX.test(password)){
+    if (!PASSWORD_REGEX.test(password)) {
         isPasswordFmtCorrect = false;
         if (errPasswordDiv.hasClass('hidden')) {
             errPasswordDiv.removeClass('hidden').toggle().fadeIn(500);
@@ -165,7 +166,7 @@ function validatePassword() {
     if (PASSWORD_REGEX.test(password)) {
         isPasswordFmtCorrect = true;
         errPasswordDiv.fadeOut(500);
-        if (passwordCheckmarkDiv.hasClass('hidden')){
+        if (passwordCheckmarkDiv.hasClass('hidden')) {
             passwordCheckmarkDiv.removeClass('hidden').toggle().fadeIn(500);
         } else {
             passwordCheckmarkDiv.fadeIn(500);
@@ -176,9 +177,9 @@ function validatePassword() {
 }
 
 function validateConfirmPassword() {
-    if (passwordInput.val() !== confPassInput.val()){
+    if (passwordInput.val() !== confPassInput.val()) {
         isConfPasswordCorrect = false;
-        if (errConfPassDiv.hasClass('hidden')){
+        if (errConfPassDiv.hasClass('hidden')) {
             errConfPassDiv.removeClass('hidden').toggle().fadeIn(500);
         } else {
             errConfPassDiv.fadeIn(500);
@@ -187,7 +188,7 @@ function validateConfirmPassword() {
     } else if (passwordInput.val() === confPassInput.val() && confPassInput.val().length > 7) {
         isConfPasswordCorrect = true;
         errConfPassDiv.fadeOut(500);
-        if (confPassCheckmarkDiv.hasClass('hidden')){
+        if (confPassCheckmarkDiv.hasClass('hidden')) {
             confPassCheckmarkDiv.removeClass('hidden').toggle().fadeIn(500);
         } else {
             confPassCheckmarkDiv.fadeIn(500);
@@ -196,32 +197,64 @@ function validateConfirmPassword() {
     validateForm();
 }
 
-passwordInput.on('keyup change blur', validatePassword);
-confPassInput.on('keyup change blur', validateConfirmPassword);
-
-
 // REGISTRATION FORM VALIDATION & RECAPTCHA VISIBILITY------------------------------------------------------------------
 
-function validateForm(){
+function recaptchaCallback() {
+    $('#registration-submit-btn').removeClass('hidden');
+}
+
+function validateForm() {
     if (isUsernameFmtCorrect && isUsernameAvailable && isEmailFmtCorrect && isEmailAvailable
         && isPasswordFmtCorrect && isConfPasswordCorrect
-    ){
-        if (recaptchaContainer.hasClass('hidden')){
+    ) {
+        if (recaptchaContainer.hasClass('hidden')) {
             recaptchaContainer.removeClass('hidden').toggle().fadeIn(500);
         } else {
             recaptchaContainer.fadeIn(500);
         }
     } else {
         recaptchaContainer.fadeOut(500);
+        registerBtn.addClass('hidden')
     }
 }
 
 // TOOLTIPS ------------------------------------------------------------------------------------------------------------
 
+function showTooltip() {
+    if ($(this).hasClass('username-input')) {
+        tooltipUsername.removeClass('hidden');
+    }
+    if ($(this).hasClass('email-input')) {
+        tooltipEmail.removeClass('hidden');
+    }
+    if ($(this).hasClass('password-input')) {
+        tooltipPassword.removeClass('hidden');
+    }
+    if ($(this).hasClass('confpass-input')) {
+        tooltipCOnfPass.removeClass('hidden');
+    }
+}
+
+function hideTooltip() {
+    if ($(this).hasClass('username-input')) {
+        tooltipUsername.addClass('hidden');
+    }
+    if ($(this).hasClass('email-input')) {
+        tooltipEmail.addClass('hidden');
+    }
+    if ($(this).hasClass('password-input')) {
+        tooltipPassword.addClass('hidden');
+    }
+    if ($(this).hasClass('confpass-input')) {
+        tooltipCOnfPass.addClass('hidden');
+    }
+}
 
 
-
-
+usernameInput.on('keyup change blur', validateUsername).on('mouseover focus', showTooltip).on('mouseleave blur', hideTooltip);;
+emailInput.on('keyup change blur', validateEmail).on('mouseover focus', showTooltip).on('mouseleave blur', hideTooltip);
+passwordInput.on('keyup change blur', validatePassword).on('mouseover focus', showTooltip).on('mouseleave blur', hideTooltip);
+confPassInput.on('keyup change blur', validateConfirmPassword).on('mouseover focus', showTooltip).on('mouseleave blur', hideTooltip);
 
 
 

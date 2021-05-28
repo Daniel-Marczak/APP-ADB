@@ -602,7 +602,8 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     background: none;
     transition-duration: 0.5s;
 }
-.username-input[title]:hover::after{
+
+.username-input[title]:hover::after {
     border-radius: 10px;
 }
 
@@ -657,6 +658,31 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     margin: 25px auto;
     width: 300px
 }
+
+.tooltip-container {
+    margin-top: 25px;
+    position: absolute;
+    width: 400px;
+    height: max-content;
+    background: none;
+    transition-duration: 0.5s;
+}
+
+.tooltip-wrapper {
+    width: 350px;
+    height: max-content;
+    background : none;
+    float: right;
+    border-radius: 25px 25px 25px 25px;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    text-align: left;
+    padding: 10PX;
+    /*-webkit-box-shadow: 0px 0px 9px 0px #000000;*/
+    /*box-shadow: 0px 0px 9px 0px rgba(204, 204, 204, 0.18);*/
+    font-weight: 300;
+    transition-duration: 0.5s;
+}
+
 
 
 
