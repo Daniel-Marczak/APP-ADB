@@ -251,10 +251,10 @@ function hideTooltip() {
 }
 
 
-usernameInput.on('keyup change blur', validateUsername).on('mouseover focus', showTooltip).on('mouseleave blur', hideTooltip);;
-emailInput.on('keyup change blur', validateEmail).on('mouseover focus', showTooltip).on('mouseleave blur', hideTooltip);
-passwordInput.on('keyup change blur', validatePassword).on('mouseover focus', showTooltip).on('mouseleave blur', hideTooltip);
-confPassInput.on('keyup change blur', validateConfirmPassword).on('mouseover focus', showTooltip).on('mouseleave blur', hideTooltip);
+usernameInput.on('keyup change blur', validateUsername).on('focus', showTooltip).on('blur', hideTooltip);;
+emailInput.on('keyup change blur', validateEmail).on('focus', showTooltip).on('blur', hideTooltip);
+passwordInput.on('keyup change blur', validatePassword).on('focus', showTooltip).on('blur', hideTooltip);
+confPassInput.on('keyup change blur', validateConfirmPassword).on('focus', showTooltip).on('blur', hideTooltip);
 
 
 

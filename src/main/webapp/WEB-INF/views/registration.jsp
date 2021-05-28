@@ -34,11 +34,11 @@
                                         <li>hyphen</li>
                                         <li>underscore</li>
                                     </ul>
-                                    A username must be between 3 and 15 characters.
+                                    <span>A username must be between 3 and 15 characters.</span>
                                 </div>
                                 <div class="tooltip-wrapper t-email hidden">
-                                    Valid email is required to complete registration process.<br>
-                                    We will send you an email with a registration confirmation link.<br>
+                                    <span>Valid email is required to complete registration process.</span>
+                                    <span>We will send you an email with a registration confirmation link.</span>
                                 </div>
                                 <div class="tooltip-wrapper t-password hidden">
                                     <span>Your password must follow these rules:</span>
@@ -51,7 +51,7 @@
                                     </ul>
                                 </div>
                                 <div class="tooltip-wrapper t-confpass hidden">
-                                    Please make sure passwords match.<br>
+                                    <span>Please make sure passwords match.</span>
                                 </div>
                             </div>
 
