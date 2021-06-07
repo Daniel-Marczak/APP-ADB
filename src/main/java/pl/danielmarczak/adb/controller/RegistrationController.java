@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import pl.danielmarczak.adb.entity.User;
 import pl.danielmarczak.adb.recaptcha.ReCaptchaResponse;
-import pl.danielmarczak.adb.repository.UserRepository;
+import pl.danielmarczak.adb.service.UserService;
 
 import javax.validation.Valid;
 
@@ -21,10 +21,10 @@ public class RegistrationController {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public RegistrationController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
@@ -55,7 +55,7 @@ public class RegistrationController {
                 return "/registration";
             }
 
-            userRepository.save(newUser);
+            userService.saveUser(newUser);
             return "redirect:/registration?success";
         } else {
 

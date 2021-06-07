@@ -4,5 +4,5 @@ import pl.danielmarczak.adb.entity.Role;
 
 public interface RoleService {
 
-    Role findFirstByName(String name);
+    Role findRoleById(Integer id);
 }

@@ -1,8 +1,5 @@
-
 const recaptchaContainer = $('.recaptcha-wrapper');
-const reCaptcha = $('.g-recaptcha');
 const registerBtn = $("#registration-submit-btn");
-const regInputs = $.makeArray($('.registration-form input'));
 
 const tooltipUsername = $('.t-username');
 const tooltipEmail = $('.t-email');
