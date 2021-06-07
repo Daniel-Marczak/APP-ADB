@@ -1,4 +1,4 @@
-package pl.danielmarczak.adb.entities;
+package pl.danielmarczak.adb.entity;
 
 import lombok.Data;
 
@@ -6,8 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
+
 @Entity
+@Data
 public class User {
 
     @Id
@@ -17,15 +18,20 @@ public class User {
     @NotBlank(message = "{validation.error-username-fmt}")
     @NotNull(message = "{validation.error-username-fmt}")
     @Column(unique = true)
-    String username;
+    private String username;
 
     @NotBlank
     @NotNull
-    String email;
+    private String email;
 
     @NotBlank
     @NotNull
-    String password;
+    private String password;
+
+    private boolean enabled;
+
+    @OneToOne
+    private Role role;
 
 
 }

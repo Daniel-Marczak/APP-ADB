@@ -27,6 +27,7 @@
                             <div>
                                 <button type="submit" name="login-submit-btn">Sign in</button>
                             </div>
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         </form>
                         <c:if test="${!empty param.test.equals('test')}">
                             <div class="form-error-box">

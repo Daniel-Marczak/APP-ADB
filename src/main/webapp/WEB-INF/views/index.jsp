@@ -233,12 +233,13 @@
             </div>
             <div class="col-md-4">
                 <ul class="list-inline quicklinks">
-                    <li>Designed by <a href="<c:url value="http://w3template.com"/>">W3 Template</a> </li>
+                    <li>Designed by <a href="<c:url value="https://w3template.com"/>">W3 Template</a> </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
+<script src="<c:url value="/resources/js/index.js"/>"></script>
 </body>
 </html>

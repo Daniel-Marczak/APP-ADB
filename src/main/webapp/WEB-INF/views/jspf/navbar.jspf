@@ -8,11 +8,21 @@
                 <a class="navbar-brand" href="#">Accommodation Cloud</a> </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="#banner">Home</a></li>
-                    <li><a href="#work">Properties</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact Us</a></li>
+                    <li class="active">
+                        <a href="/#banner">Home</a>
+                    </li>
+                    <li>
+                        <a href="/#work" target="_parent">Properties</a>
+                    </li>
+                    <li>
+                        <a href="/#testimonials">Testimonials</a>
+                    </li>
+                    <li>
+                        <a href="/#about">About</a>
+                    </li>
+                    <li>
+                        <a href="/#contact">Contact Us</a>
+                    </li>
                 </ul>
             </div>
         </div>

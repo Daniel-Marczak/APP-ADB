@@ -1,10 +1,12 @@
-package pl.danielmarczak.adb.repositories;
+package pl.danielmarczak.adb.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.danielmarczak.adb.entities.User;
+import org.springframework.stereotype.Repository;
+import pl.danielmarczak.adb.entity.User;
 
 import java.util.Optional;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findFirstByUsername(String username);

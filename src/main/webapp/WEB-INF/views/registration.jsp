@@ -45,9 +45,9 @@
                                     <ul style="padding-left: 20px">
                                         <li>must contain at least 8 characters</li>
                                         <li>must contain at least one lower case letter</li>
-                                        <li>must contain at least one upper case letter<br></li>
+                                        <li>must contain at least one upper case letter</li>
+                                        <li>must contain at least one digit</li>
                                         <li>must contain at least one special character (!,&nbsp;@, #, $, %, &, *)</li>
-                                        <li>must contain at least one digit<br></li>
                                     </ul>
                                 </div>
                                 <div class="tooltip-wrapper t-confpass hidden">

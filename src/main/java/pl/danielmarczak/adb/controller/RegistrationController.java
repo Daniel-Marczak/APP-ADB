@@ -1,4 +1,4 @@
-package pl.danielmarczak.adb.controllers;
+package pl.danielmarczak.adb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -8,13 +8,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import pl.danielmarczak.adb.entities.User;
+import pl.danielmarczak.adb.entity.User;
 import pl.danielmarczak.adb.recaptcha.ReCaptchaResponse;
-import pl.danielmarczak.adb.repositories.UserRepository;
+import pl.danielmarczak.adb.repository.UserRepository;
 
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/registration")
 public class RegistrationController {
 
     @Autowired
@@ -26,14 +27,13 @@ public class RegistrationController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/registration")
+    @GetMapping
     public String registrationGet(Model model){
         model.addAttribute("newUser", new User());
         return "registration";
     }
 
-    @PostMapping("/registration")
-//    @ResponseBody
+    @PostMapping
     public String registrationPost(@ModelAttribute("newUser") @Valid User newUser, BindingResult result, @RequestParam(name = "g-recaptcha-response") String recaptchaResponse,
                                    @RequestParam String confirmPassword
     ){
@@ -46,23 +46,21 @@ public class RegistrationController {
                 result.addError(new FieldError(
                         "newUser",
                         "password",
-                        "Adres e-mail jest już zajęty."
+                        "This email address has already been taken."
                 ));
                 return "/registration";
             }
+
             if (result.hasErrors()){
                 return "/registration";
             }
-            System.out.println(newUser);
+
             userRepository.save(newUser);
             return "redirect:/registration?success";
         } else {
+
             return "redirect:/registration?failure";
         }
-
-
-
-//        return "registration";
     }
 
 }

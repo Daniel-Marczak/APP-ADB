@@ -1,7 +1,7 @@
-package pl.danielmarczak.adb.services;
+package pl.danielmarczak.adb.service;
 
 import org.springframework.stereotype.Service;
-import pl.danielmarczak.adb.repositories.UserRepository;
+import pl.danielmarczak.adb.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService{

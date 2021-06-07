@@ -31,6 +31,7 @@ let isEmailFmtCorrect = false;
 let isEmailAvailable = false;
 let isPasswordFmtCorrect = false;
 let isConfPasswordCorrect = false;
+let showRecaptcha = false;
 
 
 // USERNAME VALIDATION -------------------------------------------------------------------------------------------------
@@ -54,7 +55,7 @@ function checkIsUsernameFmtCorrect() {
 
 function checkIsUsernameAvailable() {
     const username = usernameInput.val();
-    return $.get(`http://localhost:8080/reg/is-username-available?username=${username}`, function (data) {
+    return $.get(`http://localhost:8080/api/reg/is-username-available?username=${username}`, function (data) {
         if (data === true) {
             isUsernameAvailable = true;
             errUsernameTknDiv.fadeOut(500);
@@ -112,7 +113,7 @@ function checkIsEmailFmtCorrect() {
 
 function checkIsEmailAvailable() {
     const email = emailInput.val();
-    return $.get(`http://localhost:8080/reg/is-email-available?email=${email}`, function (data) {
+    return $.get(`http://localhost:8080/api/reg/is-email-available?email=${email}`, function (data) {
         if (data === true) {
             isEmailAvailable = true;
             errEmailTknDiv.fadeOut(500);
@@ -207,13 +208,16 @@ function validateForm() {
     if (isUsernameFmtCorrect && isUsernameAvailable && isEmailFmtCorrect && isEmailAvailable
         && isPasswordFmtCorrect && isConfPasswordCorrect
     ) {
+        showRecaptcha = true;
         if (recaptchaContainer.hasClass('hidden')) {
             recaptchaContainer.removeClass('hidden').toggle().fadeIn(500);
         } else {
             recaptchaContainer.fadeIn(500);
+            showRecaptcha = false;
         }
     } else {
         recaptchaContainer.fadeOut(500);
+        showRecaptcha = false;
         registerBtn.addClass('hidden')
     }
 }
