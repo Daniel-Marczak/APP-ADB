@@ -17,7 +17,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserService userService;
 
     @Autowired
-    public void setUserRepository(UserService userService){
+    public void setUserRepository(UserService userService) {
         this.userService = userService;
     }
 
@@ -25,10 +25,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findUserByUsername(username);
         if (user.getId() == null) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException("username not found");
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+
         return new CurrentUser(user.getUsername(), user.getPassword(), grantedAuthorities, user);
     }
 }

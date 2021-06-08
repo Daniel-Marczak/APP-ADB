@@ -18,6 +18,7 @@ public class WebAppConfig implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/reset-password").setViewName("reset-password");
+        registry.addViewController("/account-suspended").setViewName("account-suspended");
     }
 
     @Bean

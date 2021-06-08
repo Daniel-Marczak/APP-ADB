@@ -1,10 +1,17 @@
 package pl.danielmarczak.adb.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class RoleUserController {
+
+    @GetMapping("/main")
+    public String showUserMain(){
+
+        return "role_user/main";
+    }
 
 }

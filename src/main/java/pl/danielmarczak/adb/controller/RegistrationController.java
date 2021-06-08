@@ -28,14 +28,16 @@ public class RegistrationController {
     }
 
     @GetMapping
-    public String registrationGet(Model model){
+    public String showRegistrationForm(Model model){
         model.addAttribute("newUser", new User());
         return "registration";
     }
 
     @PostMapping
-    public String registrationPost(@ModelAttribute("newUser") @Valid User newUser, BindingResult result, @RequestParam(name = "g-recaptcha-response") String recaptchaResponse,
-                                   @RequestParam String confirmPassword
+    public String processRegistrationForm(
+            @ModelAttribute("newUser") @Valid User newUser, BindingResult result,
+            @RequestParam(name = "g-recaptcha-response") String recaptchaResponse,
+            @RequestParam String confirmPassword
     ){
         String url = "https://www.google.com/recaptcha/api/siteverify";
         String params = "?secret=6LeK3OkaAAAAAG3u4n12ei20nI4gvqaPbWRw6aq9&response=" + recaptchaResponse;
