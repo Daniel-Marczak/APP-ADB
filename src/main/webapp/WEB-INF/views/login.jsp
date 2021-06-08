@@ -18,25 +18,25 @@
                     <div class="banner-text">
                         <h2 style="margin-bottom: 50px">Sign in</h2>
                         <form class="login-form" action="<c:url value="/login"/>" method="post">
-                            <label style="display: block;">
-                                <input type="text" name="username" placeholder="username">
+                            <label>
+                                <input type="text" class="username-input" name="username" placeholder="username">
                             </label>
-                            <label style="display: block;">
-                                <input type="password" name="password" placeholder="password">
+                            <label>
+                                <input type="password" class="password-input hidden" name="password" placeholder="password">
                             </label>
                             <div>
-                                <button type="submit" name="login-submit-btn">Sign in</button>
+                                <button type="submit" class="sign-in-btn hidden" style="display: none">Sign in</button>
                             </div>
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         </form>
-                        <c:if test="${!empty param.test.equals('test')}">
+                        <c:if test="${param.error.equals('credentials')}">
                             <div class="form-error-box">
                                 Incorrect username or password.
                             </div>
                         </c:if>
                     </div>
                     <div class="link-box">
-                        <a href="<c:url value="/registration"/>" class="registration-link">Registration</a>
+                        <a href="<c:url value="/registration"/>" class="registration-link">Register</a>
                         <a href="<c:url value="/reset-password"/>" class="reset-password-link">Reset my password</a>
                     </div>
                 </div>
@@ -57,13 +57,14 @@
             </div>
             <div class="col-md-4">
                 <ul class="list-inline quicklinks">
-                    <li>Designed by <a href="<c:url value="http://w3template.com"/>">W3 Template</a> </li>
+                    <li>Designed by <a href="<c:url value="https://w3template.com"/>">W3 Template</a> </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
+<script src="<c:url value="/resources/js/login.js"/>"></script>
 
 </body>
 </html>

@@ -1,16 +1,13 @@
 const recaptchaContainer = $('.recaptcha-wrapper');
 const registerBtn = $("#registration-submit-btn");
-
 const tooltipUsername = $('.t-username');
 const tooltipEmail = $('.t-email');
 const tooltipPassword = $('.t-password');
 const tooltipCOnfPass = $('.t-confpass');
-
 const usernameInput = $('.username-input');
 const emailInput = $('.email-input');
 const passwordInput = $('.password-input');
 const confPassInput = $('.confpass-input');
-
 const errUsernameFmtDiv = $('.error-username-fmt');
 const errUsernameTknDiv = $('.error-username-tkn');
 const errEmailFmtDiv = $('.error-email-fmt');
@@ -28,6 +25,7 @@ let isEmailFmtCorrect = false;
 let isEmailAvailable = false;
 let isPasswordFmtCorrect = false;
 let isConfPasswordCorrect = false;
+let isRecaptchaChecked = false
 let showRecaptcha = false;
 
 
@@ -199,6 +197,7 @@ function validateConfirmPassword() {
 
 function recaptchaCallback() {
     $('#registration-submit-btn').removeClass('hidden');
+    isRecaptchaChecked = true;
 }
 
 function validateForm() {
@@ -251,11 +250,23 @@ function hideTooltip() {
     }
 }
 
-
-usernameInput.on('keyup change blur', validateUsername).on('focus', showTooltip).on('blur', hideTooltip);;
+usernameInput.on('keyup change blur', validateUsername).on('focus', showTooltip).on('blur', hideTooltip);
 emailInput.on('keyup change blur', validateEmail).on('focus', showTooltip).on('blur', hideTooltip);
 passwordInput.on('keyup change blur', validatePassword).on('focus', showTooltip).on('blur', hideTooltip);
 confPassInput.on('keyup change blur', validateConfirmPassword).on('focus', showTooltip).on('blur', hideTooltip);
 
-
-
+$(document).ready(function() {
+    $(window).keydown(function(event){
+        if(event.keyCode === 13) {
+            console.log(!isUsernameFmtCorrect,!isUsernameAvailable, !isEmailFmtCorrect , !isEmailAvailable ,
+                !isPasswordFmtCorrect , !isConfPasswordCorrect ,  !isRecaptchaChecked);
+            if (
+                !isUsernameFmtCorrect|| !isUsernameAvailable || !isEmailFmtCorrect || !isEmailAvailable ||
+                !isPasswordFmtCorrect || !isConfPasswordCorrect || !isRecaptchaChecked
+            ){
+                event.preventDefault();
+                return false;
+            }
+        }
+    });
+});

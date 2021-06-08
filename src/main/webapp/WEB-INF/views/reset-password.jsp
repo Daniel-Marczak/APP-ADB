@@ -56,7 +56,7 @@
             </div>
             <div class="col-md-4">
                 <ul class="list-inline quicklinks">
-                    <li>Designed by <a href="<c:url value="http://w3template.com"/>">W3 Template</a> </li>
+                    <li>Designed by <a href="<c:url value="https://w3template.com"/>">W3 Template</a> </li>
                 </ul>
             </div>
         </div>
