@@ -64,7 +64,7 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
-<script src="<c:url value="/resources/js/login.js"/>"></script>
+<script src="<c:url value="/resources/js/app-login.js"/>"></script>
 
 </body>
 </html>

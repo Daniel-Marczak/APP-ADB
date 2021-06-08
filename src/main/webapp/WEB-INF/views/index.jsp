@@ -240,6 +240,6 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
-<script src="<c:url value="/resources/js/index.js"/>"></script>
+<script src="<c:url value="/resources/js/app-index.js"/>"></script>
 </body>
 </html>
