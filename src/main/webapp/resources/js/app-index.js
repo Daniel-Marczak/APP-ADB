@@ -42,7 +42,7 @@ jQuery(function ($) {
 
 $(document).ready(function () {
     // Add smooth scrolling to all links in navbar + footer link
-    $(".navbar a, footer a[href='#myPage']").on('click', function (event) {
+    $(".navbar a:not(.smooth-scroll-off), footer a[href='#myPage']").on('click', function (event) {
 
         // Prevent default anchor click behavior
         event.preventDefault();

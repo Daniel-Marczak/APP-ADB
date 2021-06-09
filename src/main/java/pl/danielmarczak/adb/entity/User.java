@@ -5,9 +5,11 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @Entity
+@Table(name = "user")
 @Data
 public class User {
 
@@ -28,10 +30,13 @@ public class User {
     @NotNull
     private String password;
 
-    private boolean enabled;
-
     @OneToOne
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Property> properties;
+
+    private boolean isEnabled;
 
 
 }

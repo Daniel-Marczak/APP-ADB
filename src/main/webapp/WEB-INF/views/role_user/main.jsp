@@ -15,63 +15,14 @@
 <!-- Portfolio -->
 <div id="a" class="portfolio">
     <div class="contact" id="contact">
-        <div class="container">
-            <div class="row">
+        <div class="container" style="">
+            <div class="row" style="background-color: gray; height: 800px">
                 <div class="col-md-12">
                     <div class="text-center">
                         <h3>Contact Us</h3>
                     </div>
                 </div>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-            </div>
-        </div>
-    </div>
 
-    <!-- LOGOUT MODAL -->
-    <div tabindex="-1" class="modal bs-example-modal-sm" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header"><h4>Logout <i class="fa fa-lock"></i></h4></div>
-                <div class="modal-body"><i class="fa fa-question-circle"></i> Are you sure you want to log-off?</div>
-                <div class="modal-footer">
-                    <form action="<c:url value="/logout"/> " method="post">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                        <button type="submit" class="btn btn-primary btn-block">Logout</button>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
@@ -96,6 +47,22 @@
             </div>
         </div>
     </footer>
+
+    <!-- LOGOUT MODAL -->
+    <div tabindex="-1" class="modal bs-example-modal-sm" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header"><h4>Logout <i class="fa fa-lock"></i></h4></div>
+                <div class="modal-body"><i class="fa fa-question-circle"></i> Are you sure you want to log-off?</div>
+                <div class="modal-footer">
+                    <form action="<c:url value="/logout"/> " method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn-primary btn-block">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
 </body>
 </html>

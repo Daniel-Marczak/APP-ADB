@@ -136,7 +136,7 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
-<script src="<c:url value="/resources/js/app-registration.js"/>" async defer></script>
+<script src="<c:url value="/resources/js/app-registration.js"/>"></script>
 
 
 </body>
