@@ -9,7 +9,7 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active">
-                        <a href="<c:url value="/user/main#"/>">Menu 1</a>
+                        <a href="<c:url value="/user/main#"/>">Properties</a>
                     </li>
                     <li>
                         <a href="<c:url value="/user/main#"/>" target="_parent">Menu 2</a>
