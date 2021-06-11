@@ -1,4 +1,4 @@
-package pl.danielmarczak.adb.security;
+package pl.danielmarczak.adb.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
