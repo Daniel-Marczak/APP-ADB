@@ -3,7 +3,7 @@ package pl.danielmarczak.adb.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "property")
@@ -15,7 +15,6 @@ public class Property {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -25,8 +24,8 @@ public class Property {
     @OneToOne
     private PropertyTypeOfRental typeOfRental;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "property", orphanRemoval = true)
-    private List<PropertyRoom> propertyRooms;
+    @OneToMany
+    private Set<PropertyRoom> propertyRooms;
 
     private String name;
     private Boolean isAvailable;

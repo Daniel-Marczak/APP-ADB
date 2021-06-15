@@ -40,6 +40,15 @@
                                     <span>Valid email is required to complete registration process.</span>
                                     <span>We will send you an email with a registration confirmation link.</span>
                                 </div>
+                                <div class="tooltip-wrapper t-contact-number hidden">
+                                    <span>A valid contact number must begin with a country code.</span>
+                                    <span>Examples of correct formats:</span>
+                                    <ul style="padding-left: 20px">
+                                        <li>(48) 42 681 46 96 / +48 42 681-46-96</li>
+                                        <li>(48) 555 555 555 / +48 555-555-555<br></li>
+                                        <li>48 555 555 555 / 48 555-555-555<br></li>
+                                    </ul>
+                                </div>
                                 <div class="tooltip-wrapper t-password hidden">
                                     <span>Your password must follow these rules:</span>
                                     <ul style="padding-left: 20px">
@@ -55,7 +64,7 @@
                                 </div>
                             </div>
 
-                            <form:input path="username" type="text" placeholder="username" cssClass="username-input"/>
+                            <form:input path="username" placeholder="username" cssClass="username-input"/>
                             <div class="username-checkmark hidden">&check;</div>
                             <br>
                             <form:errors path="username" cssClass="form-error-box error-username-fmt-form"/>
@@ -66,7 +75,7 @@
                                 This username has already been taken.
                             </div>
 
-                            <form:input path="email" type="email" placeholder="email" cssClass="email-input"/>
+                            <form:input path="email" placeholder="email" cssClass="email-input"/>
                             <div class="email-checkmark hidden">&check;</div>
                             <br>
                             <form:errors path="email"/>
@@ -77,7 +86,15 @@
                                 This email has already been taken.
                             </div>
 
-                            <form:input path="password" type="password" placeholder="password"
+                            <form:input path="contactNumber" placeholder="contact number" cssClass="contact-number-input"/>
+                            <div class="contact-number-checkmark hidden">&check;</div>
+                            <br>
+                            <form:errors path="contactNumber"/>
+                            <div class="form-error-box error-contact-number hidden">
+                                Incorrect contact number format.
+                            </div>
+
+                            <form:password path="password" placeholder="password"
                                         cssClass="password-input"/>
                             <div class="password-checkmark hidden">&check;</div>
                             <br>

@@ -4,18 +4,22 @@ const tooltipUsername = $('.t-username');
 const tooltipEmail = $('.t-email');
 const tooltipPassword = $('.t-password');
 const tooltipCOnfPass = $('.t-confpass');
+const tooltipContactNumber = $('.t-contact-number');
 const usernameInput = $('.username-input');
 const emailInput = $('.email-input');
+const contactNumberInput  = $('.contact-number-input');
 const passwordInput = $('.password-input');
 const confPassInput = $('.confpass-input');
 const errUsernameFmtDiv = $('.error-username-fmt');
 const errUsernameTknDiv = $('.error-username-tkn');
 const errEmailFmtDiv = $('.error-email-fmt');
 const errEmailTknDiv = $('.error-email-tkn');
+const errContactNrFmtDiv = $('.error-contact-number')
 const errPasswordDiv = $('.error-password');
 const errConfPassDiv = $('.error-password-conf');
 const usernameCheckmarkDiv = $('.username-checkmark');
 const emailCheckmarkDiv = $('.email-checkmark');
+const contactNrCheckmarkDiv = $('.contact-number-checkmark');
 const passwordCheckmarkDiv = $('.password-checkmark');
 const confPassCheckmarkDiv = $('.confpass-checkmark');
 
@@ -23,6 +27,7 @@ let isUsernameFmtCorrect = false;
 let isUsernameAvailable = false;
 let isEmailFmtCorrect = false;
 let isEmailAvailable = false;
+let isContactNrFmtCorrect = false;
 let isPasswordFmtCorrect = false;
 let isConfPasswordCorrect = false;
 let isRecaptchaChecked = false
@@ -41,16 +46,18 @@ function checkIsUsernameFmtCorrect() {
         } else {
             errUsernameFmtDiv.fadeIn(500);
         }
+        return false;
     }
     if (USERNAME_REGEX.test(username)) {
         errUsernameFmtDiv.fadeOut(500);
         isUsernameFmtCorrect = true;
+        return true;
     }
 }
 
 function checkIsUsernameAvailable() {
     const username = usernameInput.val();
-    return $.get(`http://localhost:8080/api/reg/is-username-available?username=${username}`, function (data) {
+    return $.get(`http://localhost:8080/api/registration/is-username-available?username=${username}`, function (data) {
         if (data === true) {
             isUsernameAvailable = true;
             errUsernameTknDiv.fadeOut(500);
@@ -67,8 +74,7 @@ function checkIsUsernameAvailable() {
 }
 
 function validateUsername() {
-    checkIsUsernameFmtCorrect();
-    if (isUsernameFmtCorrect) {
+    if (checkIsUsernameFmtCorrect()) {
         $.when(checkIsUsernameAvailable()).done(function () {
             if (isUsernameFmtCorrect && isUsernameAvailable) {
                 if (usernameCheckmarkDiv.hasClass('hidden')) {
@@ -99,16 +105,18 @@ function checkIsEmailFmtCorrect() {
         } else {
             errEmailFmtDiv.fadeIn(500);
         }
+        return false;
     }
     if (EMAIL_REGEX.test(email)) {
         errEmailFmtDiv.fadeOut(500);
         isEmailFmtCorrect = true;
+        return true;
     }
 }
 
 function checkIsEmailAvailable() {
     const email = emailInput.val();
-    return $.get(`http://localhost:8080/api/reg/is-email-available?email=${email}`, function (data) {
+    return $.get(`http://localhost:8080/api/registration/is-email-available?email=${email}`, function (data) {
         if (data === true) {
             isEmailAvailable = true;
             errEmailTknDiv.fadeOut(500);
@@ -125,8 +133,7 @@ function checkIsEmailAvailable() {
 }
 
 function validateEmail() {
-    checkIsEmailFmtCorrect();
-    if (isEmailFmtCorrect) {
+    if (checkIsEmailFmtCorrect()) {
         $.when(checkIsEmailAvailable()).done(function () {
             if (isEmailFmtCorrect && isEmailAvailable) {
                 if (emailCheckmarkDiv.hasClass('hidden')) {
@@ -140,6 +147,34 @@ function validateEmail() {
         });
     } else {
         emailCheckmarkDiv.fadeOut(500);
+    }
+    validateForm();
+}
+
+
+// CONTACT NUMBER VALIDATION -------------------------------------------------------------------------------------------
+
+function validateContactNumber(){
+    const CONTACT_NUMBER_REGEX = /^([(][0-9]{1,3}[)]|^\+[0-9]{1,3}|^[0-9]{1,3})[ ]([0-9]([._\- ](?![._\- ]))?){7,15}$/;
+    const contactNumber = contactNumberInput.val();
+
+    if (!CONTACT_NUMBER_REGEX.test(contactNumber)) {
+        isContactNrFmtCorrect = false;
+        if (errContactNrFmtDiv.hasClass('hidden')) {
+            errContactNrFmtDiv.removeClass('hidden').toggle().fadeIn(500);
+        } else {
+            errContactNrFmtDiv.fadeIn(500);
+        }
+        contactNrCheckmarkDiv.fadeOut(500);
+    }
+    if (CONTACT_NUMBER_REGEX.test(contactNumber)) {
+        isContactNrFmtCorrect = true;
+        errContactNrFmtDiv.fadeOut(500);
+        if (contactNrCheckmarkDiv.hasClass('hidden')) {
+            contactNrCheckmarkDiv.removeClass('hidden').toggle().fadeIn(500);
+        } else {
+            contactNrCheckmarkDiv.fadeIn(500);
+        }
     }
     validateForm();
 }
@@ -201,7 +236,7 @@ function recaptchaCallback() {
 }
 
 function validateForm() {
-    if (isUsernameFmtCorrect && isUsernameAvailable && isEmailFmtCorrect && isEmailAvailable
+    if (isUsernameFmtCorrect && isUsernameAvailable && isEmailFmtCorrect && isEmailAvailable && isContactNrFmtCorrect
         && isPasswordFmtCorrect && isConfPasswordCorrect
     ) {
         showRecaptcha = true;
@@ -227,6 +262,9 @@ function showTooltip() {
     if ($(this).hasClass('email-input')) {
         tooltipEmail.removeClass('hidden');
     }
+    if ($(this).hasClass('contact-number-input')) {
+        tooltipContactNumber.removeClass('hidden');
+    }
     if ($(this).hasClass('password-input')) {
         tooltipPassword.removeClass('hidden');
     }
@@ -242,6 +280,9 @@ function hideTooltip() {
     if ($(this).hasClass('email-input')) {
         tooltipEmail.addClass('hidden');
     }
+    if ($(this).hasClass('contact-number-input')) {
+        tooltipContactNumber.addClass('hidden');
+    }
     if ($(this).hasClass('password-input')) {
         tooltipPassword.addClass('hidden');
     }
@@ -252,17 +293,16 @@ function hideTooltip() {
 
 usernameInput.on('keyup change blur', validateUsername).on('focus', showTooltip).on('blur', hideTooltip);
 emailInput.on('keyup change blur', validateEmail).on('focus', showTooltip).on('blur', hideTooltip);
+contactNumberInput.on('keyup change blur', validateContactNumber).on('focus', showTooltip).on('blur', hideTooltip);
 passwordInput.on('keyup change blur', validatePassword).on('focus', showTooltip).on('blur', hideTooltip);
 confPassInput.on('keyup change blur', validateConfirmPassword).on('focus', showTooltip).on('blur', hideTooltip);
 
 $(document).ready(function() {
     $(window).keydown(function(event){
         if(event.keyCode === 13) {
-            console.log(!isUsernameFmtCorrect,!isUsernameAvailable, !isEmailFmtCorrect , !isEmailAvailable ,
-                !isPasswordFmtCorrect , !isConfPasswordCorrect ,  !isRecaptchaChecked);
             if (
                 !isUsernameFmtCorrect|| !isUsernameAvailable || !isEmailFmtCorrect || !isEmailAvailable ||
-                !isPasswordFmtCorrect || !isConfPasswordCorrect || !isRecaptchaChecked
+                !isContactNrFmtCorrect || !isPasswordFmtCorrect || !isConfPasswordCorrect || !isRecaptchaChecked
             ){
                 event.preventDefault();
                 return false;

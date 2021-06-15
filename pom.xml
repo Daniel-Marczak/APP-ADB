@@ -101,9 +101,6 @@
             <version>5.2.2.RELEASE</version>
         </dependency>
 
-
-
-
     </dependencies>
     <dependencyManagement>
         <dependencies>

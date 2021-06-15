@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -28,13 +28,17 @@ public class User {
 
     @NotBlank
     @NotNull
+    private String contactNumber;
+
+    @NotBlank
+    @NotNull
     private String password;
 
     @OneToOne
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Property> properties;
+    @OneToMany
+    private Set<Property> properties;
 
     private boolean isEnabled;
 

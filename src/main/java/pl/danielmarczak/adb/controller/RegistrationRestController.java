@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RestController
-@RequestMapping("/api/reg/")
+@RequestMapping("/api/registration")
 public class RegistrationRestController {
 
     private final UserService userService;

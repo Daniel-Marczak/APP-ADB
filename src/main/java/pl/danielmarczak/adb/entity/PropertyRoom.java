@@ -14,6 +14,5 @@ public class PropertyRoom {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "property_id", referencedColumnName = "id")
     private Property property;
 }

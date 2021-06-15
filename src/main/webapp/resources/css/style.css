@@ -646,6 +646,7 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
 
 .username-checkmark,
 .email-checkmark,
+.contact-number-checkmark,
 .password-checkmark,
 .confpass-checkmark {
     display: inline-block;
