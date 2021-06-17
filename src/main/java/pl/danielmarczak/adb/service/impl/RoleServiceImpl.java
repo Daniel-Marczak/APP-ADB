@@ -1,8 +1,9 @@
-package pl.danielmarczak.adb.service;
+package pl.danielmarczak.adb.service.impl;
 
 import org.springframework.stereotype.Service;
 import pl.danielmarczak.adb.entity.Role;
 import pl.danielmarczak.adb.repository.RoleRepository;
+import pl.danielmarczak.adb.service.RoleService;
 
 @Service
 public class RoleServiceImpl implements RoleService {

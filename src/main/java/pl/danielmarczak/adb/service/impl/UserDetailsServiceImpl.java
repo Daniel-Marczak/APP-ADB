@@ -1,4 +1,4 @@
-package pl.danielmarczak.adb.service;
+package pl.danielmarczak.adb.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,7 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import pl.danielmarczak.adb.entity.User;
-import pl.danielmarczak.adb.model.CurrentUser;
+import pl.danielmarczak.adb.entity.CurrentUser;
+import pl.danielmarczak.adb.service.UserService;
 
 import java.util.HashSet;
 import java.util.Set;

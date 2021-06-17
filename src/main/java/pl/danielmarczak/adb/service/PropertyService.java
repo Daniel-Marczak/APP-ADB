@@ -15,5 +15,6 @@ public interface PropertyService {
     Set<Property> customQueryRegion(String region);
     Set<Property> customQueryProvince(String province);
     Set<Property> customQueryCity(String city);
+    public void saveProperty(Property property);
 
 }

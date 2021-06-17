@@ -1,17 +1,18 @@
 package pl.danielmarczak.adb.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "property_address")
+@Table(name = "properties_addresses")
 @Data
-public class PropertyAddress {
+@EqualsAndHashCode(callSuper = true)
+public class PropertyAddress extends AbstractEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @OneToOne(mappedBy = "propertyAddress", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Property property;
     private String street;
     private String city;
     private String country;

@@ -1,16 +1,19 @@
-package pl.danielmarczak.adb.service;
+package pl.danielmarczak.adb.service.impl;
 
 import org.springframework.stereotype.Service;
 import pl.danielmarczak.adb.entity.Property;
 import pl.danielmarczak.adb.entity.Role;
 import pl.danielmarczak.adb.entity.User;
 import pl.danielmarczak.adb.repository.PropertyRepository;
+import pl.danielmarczak.adb.service.PropertyService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 
 @Service
-public class PropertyServiceImpl implements PropertyService{
+@Transactional
+public class PropertyServiceImpl implements PropertyService {
 
     private final PropertyRepository propertyRepository;
 
@@ -58,6 +61,10 @@ public class PropertyServiceImpl implements PropertyService{
     private void hideSensitiveUserData(User user){
         user.setPassword("");
         user.setRole(new Role());
+    }
+
+    public void saveProperty(Property property){
+        propertyRepository.save(property);
     }
 
 

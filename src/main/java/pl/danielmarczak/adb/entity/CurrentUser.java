@@ -1,4 +1,4 @@
-package pl.danielmarczak.adb.model;
+package pl.danielmarczak.adb.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

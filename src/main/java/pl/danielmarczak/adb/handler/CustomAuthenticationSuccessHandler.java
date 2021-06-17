@@ -9,7 +9,7 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import pl.danielmarczak.adb.entity.User;
-import pl.danielmarczak.adb.model.CurrentUser;
+import pl.danielmarczak.adb.entity.CurrentUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

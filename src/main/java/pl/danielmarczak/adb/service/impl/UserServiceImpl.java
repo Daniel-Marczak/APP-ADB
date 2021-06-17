@@ -1,12 +1,17 @@
-package pl.danielmarczak.adb.service;
+package pl.danielmarczak.adb.service.impl;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.danielmarczak.adb.entity.User;
 import pl.danielmarczak.adb.repository.UserRepository;
+import pl.danielmarczak.adb.service.RoleService;
+import pl.danielmarczak.adb.service.UserService;
+
+import javax.transaction.Transactional;
 
 @Service
-public class UserServiceImpl implements UserService{
+@Transactional
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;

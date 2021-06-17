@@ -1,18 +1,17 @@
 package pl.danielmarczak.adb.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "property_room")
+@Table(name = "property_rooms")
 @Data
-public class PropertyRoom {
+@EqualsAndHashCode(callSuper = true)
+public class PropertyRoom extends AbstractEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "property_id")
     private Property property;
 }

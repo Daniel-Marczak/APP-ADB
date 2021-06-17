@@ -1,21 +1,23 @@
 package pl.danielmarczak.adb.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Data
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@EqualsAndHashCode(callSuper = true)
+public class User extends AbstractEntity{
 
     @NotBlank(message = "{validation.error-username-fmt}")
     @NotNull(message = "{validation.error-username-fmt}")
@@ -35,10 +37,12 @@ public class User {
     private String password;
 
     @OneToOne
+    @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany
-    private Set<Property> properties;
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Property> properties = new ArrayList<Property>();
 
     private boolean isEnabled;
 

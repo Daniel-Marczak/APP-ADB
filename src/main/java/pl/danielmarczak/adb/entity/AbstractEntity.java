@@ -4,15 +4,12 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "property_type_of_rental")
+@MappedSuperclass
 @Data
-public class PropertyTypeOfRental {
+public abstract class AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private Long id;
-    private String name;
-
-
 }
