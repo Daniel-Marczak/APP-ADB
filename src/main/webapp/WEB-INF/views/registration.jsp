@@ -42,11 +42,12 @@
                                 </div>
                                 <div class="tooltip-wrapper t-contact-number hidden">
                                     <span>A valid contact number must begin with a country code.</span>
-                                    <span>Examples of correct formats:</span>
+                                    <span>The country code number must be either preceded by a plus sign or placed inside parenthesis.</span>
+                                    <br>
+                                    <span>Examples of desired formats:</span>
                                     <ul style="padding-left: 20px">
                                         <li>(48) 42 681 46 96 / +48 42 681-46-96</li>
                                         <li>(48) 555 555 555 / +48 555-555-555<br></li>
-                                        <li>48 555 555 555 / 48 555-555-555<br></li>
                                     </ul>
                                 </div>
                                 <div class="tooltip-wrapper t-password hidden">

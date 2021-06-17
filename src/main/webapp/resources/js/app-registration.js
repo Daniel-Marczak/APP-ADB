@@ -155,7 +155,7 @@ function validateEmail() {
 // CONTACT NUMBER VALIDATION -------------------------------------------------------------------------------------------
 
 function validateContactNumber(){
-    const CONTACT_NUMBER_REGEX = /^([(][0-9]{1,3}[)]|^\+[0-9]{1,3}|^[0-9]{1,3})[ ]([0-9]([._\- ](?![._\- ]))?){7,15}$/;
+    const CONTACT_NUMBER_REGEX = /^([(][0-9]{1,3}[)]|^\+[0-9]{1,3})[ ]([0-9]([._\- ](?![._\- ]))?){7,15}$/;
     const contactNumber = contactNumberInput.val();
 
     if (!CONTACT_NUMBER_REGEX.test(contactNumber)) {
