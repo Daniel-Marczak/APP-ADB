@@ -11,7 +11,6 @@ import pl.danielmarczak.adb.service.PropertyService;
 import pl.danielmarczak.adb.service.PropertyTypeService;
 
 import java.util.List;
-import java.util.Set;
 
 
 @RestController
@@ -46,20 +45,9 @@ public class PropertyRestController {
 
 
     @GetMapping("/testing")
-    public Set<Property> testing() {
-        String city = "City 1";
-        Property property = Property.builder()
-                .user(new User())
-                .propertyAddress(new PropertyAddress())
-                .propertyType(new PropertyType())
-                .name("Property 1")
-                .isAvailable(true)
-                .propertyDescription(new PropertyDescription())
-                .build();
+    public Property testing() {
 
-        propertyService.saveProperty(property);
-
-        return propertyService.customQueryCoPoR(city, "", "");
+        return propertyService.getOneProperty();
     }
 
 

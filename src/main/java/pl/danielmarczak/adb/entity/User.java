@@ -1,5 +1,6 @@
 package pl.danielmarczak.adb.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.OnDelete;
@@ -19,21 +20,15 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class User extends AbstractEntity{
 
-    @NotBlank(message = "{validation.error-username-fmt}")
-    @NotNull(message = "{validation.error-username-fmt}")
+//    @NotBlank(message = "{validation.error-username-fmt}")
+//    @NotNull(message = "{validation.error-username-fmt}")
     @Column(unique = true)
     private String username;
 
-    @NotBlank
-    @NotNull
     private String email;
 
-    @NotBlank
-    @NotNull
     private String contactNumber;
 
-    @NotBlank
-    @NotNull
     private String password;
 
     @OneToOne
@@ -42,6 +37,7 @@ public class User extends AbstractEntity{
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnoreProperties("user")
     private List<Property> properties = new ArrayList<Property>();
 
     private boolean isEnabled;
