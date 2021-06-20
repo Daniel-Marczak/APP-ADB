@@ -9,19 +9,19 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active">
-                        <a href="<c:url value="/user/main#"/>">Properties</a>
+                        <a href="<c:url value="/user/properties#"/>">Properties</a>
                     </li>
                     <li>
-                        <a href="<c:url value="/user/main#"/>" target="_parent">Menu 2</a>
+                        <a href="<c:url value="/user/properties#"/>" target="_parent">Menu 2</a>
                     </li>
                     <li>
-                        <a href="<c:url value="/user/main#"/>">Menu 3</a>
+                        <a href="<c:url value="/user/properties#"/>">Menu 3</a>
                     </li>
                     <li>
-                        <a href="<c:url value="/user/main#"/>">Menu 4</a>
+                        <a href="<c:url value="/user/properties#"/>">Menu 4</a>
                     </li>
                     <li>
-                        <a href="<c:url value="/user/main#"/>">Menu 5</a>
+                        <a href="<c:url value="/user/properties#"/>">Menu 5</a>
                     </li>
                     <li>
                         <a href="#" data-target=".bs-example-modal-sm" data-toggle="modal">Logout</a>

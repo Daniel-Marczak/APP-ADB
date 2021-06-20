@@ -672,7 +672,7 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
 .tooltip-wrapper {
     width: 350px;
     height: max-content;
-    background : none;
+    background: none;
     float: right;
     border-radius: 25px 25px 25px 25px;
     border: rgba(204, 204, 204, 0.18) 1px solid;
@@ -684,9 +684,52 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     transition-duration: 0.5s;
 }
 
+.property-div {
+    display: inline-block;
+    width: 300px;
+    height: 300px;
+    background-color: lightgrey;
+    float: left;
+    border-radius: 10px;
+    margin: 25px 25px 25px 45px;
+    opacity: 0.9;
+    transition-duration: 0.5s;
+}
+
+.property-div:hover {
+    -webkit-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+.property-name-div {
+    background-color: white;
+    display: inline-block;
+    height: 45px;
+    width: 100%;
+    border-radius: 10px 10px 0px 0px;
+}
+
+/*.property-name-div h3 {*/
+/*    */
+/*}*/
 
 
+.property-type-div {
 
+}
+
+.property-address-div {
+
+}
+
+.property-description-div {
+
+}
+
+.property-availability-div {
+
+}
 
 
 

@@ -33,22 +33,11 @@ public class PropertyRestController {
         this.propertyRoomService = propertyRoomService;
     }
 
-    @GetMapping("/list")
-    public List<Property> showAllProperties() {
-        return propertyService.findAllProperties();
+    @GetMapping("/user-properties/{userId}")
+    public List<Property> getAllPropertiesByUserId(@PathVariable Long userId) {
+        return propertyService.getAllByUserId(userId);
     }
 
-    @GetMapping("/{propertyId}")
-    public Property getOneProperty(@PathVariable Long propertyId) {
-        return propertyService.getProperty(propertyId);
-    }
-
-
-    @GetMapping("/testing")
-    public Property testing() {
-
-        return propertyService.getOneProperty();
-    }
 
 
 }

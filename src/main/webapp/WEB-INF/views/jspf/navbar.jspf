@@ -26,7 +26,7 @@
                     </li>
                     <sec:authorize access="hasRole('USER')">
                         <li>
-                            <a class="smooth-scroll-off" href="<c:url value='/user/main'/>">Property manager</a>
+                            <a class="smooth-scroll-off" href="<c:url value='/user/properties'/>">Property manager</a>
                         </li>
                     </sec:authorize>
                 </ul>
