@@ -47,6 +47,12 @@ public class Property extends AbstractEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<PropertyRoom> propertyRooms;
 
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinColumn(name = "properties_photos_id") //from properties_photos
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnoreProperties("property")
+    private PropertyPhoto propertyPhoto;
+
     private Boolean isAvailable;
 
 

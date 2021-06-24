@@ -22,7 +22,6 @@
                     <div class="banner-text">
                         <h2 style="margin-bottom: 50px">Registration</h2>
                         <form:form class="registration-form" modelAttribute="newUser" action="/registration">
-
                             <div class="tooltip-container">
                                 <div class="tooltip-wrapper t-username hidden">
                                     <span>Your username can contain:</span>
@@ -124,6 +123,7 @@
                                 <button class="hidden" type="submit" id="registration-submit-btn">Register</button>
                             </div>
                         </form:form>
+
                         <div class="link-box">
                             <a href="<c:url value="/login"/>" class="registration-link">Sign in</a>
                             <a href="<c:url value="/reset-password"/>" class="reset-password-link">Reset password</a>

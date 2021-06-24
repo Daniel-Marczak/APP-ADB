@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -58,7 +60,6 @@
                 <div class="modal-body"><i class="fa fa-question-circle"></i> Are you sure you want to log-off?</div>
                 <div class="modal-footer">
                     <form action="<c:url value="/logout"/> " method="post">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <button type="submit" class="btn btn-primary btn-block">Logout</button>
                     </form>
                 </div>

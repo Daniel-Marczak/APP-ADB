@@ -1,5 +1,6 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -18,6 +19,7 @@
                     <div class="banner-text">
                         <h2 style="margin-bottom: 50px">Sign in</h2>
                         <form class="login-form" action="<c:url value="/login"/>" method="post">
+                            <sec:csrfInput />
                             <label>
                                 <input type="text" class="username-input" name="username" placeholder="username">
                             </label>
@@ -27,7 +29,6 @@
                             <div>
                                 <button type="submit" class="sign-in-btn hidden" style="display: none">Sign in</button>
                             </div>
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         </form>
                         <c:if test="${param.error.equals('credentials')}">
                             <div class="form-error-box">

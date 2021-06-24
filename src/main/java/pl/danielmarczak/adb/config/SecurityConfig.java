@@ -6,6 +6,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import pl.danielmarczak.adb.handler.CustomAuthenticationSuccessHandler;
 import pl.danielmarczak.adb.service.impl.UserDetailsServiceImpl;
 
@@ -16,6 +19,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
+//                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                    .ignoringAntMatchers("/test/**")
+//                .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()

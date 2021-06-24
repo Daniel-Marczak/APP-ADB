@@ -12,5 +12,5 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 public class PropertyType extends AbstractEntity{
 
-    private String propertyType;
+    private String propertyTypeName;
 }

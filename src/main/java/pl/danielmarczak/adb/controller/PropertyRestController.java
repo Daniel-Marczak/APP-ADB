@@ -1,14 +1,10 @@
 package pl.danielmarczak.adb.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import pl.danielmarczak.adb.entity.*;
-import pl.danielmarczak.adb.service.PropertyAddressService;
-import pl.danielmarczak.adb.service.PropertyRoomService;
-import pl.danielmarczak.adb.service.PropertyService;
-import pl.danielmarczak.adb.service.PropertyTypeService;
+import pl.danielmarczak.adb.service.*;
+
 
 import java.util.List;
 
@@ -21,22 +17,33 @@ public class PropertyRestController {
     private final PropertyTypeService propertyTypeService;
     private final PropertyAddressService propertyAddressService;
     private final PropertyRoomService propertyRoomService;
+    private final PropertyPhotoService propertyPhotoService;
 
 
     public PropertyRestController(
             PropertyService propertyService, PropertyTypeService propertyTypeService, PropertyAddressService propertyAddressService,
-            PropertyRoomService propertyRoomService
-    ) {
+            PropertyRoomService propertyRoomService, PropertyPhotoService propertyPhotoService) {
         this.propertyService = propertyService;
         this.propertyTypeService = propertyTypeService;
         this.propertyAddressService = propertyAddressService;
         this.propertyRoomService = propertyRoomService;
+        this.propertyPhotoService = propertyPhotoService;
     }
 
-    @GetMapping("/user-properties/{userId}")
+    @GetMapping(value = "/user-properties/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<Property> getAllPropertiesByUserId(@PathVariable Long userId) {
-        return propertyService.getAllByUserId(userId);
+        List<Property> properties = propertyService.getAllByUserId(userId);
+        properties.forEach(property -> {
+            if (property.getUser() != null) {
+                property.getUser().setPassword("");
+                property.getUser().setRole(new Role());
+            }
+        });
+        //TODO hideSensitiveUserData()
+        return properties;
     }
+
+
 
 
 
