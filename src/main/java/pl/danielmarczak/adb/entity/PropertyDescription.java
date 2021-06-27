@@ -18,7 +18,7 @@ public class PropertyDescription extends AbstractEntity{
     @JsonIgnoreProperties("propertyDescription")
     private Property property;
 
-    private String propertyDescription;
+    private String descriptionText;
 
 
 }
