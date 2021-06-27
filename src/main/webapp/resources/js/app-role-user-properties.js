@@ -23,7 +23,7 @@ function getAllPropertiesByUserId() {
                 id,
                 isAvailable,
                 propertyAddress,
-                propertyDescription,    //todo
+                propertyDescription,
                 propertyName,
                 propertyPhoto,
                 propertyRooms,          //todo
