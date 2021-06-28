@@ -1,16 +1,18 @@
+
 const propertiesContainer = $('.properties-container');
 let propertyNameElementArray = [];
 let propertyCardElementArray = [];
 let propertyDetailsElementArray = [];
 let propertyPhotoElementArray = [];
+let propertyCalendarVariableArray = [];
 
-document.addEventListener("contextmenu", function () {
-    console.log('propertyDivsArray => ')
-    console.log()
-    console.log('---------------------------------------------------------')
-    console.log('propertyDivsArray =>')
-    console.log()
-});
+// document.addEventListener("contextmenu", function () {
+//     console.log('propertyDivsArray => ')
+//     console.log()
+//     console.log('---------------------------------------------------------')
+//     console.log('propertyDivsArray =>')
+//     console.log()
+// });
 
 
 function getAllPropertiesByUserId() {
@@ -30,24 +32,30 @@ function getAllPropertiesByUserId() {
                 propertyType,
                 user
             } = property
-            console.log(propertyDescription);
+
             const {city, country, postalCode, province, region, street} = propertyAddress;
             const {descriptionText} = propertyDescription;
             const {fileData, fileName, fileType} = propertyPhoto;
             const {propertyTypeName} = propertyType;
             const {contactNumber, email, username} = user;
             let propertyIdentifier = `property-${propertyCounter}`;
+            let calendarIdentifier = `calendar-${propertyCounter}`;
 
             createPropertyNameTabElement(propertyCounter, propertyIdentifier, propertyName);
             createPropertyCardElement(propertyCounter, propertyIdentifier);
+            createFullCalendarElement(propertyCounter, calendarIdentifier);
             createPropertyDetailsElement(propertyCounter, propertyIdentifier);
             createPropertyPhotoElement(propertyCounter, propertyIdentifier, propertyPhoto.id, fileData, fileName);
-            createPropertyDetailsTableElement(propertyCounter, propertyIdentifier, isAvailable, propertyTypeName, propertyAddress.id, city, country, postalCode, province, region, street );
+            createPropertyDetailsTableElement(propertyCounter, propertyIdentifier, isAvailable, propertyTypeName, propertyAddress.id, city, country, postalCode, province, region, street);
             createPropertyDescriptionElement(propertyCounter, propertyIdentifier, propertyDescription.id, descriptionText);
 
             propertyCounter++
-        }))
-    });
+        }));
+        for (let i = 1; i < propertyCardElementArray.length; i++) {     //The calendar element has to be rendered inside a property card
+            $(propertyCardElementArray[i]).addClass('hidden')           //before adding the 'hidden' class to the property card.
+        }                                                               //Adding the 'hidden' class to a property card before rendering
+    });                                                                 //of the calendar element causes rendering problems.
+
 }
 
 getAllPropertiesByUserId();
@@ -82,14 +90,11 @@ function createPropertyCardElement(propertyCounter, propertyIdentifier) {
     const cardContainer = $('.property-card-container');
     const cardElement = $('<div class="property-card"></div>');
     cardElement.addClass(propertyIdentifier);
-    if (propertyCounter !== 0) {
-        cardElement.addClass('hidden');
-    }
     cardContainer.prepend(cardElement);
     propertyCardElementArray.push($(cardElement[0]).context);
 }
 
-function createPropertyDetailsElement(propertyCounter, propertyIdentifier){
+function createPropertyDetailsElement(propertyCounter, propertyIdentifier) {
     const cardElement = $(propertyCardElementArray[propertyCounter]);
     const detailsElement = $('<div class="property-details"></div>');
     detailsElement.addClass(propertyIdentifier);
@@ -99,7 +104,7 @@ function createPropertyDetailsElement(propertyCounter, propertyIdentifier){
 
 function createPropertyPhotoElement(propertyCounter, propertyIdentifier, propertyPhotoId, fileData, fileName) {
     const detailsElement = $(propertyDetailsElementArray[propertyCounter]);
-    const photoElement =  $('<div class="property-photo"></div>');
+    const photoElement = $('<div class="property-photo"></div>');
     const imageElement = $('<img alt="" src="" class="property-image">');
     const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
     const currentPhotoId = $(this).attr('data-photo-id');
@@ -113,7 +118,7 @@ function createPropertyPhotoElement(propertyCounter, propertyIdentifier, propert
         </form>`
     );
     imageElement.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
-    imageElement.attr('data-photo-id',propertyPhotoId);
+    imageElement.attr('data-photo-id', propertyPhotoId);
     imageElement.addClass(propertyIdentifier);
     detailsElement.append(photoElement.append(changeImageElement).append(imageElement));
     propertyPhotoElementArray.push($(photoElement[0]));
@@ -153,9 +158,44 @@ function createPropertyDescriptionElement(propertyCounter, propertyIdentifier, p
     detailsElement.append(descriptionElement.append(descriptionTextElement));
 }
 
+function createFullCalendarElement(propertyCounter, calendarIdentifier) {
+    const propertyCard = $(propertyCardElementArray[propertyCounter]);
+    const calendarElement = $(`<div id='${calendarIdentifier}' class='${calendarIdentifier}'></div>`);
+    propertyCard.append(calendarElement);
+
+    let calendar = new FullCalendar.Calendar(document.querySelector(`.${calendarIdentifier}`), {
+        initialView: 'dayGridMonth',
+        editable: true,
+        selectable: true,
+        headerToolbar: {
+            start: '',
+            center: 'title',
+            end: 'today prev,next'
+        },
+        titleFormat: {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        },
+        titleRangeSeparator: ' \u2013 ',
+        height: "auto",
+        contentHeight: "auto",
+        dateClick: function (event){
+            console.log(calendar.getDate());
+        },
+        eventDragStart: function (info){
+            console.log(info);
+        },
+        eventDragStop: function (info){
+            console.log(info);
+        },
+    });
+    calendar.render();
+}
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
 

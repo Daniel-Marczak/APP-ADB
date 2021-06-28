@@ -154,7 +154,7 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
-<script src="<c:url value="/resources/js/app-registration.js"/>"></script>
+<script src="<c:url value="/resources/js/app/app-registration.js"/>"></script>
 
 
 </body>

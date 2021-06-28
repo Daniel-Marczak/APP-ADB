@@ -7,6 +7,7 @@
 <head>
     <meta charset="utf-8">
     <title>Accommodation Cloud</title>
+    <link href='<c:url value="/resources/css/fullcalendar/main.css"/>' rel='stylesheet' />
     <%@include file="/WEB-INF/views/jspf/header.jspf" %>
 </head>
 
@@ -66,6 +67,7 @@
     </div>
 </div>
 <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
-<script src="<c:url value="/resources/js/app-role-user-properties.js"/> "></script>
+<script src="<c:url value="/resources/js/fullcalendar/main.js"/> "></script>
+<script src="<c:url value="/resources/js/app/app-role-user-properties.js"/>" type="module"></script>
 </body>
 </html>

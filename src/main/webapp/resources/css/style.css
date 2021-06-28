@@ -910,7 +910,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .property-description table:hover {
-    transform: scale(2);
+    /*transform: scale(1.2);*/
 }
 
 .property-description table.description-table th {
@@ -987,6 +987,14 @@ textarea:hover::-webkit-scrollbar-thumb {
     border-radius: 5px;
 }
 
+div[class^='calendar-'], div[class*='calendar-'] {
+    display: inline-block;
+    float: left;;
+    background-color: whitesmoke;
+    height: 500px;
+    width: 500px;
+    color: black;
+}
 
 
 
