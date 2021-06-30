@@ -24,7 +24,7 @@
                         <a href="<c:url value="/user/properties#"/>">Menu 5</a>
                     </li>
                     <li>
-                        <a href="#" data-target=".bs-example-modal-sm" data-toggle="modal">Logout</a>
+                        <a href="#" data-target=".bs-example-modal-sm" data-toggle="modal">Sign out</a>
                     </li>
                 </ul>
 

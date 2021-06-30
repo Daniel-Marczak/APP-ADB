@@ -1,19 +1,21 @@
-
 const propertiesContainer = $('.properties-container');
 let propertyNameElementArray = [];
 let propertyCardElementArray = [];
 let propertyDetailsElementArray = [];
 let propertyPhotoElementArray = [];
-let propertyCalendarVariableArray = [];
+let propertyCalendarArray = [];
 
-// document.addEventListener("contextmenu", function () {
-//     console.log('propertyDivsArray => ')
-//     console.log()
-//     console.log('---------------------------------------------------------')
-//     console.log('propertyDivsArray =>')
-//     console.log()
-// });
+//ADD CALENDAR EVENT VARIABLES
+const eventModal = $('.add-booking-modal');
+const addBookingBtn = $('.add-booking-btn');
+addBookingBtn.on('click', addBooking);
 
+let currentCalendar;
+let selectionInfoEventStart;
+let selectionInfoEventEnd;
+
+
+//FUNCTIONS
 
 function getAllPropertiesByUserId() {
     const userId = $('input[type=hidden]').val();
@@ -43,7 +45,7 @@ function getAllPropertiesByUserId() {
 
             createPropertyNameTabElement(propertyCounter, propertyIdentifier, propertyName);
             createPropertyCardElement(propertyCounter, propertyIdentifier);
-            createFullCalendarElement(propertyCounter, calendarIdentifier);
+            createFullCalendarElement(propertyCounter, propertyIdentifier, calendarIdentifier);
             createPropertyDetailsElement(propertyCounter, propertyIdentifier);
             createPropertyPhotoElement(propertyCounter, propertyIdentifier, propertyPhoto.id, fileData, fileName);
             createPropertyDetailsTableElement(propertyCounter, propertyIdentifier, isAvailable, propertyTypeName, propertyAddress.id, city, country, postalCode, province, region, street);
@@ -78,10 +80,10 @@ function displayPropertyCard() {
 
 function createPropertyNameTabElement(propertyCounter, propertyIdentifier, propertyName) {
     const nameTabContainer = $('.property-name-tab-container');
-    const nameTabElement = $('<div class="property-name-tab"></div>');
+    const nameTabElement = $(`<div class="property-name-tab" data-property-id=${propertyIdentifier}></div>`);
     const nameTextElement = $('<h3 style="margin-top: 0px"></h3>').text(propertyName);
     nameTabElement.addClass(propertyIdentifier);
-    nameTabElement.on('click', displayPropertyCard);
+    nameTabElement.on('click', displayPropertyCard).on('click', setCurrentCalendar);
     nameTabContainer.append(nameTabElement.append(nameTextElement));
     propertyNameElementArray.push(nameTabElement[0].context);
 }
@@ -158,15 +160,22 @@ function createPropertyDescriptionElement(propertyCounter, propertyIdentifier, p
     detailsElement.append(descriptionElement.append(descriptionTextElement));
 }
 
-function createFullCalendarElement(propertyCounter, calendarIdentifier) {
+function createFullCalendarElement(propertyCounter, propertyIdentifier, calendarIdentifier) {
     const propertyCard = $(propertyCardElementArray[propertyCounter]);
-    const calendarElement = $(`<div id='${calendarIdentifier}' class='${calendarIdentifier}'></div>`);
+    const calendarElement = $(`<div id='${calendarIdentifier}' data-property-id='${propertyIdentifier}' class='${calendarIdentifier}'></div>`);
     propertyCard.append(calendarElement);
 
     let calendar = new FullCalendar.Calendar(document.querySelector(`.${calendarIdentifier}`), {
         initialView: 'dayGridMonth',
+        titleRangeSeparator: ' \u2013 ',
+        height: "auto",
+        contentHeight: "auto",
         editable: true,
         selectable: true,
+        fixedWeekCount: true,
+        firstDay: 1,
+        weekNumbers: true,
+        weekText: '',
         headerToolbar: {
             start: '',
             center: 'title',
@@ -177,25 +186,115 @@ function createFullCalendarElement(propertyCounter, calendarIdentifier) {
             month: 'short',
             year: 'numeric'
         },
-        titleRangeSeparator: ' \u2013 ',
-        height: "auto",
-        contentHeight: "auto",
-        dateClick: function (event){
-            console.log(calendar.getDate());
+        // display: 'block',
+        displayEventTime : false,
+        eventTextColor: 'white',
+        events: [
+            {
+                id: '',
+                title: '',
+                start: '',
+                end: '',
+                extendedProps: {
+                    propertyId: '',
+                    calendarId: '',
+                    booking: {
+                        id: '',
+                        customer: {
+                            name: '',
+                            surname: '',
+                            phone: '',
+                        },
+                        additionalInfo: '',
+                    }
+                },
+            }
+        ],
+        select: function (selectionInfo) {
+            // ADD EVENT MODAL DISPLAY TOGGLE
+            eventModal.modal('toggle');
+            //SET EVENT START & END VALUES
+            selectionInfoEventStart = selectionInfo.start;
+            selectionInfoEventEnd = selectionInfo.end;
         },
-        eventDragStart: function (info){
-            console.log(info);
-        },
-        eventDragStop: function (info){
-            console.log(info);
-        },
+        eventClick: function (info) {
+          console.log(info.event);
+        }
     });
+    if (propertyCounter === 0){
+        currentCalendar = calendar;
+    }
+    propertyCalendarArray.push(calendar);
     calendar.render();
 }
 
 
+///////////////////////// THINGS THAT 50% OF THE TIME WORK EVERY TIME A.K.A TESTS //////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function addBooking() {
+    const calendar = currentCalendar;
+
+    class Event {
+        constructor(id, title, start, end, bookingId, customerName, customerSurname, customerPhone, additionalInfo) {
+            this.id = id;
+            this.title = title;
+            this.start = start;
+            this.end = end;
+            this.booking = {
+                id: bookingId,
+                customer: {
+                    name: customerName,
+                    surname: customerSurname,
+                    phone: customerPhone,
+                },
+                additionalInfo: additionalInfo
+            }
+        }
+    }
+
+    const eventId = '1' //save to db and retrieve the id
+    const eventTitle = $('.add-event-booking-tittle').val();
+    const eventBookingId = 'event booking id' //save to db and retrieve the id
+    const eventBookingCustomerName = $('.add-event-customer-name').val();
+    const eventBookingCustomerSurname = $('.add-event-customer-surname').val();
+    const eventBookingCustomerPhone = $('.add-event-customer-phone').val();
+    const eventBookingAdditionalInfo = $('.add-event-additional-info').val();
+
+    let event = new Event(
+        eventId,
+        eventTitle,
+        selectionInfoEventStart,
+        selectionInfoEventEnd,
+        eventBookingId,
+        eventBookingCustomerName,
+        eventBookingCustomerSurname,
+        eventBookingCustomerPhone,
+        eventBookingAdditionalInfo
+    );
+    eventModal.modal('toggle');
+    calendar.addEvent(event);
+}
+
+function setCurrentCalendar(){
+    let nameTabPropertyDataId = this.getAttribute('data-property-id');
+    propertyCalendarArray.forEach(calendar => {
+        const calendarDataPropertyId = calendar.el.getAttribute('data-property-id');
+        if (nameTabPropertyDataId === calendarDataPropertyId){
+            currentCalendar = calendar;
+        }
+    });
+}
+
+
+document.addEventListener('click', function (){
+    console.log(propertyCalendarArray[0]);
+})
+
+
+
+
+
+
 
 
 

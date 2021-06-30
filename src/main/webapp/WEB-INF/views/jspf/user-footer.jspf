@@ -1,0 +1,21 @@
+<html>
+<!-- SIGN OUT MODAL -->
+<div tabindex="-1" class="modal bs-example-modal-sm" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header"><h4>Sign out <i class="fa fa-lock"></i></h4></div>
+            <div class="modal-body"><i class="fa fa-question-circle"></i> Are you sure you want to sign out?</div>
+            <div class="modal-footer">
+                <form action="<c:url value="/logout"/> " method="post">
+                    <button type="submit" class="btn btn-primary btn-block">Sign out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<c:url value="/resources/js/jquery.min.js"/> "></script>
+<script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/owl.carousel.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/jquery.countTo.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/jquery.waypoints.min.js"/>"></script>
