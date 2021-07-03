@@ -61,24 +61,27 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <label>Booking tittle:
-                    <input type="text" class="add-event-booking-tittle"/>
-                </label>
-                <label>Customer name:
-                    <input type="text" class="add-event-customer-name"/>
-                </label>
-                <label>Customer surname
-                    <input type="text" class="add-event-customer-surname"/>
-                </label>
-                <label>Customer phone:
-                    <input type="text" class="add-event-customer-phone"/>
-                </label>
-                <label>Additional info:
-                    <textarea  class="add-event-additional-info"></textarea>
-                </label>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary btn-block add-booking-btn">Add booking</button>
+                <form method="post" id="add-event-form">
+                    <input type="hidden">
+                    <label>Booking tittle:
+                        <input type="text" name="tittle" class="add-event-booking-tittle"/>
+                    </label>
+                    <label>Customer name:
+                        <input type="text" name="customerName" class="add-event-customer-name"/>
+                    </label>
+                    <label>Customer surname:
+                        <input type="text" name="customerSurname" class="add-event-customer-surname"/>
+                    </label>
+                    <label>Customer phone:
+                        <input type="text" name="customerPhone" class="add-event-customer-phone"/>
+                    </label>
+                    <label>Additional info:
+                        <textarea name="additionalInfo" class="add-event-additional-info"></textarea>
+                    </label>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-block add-booking-btn">Add booking</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

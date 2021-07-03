@@ -1,21 +1,38 @@
+///////////////////////////////////////////////////// VARIABLES ////////////////////////////////////////////////////////
+
 const propertiesContainer = $('.properties-container');
-let propertyNameElementArray = [];
-let propertyCardElementArray = [];
 let propertyDetailsElementArray = [];
 let propertyPhotoElementArray = [];
 let propertyCalendarArray = [];
 
-//ADD CALENDAR EVENT VARIABLES
 const eventModal = $('.add-booking-modal');
 const addBookingBtn = $('.add-booking-btn');
-addBookingBtn.on('click', addBooking);
+addBookingBtn.on('click', function (e){
+    eventModal.modal('toggle');
+});
 
 let currentCalendar;
 let selectionInfoEventStart;
 let selectionInfoEventEnd;
 
+const addEventForm = $('#add-event-form');
+addEventForm.on('submit', saveEventToDatabaseAndAddCalendarEvent);
 
-//FUNCTIONS
+////////////////////////////////////////////////////// CLASSES /////////////////////////////////////////////////////////
+
+class Event {
+    constructor(id, title, start, end, calendarId, customer, additionalInfo) {
+        this.id = id;
+        this.title = title;
+        this.start = start;
+        this.end = end;
+        this.calendarId = calendarId;
+        this.additionalInfo = additionalInfo;
+        this.customer = customer;
+    }
+}
+
+///////////////////////////////////////////////////// FUNCTIONS ////////////////////////////////////////////////////////
 
 function getAllPropertiesByUserId() {
     const userId = $('input[type=hidden]').val();
@@ -24,40 +41,40 @@ function getAllPropertiesByUserId() {
 
         properties.forEach((property => {
             const {
-                id,
+                propertyId,
                 isAvailable,
                 propertyAddress,
                 propertyDescription,
+                propertyCalendar,
                 propertyName,
                 propertyPhoto,
-                propertyRooms,          //todo
+                propertyRooms,          //TODO
                 propertyType,
                 user
             } = property
+            console.log(property);
 
-            const {city, country, postalCode, province, region, street} = propertyAddress;
-            const {descriptionText} = propertyDescription;
-            const {fileData, fileName, fileType} = propertyPhoto;
-            const {propertyTypeName} = propertyType;
+            const {propertyTypeId, propertyTypeName} = propertyType;
             const {contactNumber, email, username} = user;
+
             let propertyIdentifier = `property-${propertyCounter}`;
             let calendarIdentifier = `calendar-${propertyCounter}`;
 
-            createPropertyNameTabElement(propertyCounter, propertyIdentifier, propertyName);
-            createPropertyCardElement(propertyCounter, propertyIdentifier);
-            createFullCalendarElement(propertyCounter, propertyIdentifier, calendarIdentifier);
-            createPropertyDetailsElement(propertyCounter, propertyIdentifier);
-            createPropertyPhotoElement(propertyCounter, propertyIdentifier, propertyPhoto.id, fileData, fileName);
-            createPropertyDetailsTableElement(propertyCounter, propertyIdentifier, isAvailable, propertyTypeName, propertyAddress.id, city, country, postalCode, province, region, street);
-            createPropertyDescriptionElement(propertyCounter, propertyIdentifier, propertyDescription.id, descriptionText);
+            createPropertyNameTabElement(propertyIdentifier, calendarIdentifier, propertyName);
+            createPropertyCardElement(propertyIdentifier);
+            createFullCalendarElement(propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
+            createPropertyDetailsElement(propertyIdentifier);
+            createPropertyPhotoElement(propertyIdentifier, propertyPhoto);
+            createPropertyAddressElement(propertyIdentifier, isAvailable, propertyTypeName, propertyAddress);
+            createPropertyDescriptionElement(propertyIdentifier, propertyDescription);
 
             propertyCounter++
         }));
-        for (let i = 1; i < propertyCardElementArray.length; i++) {     //The calendar element has to be rendered inside a property card
-            $(propertyCardElementArray[i]).addClass('hidden')           //before adding the 'hidden' class to the property card.
-        }                                                               //Adding the 'hidden' class to a property card before rendering
-    });                                                                 //of the calendar element causes rendering problems.
-
+        const propertyCards = $(`.property-card:not('.property-0')`);
+        for (let i = 0; i < propertyCards.length; i++) {
+            $(propertyCards[i]).addClass('hidden');
+        }
+    });
 }
 
 getAllPropertiesByUserId();
@@ -73,50 +90,54 @@ function convertPropertyPhotoFileDataToBlob(fileData) {
 }
 
 function displayPropertyCard() {
-    propertyCardElementArray.forEach(card => {
-        $(card).hasClass(`${$(this.classList)[1]}`) ? $(card).removeClass('hidden').toggle().fadeIn(300) : $(card).addClass('hidden').toggle().fadeOut(300);
-    });
+    const propertyCards = $(`.property-card`);
+    for (let i = 0; i < propertyCards.length; i++) {
+        if ($(propertyCards[i]).hasClass(`${$(this.classList)[1]}`)) {
+            $(propertyCards[i]).removeClass('hidden').toggle().fadeIn(300);
+        } else {
+            $(propertyCards[i]).addClass('hidden').toggle().fadeOut(300);
+        }
+    }
 }
 
-function createPropertyNameTabElement(propertyCounter, propertyIdentifier, propertyName) {
+function createPropertyNameTabElement(propertyIdentifier, calendarIdentifier, propertyName) {
     const nameTabContainer = $('.property-name-tab-container');
-    const nameTabElement = $(`<div class="property-name-tab" data-property-id=${propertyIdentifier}></div>`);
+    const nameTabElement = $(`<div class="property-name-tab" ></div>`);
     const nameTextElement = $('<h3 style="margin-top: 0px"></h3>').text(propertyName);
-    nameTabElement.addClass(propertyIdentifier);
+    nameTabElement.addClass(`${propertyIdentifier}`).addClass(`${calendarIdentifier}`);
     nameTabElement.on('click', displayPropertyCard).on('click', setCurrentCalendar);
     nameTabContainer.append(nameTabElement.append(nameTextElement));
-    propertyNameElementArray.push(nameTabElement[0].context);
 }
 
-function createPropertyCardElement(propertyCounter, propertyIdentifier) {
+function createPropertyCardElement(propertyIdentifier) {
     const cardContainer = $('.property-card-container');
     const cardElement = $('<div class="property-card"></div>');
     cardElement.addClass(propertyIdentifier);
     cardContainer.prepend(cardElement);
-    propertyCardElementArray.push($(cardElement[0]).context);
 }
 
-function createPropertyDetailsElement(propertyCounter, propertyIdentifier) {
-    const cardElement = $(propertyCardElementArray[propertyCounter]);
-    const detailsElement = $('<div class="property-details"></div>');
+function createPropertyDetailsElement(propertyIdentifier) {
+    const cardElement = $(`.property-card.${propertyIdentifier}`);
+    const detailsElement = $('<div class="property-details-container"></div>');
     detailsElement.addClass(propertyIdentifier);
     cardElement.append(detailsElement);
     propertyDetailsElementArray.push($(detailsElement[0]).context);
 }
 
-function createPropertyPhotoElement(propertyCounter, propertyIdentifier, propertyPhotoId, fileData, fileName) {
-    const detailsElement = $(propertyDetailsElementArray[propertyCounter]);
+function createPropertyPhotoElement(propertyIdentifier, propertyPhoto) {
+    const {propertyPhotoId, fileData, fileName, fileType} = propertyPhoto;
+    const detailsElement = $(`.property-details-container.${propertyIdentifier}`);
     const photoElement = $('<div class="property-photo"></div>');
     const imageElement = $('<img alt="" src="" class="property-image">');
     const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
-    const currentPhotoId = $(this).attr('data-photo-id');
-    const changeImageElement = $(
+    const photoId = $(this).attr('data-photo-id');
+    const changeImageElement = $( //TODO
         `<form method="POST" class="upload-photo" action="<c:url value='/api/property/test'/>" enctype="multipart/form-data">
-            <input type="hidden" name="propertyPhotoId" value="${currentPhotoId}"/> 
+            <input type="hidden" name="propertyPhotoId" value="${photoId}"/> 
             <label>Select a file to upload
                 <input type="file" name="file" class="hidden"/>
             </label>
-<!--            <input type="submit" value="Submit" />-->
+            <input type="submit" value="Submit" class="hidden"/>
         </form>`
     );
     imageElement.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
@@ -126,12 +147,13 @@ function createPropertyPhotoElement(propertyCounter, propertyIdentifier, propert
     propertyPhotoElementArray.push($(photoElement[0]));
 }
 
-function createPropertyDetailsTableElement(propertyCounter, propertyIdentifier, isAvailable, propertyTypeName, propertyAddressId, city, country, postalCode, province, region, street) {
-    const detailsElement = $(propertyDetailsElementArray[propertyCounter]);
-    const addressElement = $('<div class="property-details">');
+function createPropertyAddressElement(propertyIdentifier, isAvailable, propertyTypeName, propertyAddress) {
+    const {propertyAddressId, city, country, postalCode, province, region, street} = propertyAddress;
+    const detailsElement = $(`.property-details-container.${propertyIdentifier}`);
+    const addressElement = $('<div class="property-address">');
     let isAvailableToString = (isAvailable) ? 'Yes' : 'No';
     const addressDetailsTableElement = $(
-        `<table class="address-details">
+        `<table class="property-address-table">
             <tbody>
                 <tr><th>Available: </th><td><input value="${isAvailableToString}"></td></tr>
                 <tr><th>Type: </th><td><input value="${propertyTypeName}"></td></tr>
@@ -146,11 +168,12 @@ function createPropertyDetailsTableElement(propertyCounter, propertyIdentifier, 
     detailsElement.append(addressElement.append(addressDetailsTableElement));
 }
 
-function createPropertyDescriptionElement(propertyCounter, propertyIdentifier, propertyDescriptionId, descriptionText) {
-    const detailsElement = $(propertyDetailsElementArray[propertyCounter]);
+function createPropertyDescriptionElement(propertyIdentifier, propertyDescription) {
+    const {propertyDescriptionId, descriptionText} = propertyDescription;
+    const detailsElement = $(`.property-details-container.${propertyIdentifier}`);
     const descriptionElement = $('<div class="property-description">');
     const descriptionTextElement = $(
-        `<table class="description-table">
+        `<table class="property-description-table">
             <tbody>
                 <tr><th>Description</th></tr>
                 <tr><td><textarea class="description-text">${descriptionText}</textarea></td></tr>
@@ -160,12 +183,25 @@ function createPropertyDescriptionElement(propertyCounter, propertyIdentifier, p
     detailsElement.append(descriptionElement.append(descriptionTextElement));
 }
 
-function createFullCalendarElement(propertyCounter, propertyIdentifier, calendarIdentifier) {
-    const propertyCard = $(propertyCardElementArray[propertyCounter]);
-    const calendarElement = $(`<div id='${calendarIdentifier}' data-property-id='${propertyIdentifier}' class='${calendarIdentifier}'></div>`);
-    propertyCard.append(calendarElement);
+function setCurrentCalendar() {
+    let nameTabCalendarIdentifierClassName = this.classList[2];
+    propertyCalendarArray.forEach(calendar => {
+        const calendarDataPropertyId = calendar.el.classList[1];
+        if (nameTabCalendarIdentifierClassName === calendarDataPropertyId) {
+            currentCalendar = calendar;
+        }
+    });
+}
 
-    let calendar = new FullCalendar.Calendar(document.querySelector(`.${calendarIdentifier}`), {
+function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar) {
+    const {propertyCalendarId, events} = propertyCalendar;
+    const propertyCard = $(`.property-card.${propertyIdentifier}`);
+    const calendarElement = $(`<div id='${calendarIdentifier}' class='property-calendar'></div>`);
+    calendarElement.attr('data-property-calendar-id', propertyCalendarId)
+    calendarElement.addClass(calendarIdentifier);
+    propertyCard.get(0).append(calendarElement.get(0));
+
+    let calendar = new FullCalendar.Calendar(calendarElement.get(0), {
         initialView: 'dayGridMonth',
         titleRangeSeparator: ' \u2013 ',
         height: "auto",
@@ -187,7 +223,7 @@ function createFullCalendarElement(propertyCounter, propertyIdentifier, calendar
             year: 'numeric'
         },
         // display: 'block',
-        displayEventTime : false,
+        displayEventTime: false,
         eventTextColor: 'white',
         events: [
             {
@@ -198,100 +234,100 @@ function createFullCalendarElement(propertyCounter, propertyIdentifier, calendar
                 extendedProps: {
                     propertyId: '',
                     calendarId: '',
-                    booking: {
-                        id: '',
-                        customer: {
-                            name: '',
-                            surname: '',
-                            phone: '',
-                        },
-                        additionalInfo: '',
+                    additionalInfo: '',
+                    customer: {
+                        name: '',
+                        surname: '',
+                        phone: '',
                     }
                 },
             }
         ],
         select: function (selectionInfo) {
-            // ADD EVENT MODAL DISPLAY TOGGLE
             eventModal.modal('toggle');
-            //SET EVENT START & END VALUES
-            selectionInfoEventStart = selectionInfo.start;
-            selectionInfoEventEnd = selectionInfo.end;
+            selectionInfoEventStart = selectionInfo.startStr;
+            selectionInfoEventEnd = selectionInfo.endStr;
         },
-        eventClick: function (info) {
-          console.log(info.event);
+        eventClick: function (info) { //TODO event modal
+            console.log(info.event);
         }
     });
-    if (propertyCounter === 0){
+    if (calendar.el.getAttribute('id') === 'calendar-0') {
         currentCalendar = calendar;
     }
+
+    events.forEach(event => {
+        const {eventId, tittle, start, end, customer, additionalInfo} = event;
+        const dbEvent = new Event();
+        dbEvent.id = eventId;
+        dbEvent.title = tittle;
+        dbEvent.start = start;
+        dbEvent.end = end;
+        dbEvent.calendarId = propertyCalendarId;
+        dbEvent.additionalInfo = additionalInfo
+        dbEvent.customer = customer;
+
+        calendar.addEvent(dbEvent)
+    });
+
     propertyCalendarArray.push(calendar);
     calendar.render();
 }
 
-
 ///////////////////////// THINGS THAT 50% OF THE TIME WORK EVERY TIME A.K.A TESTS //////////////////////////////////////
 
-function addBooking() {
-    const calendar = currentCalendar;
 
-    class Event {
-        constructor(id, title, start, end, bookingId, customerName, customerSurname, customerPhone, additionalInfo) {
-            this.id = id;
-            this.title = title;
-            this.start = start;
-            this.end = end;
-            this.booking = {
-                id: bookingId,
-                customer: {
-                    name: customerName,
-                    surname: customerSurname,
-                    phone: customerPhone,
-                },
-                additionalInfo: additionalInfo
-            }
-        }
+
+
+async function saveEventToDatabaseAndAddCalendarEvent(e) {
+    e.preventDefault();
+
+    const currentCalendarId = $(currentCalendar).get(0).el.getAttribute('data-property-calendar-id');
+    const addEventFormData = new FormData(addEventForm.get(0));
+    addEventFormData.append('start', selectionInfoEventStart);
+    addEventFormData.append('end', selectionInfoEventEnd);
+    addEventFormData.append('calendarId', currentCalendarId);
+    let eventForm = {};
+    for (let [key, value] of addEventFormData.entries()) {
+        eventForm[key] = value;
     }
 
-    const eventId = '1' //save to db and retrieve the id
-    const eventTitle = $('.add-event-booking-tittle').val();
-    const eventBookingId = 'event booking id' //save to db and retrieve the id
-    const eventBookingCustomerName = $('.add-event-customer-name').val();
-    const eventBookingCustomerSurname = $('.add-event-customer-surname').val();
-    const eventBookingCustomerPhone = $('.add-event-customer-phone').val();
-    const eventBookingAdditionalInfo = $('.add-event-additional-info').val();
-
-    let event = new Event(
-        eventId,
-        eventTitle,
-        selectionInfoEventStart,
-        selectionInfoEventEnd,
-        eventBookingId,
-        eventBookingCustomerName,
-        eventBookingCustomerSurname,
-        eventBookingCustomerPhone,
-        eventBookingAdditionalInfo
-    );
-    eventModal.modal('toggle');
-    calendar.addEvent(event);
-}
-
-function setCurrentCalendar(){
-    let nameTabPropertyDataId = this.getAttribute('data-property-id');
-    propertyCalendarArray.forEach(calendar => {
-        const calendarDataPropertyId = calendar.el.getAttribute('data-property-id');
-        if (nameTabPropertyDataId === calendarDataPropertyId){
-            currentCalendar = calendar;
+     $.ajax({
+        type: 'POST',
+        url: 'http://localhost:8080/api/calendar/save-event-to-database',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        data: JSON.stringify(eventForm),
+        success: function (response){
+            console.log(response);
         }
     });
+
+
 }
 
+// function addCalendarEvent(propertyCalendarId, event){
+//     const {eventId, tittle, start, end, customer, additionalInfo} = event;
+//     const dbEvent = new Event();
+//     dbEvent.id = eventId;
+//     dbEvent.title = tittle;
+//     dbEvent.start = start;
+//     dbEvent.end = end;
+//     dbEvent.propertyId = "propertyId"  // TODO
+//     dbEvent.calendarId = propertyCalendarId;
+//     dbEvent.additionalInfo = additionalInfo
+//     dbEvent.customer = customer;
+//
+//     calendar.addEvent(dbEvent)
+// }
 
-document.addEventListener('click', function (){
-    console.log(propertyCalendarArray[0]);
-})
 
-
-
+// document.addEventListener('click', function () {
+//     console.log(currentCalendar);
+//     // console.log(propertyCalendarArray);
+// });
 
 
 

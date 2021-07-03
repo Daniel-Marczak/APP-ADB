@@ -9,10 +9,10 @@ import pl.danielmarczak.adb.entity.CurrentUser;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/user")
-public class RoleUserController {
+@RequestMapping("/properties")
+public class PropertyController {
 
-    @GetMapping("/properties")
+    @GetMapping("/user-properties")
     public String showUserProperties(@AuthenticationPrincipal CurrentUser currentUser, HttpServletRequest request){
         request.setAttribute("userId", currentUser.getUser().getId());
         return "role_user/properties";

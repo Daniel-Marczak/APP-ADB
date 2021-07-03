@@ -2,18 +2,21 @@ package pl.danielmarczak.adb.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "property_rooms")
+@Table(name = "properties_rooms")
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class PropertyRoom extends AbstractEntity{
+public class PropertyRoom {
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "property_id", referencedColumnName = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false, name = "property_room_id")
+    private Long propertyRoomId;
+
+    @ManyToOne
+    @JoinColumn(name = "property_id", referencedColumnName = "property_id")
     @JsonIgnoreProperties("propertyRooms")
     private Property property;
 

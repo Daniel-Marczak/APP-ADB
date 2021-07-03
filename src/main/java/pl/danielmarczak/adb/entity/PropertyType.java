@@ -1,16 +1,20 @@
 package pl.danielmarczak.adb.entity;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-
+import javax.persistence.*;
 
 
 @Entity
+@Table(name = "properties_types")
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class PropertyType extends AbstractEntity{
+public class PropertyType {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false, name = "property_type_id")
+    private Long propertyTypeId;
 
     private String propertyTypeName;
 }

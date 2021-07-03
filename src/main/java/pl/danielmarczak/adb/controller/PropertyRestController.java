@@ -37,6 +37,7 @@ public class PropertyRestController {
             if (property.getUser() != null) {
                 property.getUser().setPassword("");
                 property.getUser().setRole(new Role());
+                property.getUser().setId(null);
             }
         });
         //TODO hideSensitiveUserData()
