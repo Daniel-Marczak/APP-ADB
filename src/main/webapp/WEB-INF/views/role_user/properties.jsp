@@ -52,19 +52,16 @@
 </footer>
 
 <!-- ADD EVENT MODAL -->
-<div tabindex="-1" class="modal add-booking-modal" role="dialog" aria-hidden="true">
+<div tabindex="-1" class="modal add-event-modal" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4>Please specify booking details
-<%--                    <i class="fa fa-info-circle"></i>--%>
-                </h4>
+                <h4>Please specify booking details</h4>
             </div>
             <div class="modal-body">
                 <form method="post" id="add-event-form">
-                    <input type="hidden">
                     <label>Booking tittle:
-                        <input type="text" name="tittle" class="add-event-booking-tittle"/>
+                        <input type="text" name="title" class="add-event-title"/>
                     </label>
                     <label>Customer name:
                         <input type="text" name="customerName" class="add-event-customer-name"/>
@@ -79,7 +76,42 @@
                         <textarea name="additionalInfo" class="add-event-additional-info"></textarea>
                     </label>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-block add-booking-btn">Add booking</button>
+                        <button type="submit" class="btn btn-primary btn-block add-event-btn">Add booking</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT EVENT MODAL -->
+<div tabindex="-1" class="modal edit-event-modal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header">
+                    <button type="submit" class="btn btn-danger btn-block cancel-booking-btn">Cancel booking</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="edit-event-form" >
+                    <label>Booking tittle:
+                        <input type="text" name="tittle" class="event-title-edit"/>
+                    </label>
+                    <label>Customer name:
+                        <input type="text" name="customerName" class="event-customer-name-edit"/>
+                    </label>
+                    <label>Customer surname:
+                        <input type="text" name="customerSurname" class="event-customer-surname-edit"/>
+                    </label>
+                    <label>Customer phone:
+                        <input type="text" name="customerPhone" class="event-customer-phone-edit"/>
+                    </label>
+                    <label>Additional info:
+                        <textarea name="additionalInfo" class="event-additional-info-edit"></textarea>
+                    </label>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-block save-event-changes-btn">Save changes</button>
                     </div>
                 </form>
             </div>

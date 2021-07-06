@@ -1,9 +1,6 @@
 package pl.danielmarczak.adb.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -25,40 +22,31 @@ public class Property {
     private String propertyName;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties("properties")
+    @JoinColumn(name = "fk_user_id")
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "property_address_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties("property")
+    @JoinColumn(name = "fk_address_id")
     private PropertyAddress propertyAddress;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "description_id", referencedColumnName = "property_description_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties("property")
+    @JoinColumn(name = "fk_description_id")
     private PropertyDescription propertyDescription;
 
     @ManyToOne
-    @JoinColumn(name = "property_type_id")
+    @JoinColumn(name = "fk_type_id")
     private PropertyType propertyType;
 
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties("property")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_room_id")
     private List<PropertyRoom> propertyRooms;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "photo_id", referencedColumnName = "property_photo_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties("property")
+    @JoinColumn(name = "fk_photo_id")
     private PropertyPhoto propertyPhoto;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "property_calendar_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "fk_calendar_id")
     private PropertyCalendar propertyCalendar;
 
     private Boolean isAvailable;

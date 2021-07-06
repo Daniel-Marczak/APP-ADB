@@ -4,5 +4,7 @@ import pl.danielmarczak.adb.entity.PropertyPhoto;
 
 public interface PropertyPhotoService {
 
-    PropertyPhoto getPropertyPhoto(Long propertyPhotoId);
+    PropertyPhoto getPropertyPhotoById(Long propertyPhotoId);
+
+    void savePropertyPhoto(PropertyPhoto propertyPhoto);
 }

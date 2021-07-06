@@ -1,28 +1,40 @@
 ///////////////////////////////////////////////////// VARIABLES ////////////////////////////////////////////////////////
 
 const propertiesContainer = $('.properties-container');
-let propertyDetailsElementArray = [];
-let propertyPhotoElementArray = [];
-let propertyCalendarArray = [];
+let propertyCalendarArray = [];//TODO
 
-const eventModal = $('.add-booking-modal');
-const addBookingBtn = $('.add-booking-btn');
-addBookingBtn.on('click', function (e){
-    eventModal.modal('toggle');
-});
+const addEventModal = $('.add-event-modal');
+const addEventForm = $('#add-event-form');
+addEventForm.on('submit', saveEventToDatabaseAndAddEventToCalendar);
+
+const editEventModal = $('.edit-event-modal');
+const editEventForm = $('#edit-event-form');
+editEventForm.on('submit', updateEventDataInDatabase)
+
 
 let currentCalendar;
 let selectionInfoEventStart;
 let selectionInfoEventEnd;
 
-const addEventForm = $('#add-event-form');
-addEventForm.on('submit', saveEventToDatabaseAndAddCalendarEvent);
+let currentEvent;
+let cancelBookingBtn = $('.cancel-booking-btn');
+cancelBookingBtn.on('click', deleteEventFromPropertyCalendar)
+
 
 ////////////////////////////////////////////////////// CLASSES /////////////////////////////////////////////////////////
 
+class Customer {
+    constructor(customerID, customerName, customerSurname, customerPhone) {
+        this.customerID = customerID;
+        this.customerName = customerName;
+        this.customerSurname = customerSurname;
+        this.customerPhone = customerPhone;
+    }
+}
+
 class Event {
-    constructor(id, title, start, end, calendarId, customer, additionalInfo) {
-        this.id = id;
+    constructor(eventId, title, start, end, calendarId, customer, additionalInfo) {
+        this.eventId = eventId;
         this.title = title;
         this.start = start;
         this.end = end;
@@ -52,11 +64,8 @@ function getAllPropertiesByUserId() {
                 propertyType,
                 user
             } = property
-            console.log(property);
 
-            const {propertyTypeId, propertyTypeName} = propertyType;
             const {contactNumber, email, username} = user;
-
             let propertyIdentifier = `property-${propertyCounter}`;
             let calendarIdentifier = `calendar-${propertyCounter}`;
 
@@ -65,7 +74,7 @@ function getAllPropertiesByUserId() {
             createFullCalendarElement(propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
             createPropertyDetailsElement(propertyIdentifier);
             createPropertyPhotoElement(propertyIdentifier, propertyPhoto);
-            createPropertyAddressElement(propertyIdentifier, isAvailable, propertyTypeName, propertyAddress);
+            createPropertyAddressElement(propertyIdentifier, isAvailable, propertyType, propertyAddress);
             createPropertyDescriptionElement(propertyIdentifier, propertyDescription);
 
             propertyCounter++
@@ -121,17 +130,16 @@ function createPropertyDetailsElement(propertyIdentifier) {
     const detailsElement = $('<div class="property-details-container"></div>');
     detailsElement.addClass(propertyIdentifier);
     cardElement.append(detailsElement);
-    propertyDetailsElementArray.push($(detailsElement[0]).context);
 }
 
-function createPropertyPhotoElement(propertyIdentifier, propertyPhoto) {
+function createPropertyPhotoElement(propertyIdentifier, propertyPhoto) { //TODO
     const {propertyPhotoId, fileData, fileName, fileType} = propertyPhoto;
     const detailsElement = $(`.property-details-container.${propertyIdentifier}`);
     const photoElement = $('<div class="property-photo"></div>');
     const imageElement = $('<img alt="" src="" class="property-image">');
     const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
     const photoId = $(this).attr('data-photo-id');
-    const changeImageElement = $( //TODO
+    const changeImageElement = $(
         `<form method="POST" class="upload-photo" action="<c:url value='/api/property/test'/>" enctype="multipart/form-data">
             <input type="hidden" name="propertyPhotoId" value="${photoId}"/> 
             <label>Select a file to upload
@@ -144,10 +152,10 @@ function createPropertyPhotoElement(propertyIdentifier, propertyPhoto) {
     imageElement.attr('data-photo-id', propertyPhotoId);
     imageElement.addClass(propertyIdentifier);
     detailsElement.append(photoElement.append(changeImageElement).append(imageElement));
-    propertyPhotoElementArray.push($(photoElement[0]));
 }
 
-function createPropertyAddressElement(propertyIdentifier, isAvailable, propertyTypeName, propertyAddress) {
+function createPropertyAddressElement(propertyIdentifier, isAvailable, propertyType, propertyAddress) {
+    const {propertyTypeId, propertyTypeName} = propertyType;
     const {propertyAddressId, city, country, postalCode, province, region, street} = propertyAddress;
     const detailsElement = $(`.property-details-container.${propertyIdentifier}`);
     const addressElement = $('<div class="property-address">');
@@ -206,8 +214,8 @@ function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdent
         titleRangeSeparator: ' \u2013 ',
         height: "auto",
         contentHeight: "auto",
-        editable: true,
         selectable: true,
+        selectOverlap: false,
         fixedWeekCount: true,
         firstDay: 1,
         weekNumbers: true,
@@ -224,7 +232,6 @@ function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdent
         },
         // display: 'block',
         displayEventTime: false,
-        eventTextColor: 'white',
         events: [
             {
                 id: '',
@@ -243,91 +250,227 @@ function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdent
                 },
             }
         ],
+        eventTextColor: 'white',
+        editable: true,
+        dragScroll: true,
+        eventOverlap: false,
+        eventStartEditable: true,
+        eventResizableFromStart: true,
         select: function (selectionInfo) {
-            eventModal.modal('toggle');
+            addEventModal.modal('toggle');
             selectionInfoEventStart = selectionInfo.startStr;
             selectionInfoEventEnd = selectionInfo.endStr;
         },
-        eventClick: function (info) { //TODO event modal
-            console.log(info.event);
-        }
+        eventClick: function (eventInfo) { //TODO event modal
+            console.log(eventInfo);
+            showEditEventModalWIthEventData(eventInfo);
+        },
+        eventDrop: function (eventDropInfo) {
+            console.log(eventDropInfo);
+            updateEventStartAndEndDates(eventDropInfo);
+        },
+        eventResize: function (eventResizeInfo) {
+            console.log(eventResizeInfo);
+            updateEventStartAndEndDates(eventResizeInfo);
+        },
     });
     if (calendar.el.getAttribute('id') === 'calendar-0') {
         currentCalendar = calendar;
     }
 
     events.forEach(event => {
-        const {eventId, tittle, start, end, customer, additionalInfo} = event;
-        const dbEvent = new Event();
-        dbEvent.id = eventId;
-        dbEvent.title = tittle;
-        dbEvent.start = start;
-        dbEvent.end = end;
-        dbEvent.calendarId = propertyCalendarId;
-        dbEvent.additionalInfo = additionalInfo
-        dbEvent.customer = customer;
-
-        calendar.addEvent(dbEvent)
+        addEventToCalendar(event, calendar);
     });
 
     propertyCalendarArray.push(calendar);
     calendar.render();
 }
 
-///////////////////////// THINGS THAT 50% OF THE TIME WORK EVERY TIME A.K.A TESTS //////////////////////////////////////
-
-
-
-
-async function saveEventToDatabaseAndAddCalendarEvent(e) {
+function saveEventToDatabaseAndAddEventToCalendar(e) {
     e.preventDefault();
+    addEventModal.modal('toggle');
 
-    const currentCalendarId = $(currentCalendar).get(0).el.getAttribute('data-property-calendar-id');
-    const addEventFormData = new FormData(addEventForm.get(0));
-    addEventFormData.append('start', selectionInfoEventStart);
-    addEventFormData.append('end', selectionInfoEventEnd);
-    addEventFormData.append('calendarId', currentCalendarId);
-    let eventForm = {};
-    for (let [key, value] of addEventFormData.entries()) {
-        eventForm[key] = value;
-    }
+    const customer = new Customer();
+    customer.customerID = null;
+    customer.customerName = addEventForm.find('input.add-event-customer-name').val();
+    customer.customerSurname = addEventForm.find('input.add-event-customer-surname').val();
+    customer.customerPhone = addEventForm.find('input.add-event-customer-phone').val();
 
-     $.ajax({
+    const event = new Event();
+    event.eventId = null;
+    event.title = addEventForm.find('input.add-event-title').val();
+    event.start = selectionInfoEventStart;
+    event.end = selectionInfoEventEnd;
+    event.calendarId = getCurrentCalendarId();
+    event.additionalInfo = addEventForm.find('textarea.add-event-additional-info').val();
+    event.customer = customer;
+    console.log(event);
+    console.log(event.customer);
+
+    $.ajax({
         type: 'POST',
-        url: 'http://localhost:8080/api/calendar/save-event-to-database',
+        url: 'http://localhost:8080/api/event/add-event-to-property-calendar',
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
         },
-        data: JSON.stringify(eventForm),
-        success: function (response){
+        data: JSON.stringify(event),
+        success: function (event) {
+            addEventToCalendar(event, currentCalendar);
+        },
+        dataType: 'json',
+        error: function (data) {
+            console.log(data);
+        }
+    });
+}
+
+function addEventToCalendar(event, calendar) {
+    const {eventId, title, start, end, customer, additionalInfo} = event;
+    const calendarId = $(calendar).get(0).el.getAttribute('data-property-calendar-id');
+    const dbEvent = new Event();
+    dbEvent.eventId = eventId;
+    dbEvent.title = title;
+    dbEvent.start = start;
+    dbEvent.end = end;
+    dbEvent.additionalInfo = additionalInfo;
+    dbEvent.customer = customer;
+    dbEvent.calendarId = calendarId;
+    calendar.addEvent(dbEvent);
+}
+
+function updateEventStartAndEndDates(eventInfo) {
+    console.log(eventInfo);
+    const eventId = eventInfo.event._def.extendedProps.eventId;
+    const start = eventInfo.event.startStr;
+    const end = eventInfo.event.endStr;
+    $.ajax({
+        url: `http://localhost:8080/api/event/update-event-start-and-end-dates/${eventId}/${start}/${end}`,
+        type: 'PUT',
+        success: function (response) {
             console.log(response);
+            if (response === false || response === null) {
+                eventInfo.revert();
+            }
         }
     });
 
-
 }
 
-// function addCalendarEvent(propertyCalendarId, event){
-//     const {eventId, tittle, start, end, customer, additionalInfo} = event;
-//     const dbEvent = new Event();
-//     dbEvent.id = eventId;
-//     dbEvent.title = tittle;
-//     dbEvent.start = start;
-//     dbEvent.end = end;
-//     dbEvent.propertyId = "propertyId"  // TODO
-//     dbEvent.calendarId = propertyCalendarId;
-//     dbEvent.additionalInfo = additionalInfo
-//     dbEvent.customer = customer;
-//
-//     calendar.addEvent(dbEvent)
-// }
+function showEditEventModalWIthEventData(eventInfo) {
+    editEventModal.modal('toggle');
+    currentEvent = eventInfo.event;
+    const title = eventInfo.event._def.title;
+    const {customerName, customerSurname, customerPhone} = eventInfo.event._def.extendedProps.customer;
+    const additionalInfo = eventInfo.event._def.extendedProps.additionalInfo;
+    editEventForm.find('input.event-title-edit').val(title);
+    editEventForm.find('input.event-customer-name-edit').val(customerName);
+    editEventForm.find('input.event-customer-surname-edit').val(customerSurname);
+    editEventForm.find('input.event-customer-phone-edit').val(customerPhone);
+    editEventForm.find('textarea.event-additional-info-edit').val(additionalInfo);
+}
+
+function getCurrentCalendarId() {
+    return $(currentCalendar).get(0).el.getAttribute('data-property-calendar-id');
+}
+
+function getCurrentEventData() {
+    return {
+        eventId: currentEvent._def.extendedProps.eventId,
+        title: currentEvent.title,
+        start: currentEvent.startStr,
+        end: currentEvent.endStr,
+        calendarId: currentEvent._def.extendedProps.calendarId,
+        additionalInfo: currentEvent._def.extendedProps.additionalInfo,
+        customer: currentEvent._def.extendedProps.customer
+    };
+}
+
+function updateEventDataInDatabase(e) {
+    e.preventDefault();
+    const currentEventData = getCurrentEventData();
+    const {customerId} = currentEventData.customer;
+    const customer = new Customer();
+    customer.customerId = customerId;
+    customer.customerName = editEventForm.find('input.event-customer-name-edit').val();
+    customer.customerSurname = editEventForm.find('input.event-customer-surname-edit').val();
+    customer.customerPhone = editEventForm.find('input.event-customer-phone-edit').val();
+    const event = new Event();
+    event.eventId = currentEventData.eventId;
+    event.title = editEventForm.find('input.event-title-edit').val();
+    event.start = currentEventData.start;
+    event.end = currentEventData.end;
+    event.calendarId = currentEventData.calendarId;
+    event.additionalInfo = editEventForm.find('textarea.event-additional-info-edit').val();
+    event.customer = customer;
+
+    $.ajax({
+        type: 'PUT',
+        url: 'http://localhost:8080/api/event/update-event-data-in-database',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        data: JSON.stringify(event),
+        success: function (event) {
+            console.log(event);
+        },
+        dataType: 'json',
+        error: function (data) {
+            console.log(data);
+        }
+    });
+    editEventModal.modal('toggle');//TODO
+}
+
+function deleteEventFromPropertyCalendar() {
+    const currentEventData = getCurrentEventData();
+    const currentEventId = currentEventData.eventId;
+    $.ajax({
+        type: 'DELETE',
+        url: `http://localhost:8080/api/event/delete-event-from-property-calendar/${currentEventId}`,
+        success: function (response) {
+            editEventModal.modal('toggle');
+            currentEvent.remove();
+        },
+        error: function (data) {
+            console.log(data);
+        }
+    });
+}
+
+//TODO add this to 'add property form' and 'change property photo'
+function addPropertyPhoto() {
+    const formToSubmit = $('#upload-form').get(0);
+
+    $(formToSubmit).on('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(formToSubmit);
+
+        $.ajax({
+            url: 'http://localhost:8080/api/property/upload-property-photo',
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            success: function (response) {
+                console.log(response);
+            }
+        });
+    })
+}
+
+///////////////////////// CODE THAT 50% OF THE TIME WORKS EVERY TIME //////////////////////////////////////
 
 
 // document.addEventListener('click', function () {
 //     console.log(currentCalendar);
 //     // console.log(propertyCalendarArray);
 // });
+
 
 
 

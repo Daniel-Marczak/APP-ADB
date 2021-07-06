@@ -1,15 +1,12 @@
 package pl.danielmarczak.adb.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "customers")
 @Data
-@NoArgsConstructor
 public class Customer {
 
     @Id
@@ -20,9 +17,5 @@ public class Customer {
     private String customerName;
     private String customerSurname;
     private String customerPhone;
-
-    @OneToOne(mappedBy = "customer")
-    @JsonIgnoreProperties("customer")
-    private Event event;
 
 }

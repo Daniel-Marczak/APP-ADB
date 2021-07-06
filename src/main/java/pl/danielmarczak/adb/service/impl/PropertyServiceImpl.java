@@ -24,4 +24,14 @@ public class PropertyServiceImpl implements PropertyService {
     public List<Property> getAllByUserId(Long userId) {
         return propertyRepository.getAllByUserId(userId).orElse(new ArrayList<>());
     }
+
+    @Override
+    public Property getPropertyById(Long propertyId) {
+        return propertyRepository.getOne(propertyId);
+    }
+
+    @Override
+    public void saveProperty(Property property) {
+        propertyRepository.save(property);
+    }
 }

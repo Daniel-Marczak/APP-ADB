@@ -1,40 +1,31 @@
 package pl.danielmarczak.adb.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.bind.annotation.*;
-import pl.danielmarczak.adb.entity.Customer;
-import pl.danielmarczak.adb.entity.Event;
-import pl.danielmarczak.adb.model.EventForm;
 import pl.danielmarczak.adb.service.CustomerService;
 import pl.danielmarczak.adb.service.EventService;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import pl.danielmarczak.adb.service.PropertyCalendarService;
 
 
 @RestController
 @RequestMapping("/api/calendar")
 public class PropertyCalendarRestController {
 
+    protected Log logger = LogFactory.getLog(this.getClass());
     private final EventService eventService;
     private final CustomerService customerService;
+    private final PropertyCalendarService propertyCalendarService;
 
-    public PropertyCalendarRestController(EventService eventService, CustomerService customerService) {
+    public PropertyCalendarRestController(EventService eventService, CustomerService customerService, PropertyCalendarService propertyCalendarService) {
         this.eventService = eventService;
         this.customerService = customerService;
+        this.propertyCalendarService = propertyCalendarService;
     }
 
-    @PostMapping(value = "/save-event-to-database", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> saveEventToDB(@RequestBody EventForm eventForm) throws JsonProcessingException {
-        Customer newCustomer = customerService.createCustomerFromEventFormData(eventForm);
-        customerService.saveCustomer(newCustomer);
-        Event newEvent = eventService.createEventFromEventFormData(eventForm, newCustomer);
-        eventService.saveEvent(newEvent);
 
-        return new ResponseEntity<>("event", HttpStatus.OK);
 
-    }
+
 
 
 }

@@ -40,7 +40,7 @@ public class WebAppConfig implements WebMvcConfigurer {
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(100000);
+        multipartResolver.setMaxUploadSize(500000);
         multipartResolver.setDefaultEncoding("UTF-8");
         return multipartResolver;
     }

@@ -1,6 +1,5 @@
 package pl.danielmarczak.adb.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,11 +13,6 @@ public class PropertyRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false, name = "property_room_id")
     private Long propertyRoomId;
-
-    @ManyToOne
-    @JoinColumn(name = "property_id", referencedColumnName = "property_id")
-    @JsonIgnoreProperties("propertyRooms")
-    private Property property;
 
     private String roomName;
 }

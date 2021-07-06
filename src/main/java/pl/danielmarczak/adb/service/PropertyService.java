@@ -8,4 +8,8 @@ public interface PropertyService {
 
     List<Property> getAllByUserId(Long userId);
 
+    Property getPropertyById(Long propertyId);
+
+    void saveProperty(Property property);
+
 }
