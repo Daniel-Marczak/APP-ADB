@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.danielmarczak.adb.entity.Event;
 import pl.danielmarczak.adb.service.EventService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/event")
@@ -16,6 +18,11 @@ public class EventRestController {
 
     public EventRestController(EventService eventService) {
         this.eventService = eventService;
+    }
+
+    @GetMapping("/get-calendar-events/{calendarId}")
+    public List<Event> getAllEventsByCalendarId(@PathVariable Long calendarId){
+        return eventService.getAllEventsByCalendarId(calendarId);
     }
 
     @PostMapping(value = "/add-event-to-property-calendar")
@@ -30,9 +37,8 @@ public class EventRestController {
     }
 
     @PutMapping(value = "/update-event-data-in-database")
-    public Boolean updateEventDataInDatabase(@RequestBody Event event) {
-        eventService.saveEvent(event);
-        return true; //TODO
+    public Event updateEventDataInDatabase(@RequestBody Event event) {
+        return eventService.saveEvent(event);
     }
 
     @DeleteMapping("/delete-event-from-property-calendar/{eventId}")

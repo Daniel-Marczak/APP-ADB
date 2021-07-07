@@ -12,7 +12,7 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
-    private Long eventId;
+    private Long id;
 
     private String title;
     private String start;
@@ -25,7 +25,8 @@ public class Event {
 
     private String additionalInfo;
 
-    @Transient
-    private Long calendarId;
+    @ManyToOne
+    @JoinColumn(name = "fk_property_calendar_id")
+    private PropertyCalendar propertyCalendar;
 
 }

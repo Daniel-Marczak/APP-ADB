@@ -33,8 +33,8 @@ class Customer {
 }
 
 class Event {
-    constructor(eventId, title, start, end, calendarId, customer, additionalInfo) {
-        this.eventId = eventId;
+    constructor(id, title, start, end, calendarId, customer, additionalInfo) {
+        this.id = id;
         this.title = title;
         this.start = start;
         this.end = end;
@@ -114,8 +114,16 @@ function createPropertyNameTabElement(propertyIdentifier, calendarIdentifier, pr
     const nameTabElement = $(`<div class="property-name-tab" ></div>`);
     const nameTextElement = $('<h3 style="margin-top: 0px"></h3>').text(propertyName);
     nameTabElement.addClass(`${propertyIdentifier}`).addClass(`${calendarIdentifier}`);
-    nameTabElement.on('click', displayPropertyCard).on('click', setCurrentCalendar);
+    nameTabElement.on('click', displayPropertyCard).on('click', setCurrentCalendar).on('click', renderPropertyCalendar);
     nameTabContainer.append(nameTabElement.append(nameTextElement));
+}
+
+function renderPropertyCalendar(){
+    propertyCalendarArray.forEach(calendar => {
+        if (calendar.el.getAttribute('id')){
+            calendar.render();
+        }
+    });
 }
 
 function createPropertyCardElement(propertyIdentifier) {
@@ -202,7 +210,7 @@ function setCurrentCalendar() {
 }
 
 function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar) {
-    const {propertyCalendarId, events} = propertyCalendar;
+    const {propertyCalendarId} = propertyCalendar;
     const propertyCard = $(`.property-card.${propertyIdentifier}`);
     const calendarElement = $(`<div id='${calendarIdentifier}' class='property-calendar'></div>`);
     calendarElement.attr('data-property-calendar-id', propertyCalendarId)
@@ -230,26 +238,14 @@ function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdent
             month: 'short',
             year: 'numeric'
         },
-        // display: 'block',
         displayEventTime: false,
-        events: [
-            {
-                id: '',
-                title: '',
-                start: '',
-                end: '',
-                extendedProps: {
-                    propertyId: '',
-                    calendarId: '',
-                    additionalInfo: '',
-                    customer: {
-                        name: '',
-                        surname: '',
-                        phone: '',
-                    }
-                },
-            }
-        ],
+        events: function (info, successCallback, failureCallback){  //TODO
+            $.get(`http://localhost:8080/api/event/get-calendar-events/${propertyCalendarId}`,function (events){
+                successCallback(
+                    events,
+                );
+            });
+        },
         eventTextColor: 'white',
         editable: true,
         dragScroll: true,
@@ -262,28 +258,23 @@ function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdent
             selectionInfoEventEnd = selectionInfo.endStr;
         },
         eventClick: function (eventInfo) { //TODO event modal
-            console.log(eventInfo);
+            // console.log(eventInfo);
             showEditEventModalWIthEventData(eventInfo);
         },
         eventDrop: function (eventDropInfo) {
-            console.log(eventDropInfo);
+            // console.log(eventDropInfo);
             updateEventStartAndEndDates(eventDropInfo);
         },
         eventResize: function (eventResizeInfo) {
-            console.log(eventResizeInfo);
+            // console.log(eventResizeInfo);
             updateEventStartAndEndDates(eventResizeInfo);
         },
     });
     if (calendar.el.getAttribute('id') === 'calendar-0') {
         currentCalendar = calendar;
+        calendar.render();
     }
-
-    events.forEach(event => {
-        addEventToCalendar(event, calendar);
-    });
-
     propertyCalendarArray.push(calendar);
-    calendar.render();
 }
 
 function saveEventToDatabaseAndAddEventToCalendar(e) {
@@ -297,16 +288,16 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
     customer.customerPhone = addEventForm.find('input.add-event-customer-phone').val();
 
     const event = new Event();
-    event.eventId = null;
+    event.id = null;
     event.title = addEventForm.find('input.add-event-title').val();
     event.start = selectionInfoEventStart;
     event.end = selectionInfoEventEnd;
-    event.calendarId = getCurrentCalendarId();
+    event.propertyCalendar = {
+        propertyCalendarId: getCurrentCalendarId(),
+    };
     event.additionalInfo = addEventForm.find('textarea.add-event-additional-info').val();
     event.customer = customer;
-    console.log(event);
-    console.log(event.customer);
-
+    
     $.ajax({
         type: 'POST',
         url: 'http://localhost:8080/api/event/add-event-to-property-calendar',
@@ -319,42 +310,41 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
             addEventToCalendar(event, currentCalendar);
         },
         dataType: 'json',
-        error: function (data) {
+        error: function (data) { //TODO
             console.log(data);
         }
     });
 }
 
+//TODO
 function addEventToCalendar(event, calendar) {
     const {eventId, title, start, end, customer, additionalInfo} = event;
     const calendarId = $(calendar).get(0).el.getAttribute('data-property-calendar-id');
     const dbEvent = new Event();
-    dbEvent.eventId = eventId;
+    dbEvent.id = eventId;
     dbEvent.title = title;
     dbEvent.start = start;
     dbEvent.end = end;
     dbEvent.additionalInfo = additionalInfo;
     dbEvent.customer = customer;
-    dbEvent.calendarId = calendarId;
+    dbEvent.propertyCalendar = {
+        propertyCalendarId: calendarId};
     calendar.addEvent(dbEvent);
 }
 
 function updateEventStartAndEndDates(eventInfo) {
-    console.log(eventInfo);
-    const eventId = eventInfo.event._def.extendedProps.eventId;
+    const eventId = eventInfo.event.id;
     const start = eventInfo.event.startStr;
     const end = eventInfo.event.endStr;
     $.ajax({
         url: `http://localhost:8080/api/event/update-event-start-and-end-dates/${eventId}/${start}/${end}`,
         type: 'PUT',
         success: function (response) {
-            console.log(response);
             if (response === false || response === null) {
                 eventInfo.revert();
             }
         }
     });
-
 }
 
 function showEditEventModalWIthEventData(eventInfo) {
@@ -375,32 +365,39 @@ function getCurrentCalendarId() {
 }
 
 function getCurrentEventData() {
+    const {propertyCalendar:{propertyCalendarId}} = currentEvent.extendedProps;
     return {
-        eventId: currentEvent._def.extendedProps.eventId,
+        id: currentEvent.id,
         title: currentEvent.title,
         start: currentEvent.startStr,
         end: currentEvent.endStr,
-        calendarId: currentEvent._def.extendedProps.calendarId,
-        additionalInfo: currentEvent._def.extendedProps.additionalInfo,
-        customer: currentEvent._def.extendedProps.customer
+        calendar: {
+            propertyCalendarId: propertyCalendarId
+        },
+        additionalInfo: currentEvent.extendedProps.additionalInfo,
+        customer: currentEvent.extendedProps.customer
     };
 }
 
+//TODO
 function updateEventDataInDatabase(e) {
     e.preventDefault();
     const currentEventData = getCurrentEventData();
     const {customerId} = currentEventData.customer;
+    const {propertyCalendarId} = currentEventData.calendar;
     const customer = new Customer();
     customer.customerId = customerId;
     customer.customerName = editEventForm.find('input.event-customer-name-edit').val();
     customer.customerSurname = editEventForm.find('input.event-customer-surname-edit').val();
     customer.customerPhone = editEventForm.find('input.event-customer-phone-edit').val();
     const event = new Event();
-    event.eventId = currentEventData.eventId;
+    event.id = currentEventData.id;
     event.title = editEventForm.find('input.event-title-edit').val();
     event.start = currentEventData.start;
     event.end = currentEventData.end;
-    event.calendarId = currentEventData.calendarId;
+    event.propertyCalendar = {
+        propertyCalendarId: propertyCalendarId
+    };
     event.additionalInfo = editEventForm.find('textarea.event-additional-info-edit').val();
     event.customer = customer;
 
@@ -413,19 +410,20 @@ function updateEventDataInDatabase(e) {
         },
         data: JSON.stringify(event),
         success: function (event) {
-            console.log(event);
+            console.log(event); //TODO update event info in calendar
+            // getEventById
         },
         dataType: 'json',
-        error: function (data) {
+        error: function (data) { //TODO
             console.log(data);
         }
     });
-    editEventModal.modal('toggle');//TODO
+    editEventModal.modal('toggle');
 }
 
 function deleteEventFromPropertyCalendar() {
     const currentEventData = getCurrentEventData();
-    const currentEventId = currentEventData.eventId;
+    const currentEventId = currentEventData.id;
     $.ajax({
         type: 'DELETE',
         url: `http://localhost:8080/api/event/delete-event-from-property-calendar/${currentEventId}`,
@@ -433,7 +431,7 @@ function deleteEventFromPropertyCalendar() {
             editEventModal.modal('toggle');
             currentEvent.remove();
         },
-        error: function (data) {
+        error: function (data) { //TODO
             console.log(data);
         }
     });
@@ -456,7 +454,7 @@ function addPropertyPhoto() {
             contentType: false,
             processData: false,
             method: 'POST',
-            success: function (response) {
+            success: function (response) { //TODO
                 console.log(response);
             }
         });
@@ -467,10 +465,12 @@ function addPropertyPhoto() {
 
 
 // document.addEventListener('click', function () {
-//     console.log(currentCalendar);
-//     // console.log(propertyCalendarArray);
+//     console.log();
 // });
 
+// document.addEventListener('contextmenu', function () {
+//     console.log();
+// });
 
 
 
