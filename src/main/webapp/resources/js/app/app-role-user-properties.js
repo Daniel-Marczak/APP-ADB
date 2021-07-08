@@ -11,10 +11,9 @@ const editEventModal = $('.edit-event-modal');
 const editEventForm = $('#edit-event-form');
 editEventForm.on('submit', updateEventDataInDatabase)
 
-
-let currentCalendar;
 let selectionInfoEventStart;
 let selectionInfoEventEnd;
+let selectionInfoCurrentCalendarId;
 
 let currentEvent;
 let cancelBookingBtn = $('.cancel-booking-btn');
@@ -71,7 +70,7 @@ function getAllPropertiesByUserId() {
 
             createPropertyNameTabElement(propertyIdentifier, calendarIdentifier, propertyName);
             createPropertyCardElement(propertyIdentifier);
-            createFullCalendarElement(propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
+            createFullCalendarElement(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
             createPropertyDetailsElement(propertyIdentifier);
             createPropertyPhotoElement(propertyIdentifier, propertyPhoto);
             createPropertyAddressElement(propertyIdentifier, isAvailable, propertyType, propertyAddress);
@@ -114,13 +113,13 @@ function createPropertyNameTabElement(propertyIdentifier, calendarIdentifier, pr
     const nameTabElement = $(`<div class="property-name-tab" ></div>`);
     const nameTextElement = $('<h3 style="margin-top: 0px"></h3>').text(propertyName);
     nameTabElement.addClass(`${propertyIdentifier}`).addClass(`${calendarIdentifier}`);
-    nameTabElement.on('click', displayPropertyCard).on('click', setCurrentCalendar).on('click', renderPropertyCalendar);
+    nameTabElement.on('click', displayPropertyCard).on('click', renderPropertyCalendar);
     nameTabContainer.append(nameTabElement.append(nameTextElement));
 }
 
-function renderPropertyCalendar(){
+function renderPropertyCalendar() {
     propertyCalendarArray.forEach(calendar => {
-        if (calendar.el.getAttribute('id')){
+        if (calendar.el.getAttribute('id')) {
             calendar.render();
         }
     });
@@ -199,17 +198,7 @@ function createPropertyDescriptionElement(propertyIdentifier, propertyDescriptio
     detailsElement.append(descriptionElement.append(descriptionTextElement));
 }
 
-function setCurrentCalendar() {
-    let nameTabCalendarIdentifierClassName = this.classList[2];
-    propertyCalendarArray.forEach(calendar => {
-        const calendarDataPropertyId = calendar.el.classList[1];
-        if (nameTabCalendarIdentifierClassName === calendarDataPropertyId) {
-            currentCalendar = calendar;
-        }
-    });
-}
-
-function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar) {
+function createFullCalendarElement(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar) {
     const {propertyCalendarId} = propertyCalendar;
     const propertyCard = $(`.property-card.${propertyIdentifier}`);
     const calendarElement = $(`<div id='${calendarIdentifier}' class='property-calendar'></div>`);
@@ -239,11 +228,14 @@ function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdent
             year: 'numeric'
         },
         displayEventTime: false,
-        events: function (info, successCallback, failureCallback){  //TODO
-            $.get(`http://localhost:8080/api/event/get-calendar-events/${propertyCalendarId}`,function (events){
+        events: function (info, successCallback, failureCallback) {
+            $.get(`http://localhost:8080/api/event/get-calendar-events/${propertyCalendarId}`, function (events) {
                 successCallback(
-                    events,
+                    events
                 );
+            }).error(function (error) {
+                const {responseJSON} = error
+                failureCallback(responseJSON)
             });
         },
         eventTextColor: 'white',
@@ -256,6 +248,7 @@ function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdent
             addEventModal.modal('toggle');
             selectionInfoEventStart = selectionInfo.startStr;
             selectionInfoEventEnd = selectionInfo.endStr;
+            selectionInfoCurrentCalendarId = selectionInfo.view.calendar.customContentRenderId;
         },
         eventClick: function (eventInfo) { //TODO event modal
             // console.log(eventInfo);
@@ -270,8 +263,8 @@ function createFullCalendarElement(propertyIdentifier, propertyId, calendarIdent
             updateEventStartAndEndDates(eventResizeInfo);
         },
     });
-    if (calendar.el.getAttribute('id') === 'calendar-0') {
-        currentCalendar = calendar;
+    calendar.customContentRenderId = propertyCalendarId;
+    if (propertyCounter === 0) {
         calendar.render();
     }
     propertyCalendarArray.push(calendar);
@@ -293,12 +286,12 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
     event.start = selectionInfoEventStart;
     event.end = selectionInfoEventEnd;
     event.propertyCalendar = {
-        propertyCalendarId: getCurrentCalendarId(),
+        propertyCalendarId: selectionInfoCurrentCalendarId,
     };
     event.additionalInfo = addEventForm.find('textarea.add-event-additional-info').val();
     event.customer = customer;
-    
-    $.ajax({
+
+        $.ajax({
         type: 'POST',
         url: 'http://localhost:8080/api/event/add-event-to-property-calendar',
         headers: {
@@ -307,7 +300,12 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
         },
         data: JSON.stringify(event),
         success: function (event) {
-            addEventToCalendar(event, currentCalendar);
+            if(event.id !== null){
+                addEventToCalendar(event);
+            } else {
+                //TODO error modal
+                console.log('event not saved');
+            }
         },
         dataType: 'json',
         error: function (data) { //TODO
@@ -317,20 +315,32 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
 }
 
 //TODO
-function addEventToCalendar(event, calendar) {
-    const {eventId, title, start, end, customer, additionalInfo} = event;
-    const calendarId = $(calendar).get(0).el.getAttribute('data-property-calendar-id');
+function addEventToCalendar(event) {
+    const {id, title, start, end, customer, propertyCalendar, additionalInfo} = event;
+    const {propertyCalendarId} = propertyCalendar;
+    const calendar = getCalendarByCustomContentRenderId(propertyCalendarId);
     const dbEvent = new Event();
-    dbEvent.id = eventId;
+    console.log(event);
+    dbEvent.id = id;
     dbEvent.title = title;
     dbEvent.start = start;
     dbEvent.end = end;
     dbEvent.additionalInfo = additionalInfo;
     dbEvent.customer = customer;
-    dbEvent.propertyCalendar = {
-        propertyCalendarId: calendarId};
+    dbEvent.propertyCalendar = propertyCalendar;
     calendar.addEvent(dbEvent);
 }
+
+function getCalendarByCustomContentRenderId(propertyCalendarId){
+    let calendar;
+    propertyCalendarArray.forEach(cal => {
+        if(propertyCalendarId === cal.customContentRenderId){
+            calendar = cal;
+        }
+    });
+    return calendar;
+}
+
 
 function updateEventStartAndEndDates(eventInfo) {
     const eventId = eventInfo.event.id;
@@ -360,12 +370,8 @@ function showEditEventModalWIthEventData(eventInfo) {
     editEventForm.find('textarea.event-additional-info-edit').val(additionalInfo);
 }
 
-function getCurrentCalendarId() {
-    return $(currentCalendar).get(0).el.getAttribute('data-property-calendar-id');
-}
-
 function getCurrentEventData() {
-    const {propertyCalendar:{propertyCalendarId}} = currentEvent.extendedProps;
+    const {propertyCalendar: {propertyCalendarId}} = currentEvent.extendedProps;
     return {
         id: currentEvent.id,
         title: currentEvent.title,
@@ -379,7 +385,6 @@ function getCurrentEventData() {
     };
 }
 
-//TODO
 function updateEventDataInDatabase(e) {
     e.preventDefault();
     const currentEventData = getCurrentEventData();
@@ -410,8 +415,11 @@ function updateEventDataInDatabase(e) {
         },
         data: JSON.stringify(event),
         success: function (event) {
-            console.log(event); //TODO update event info in calendar
-            // getEventById
+            const {propertyCalendar} = event
+            const {propertyCalendarId} = propertyCalendar
+            const calendar = getCalendarByCustomContentRenderId(propertyCalendarId);
+            calendar.getEventById(event.id).remove();
+            calendar.addEvent(event);
         },
         dataType: 'json',
         error: function (data) { //TODO
