@@ -575,7 +575,7 @@ body::-webkit-scrollbar-thumb {
     font-weight: 400;
 }
 
-.login-form button, .registration-form button {
+.login-form button, .registration-form button, .add-property-btn {
     border: rgba(204, 204, 204, 0.18) 1px solid;
     padding: 12px 35px;
     color: #ccc;
@@ -850,6 +850,32 @@ div.property-calendar {
     color: black;
 }
 
+.add-property-btn-container{
+    margin-top: -25px;
+    display: block;
+    height: 60px;
+    margin-bottom: 10px;
+    background: none;
+}
+
+.add-property-btn {
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    padding: 12px 35px;
+    color: #ccc;
+    display: inline-block;
+    border-radius: 25px 25px 25px 25px;
+    font-size: 15px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    background: none;
+    transition-duration: 0.5s;
+    width: 180px;
+}
+
+.add-property-btn:hover {
+    background-color: #ccc;
+    color: #000;
+}
 
 
 

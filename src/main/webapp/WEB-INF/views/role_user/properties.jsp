@@ -20,6 +20,9 @@
     <div class="bg-overlay" style="padding: 70px 250px 100px 250px">
         <div class="container-xl" style="height: 80%; margin-top: 60px">
             <input type="hidden" name="userId" value="${requestScope.userId}">
+            <div class="add-property-btn-container">
+                <button class="add-property-btn">Add property</button>
+            </div>
             <div class="properties-container">
                 <div class="property-name-tab-container">
                 </div>
@@ -50,6 +53,66 @@
         </div>
     </div>
 </footer>
+
+<!-- SAVE NEW PROPERTY MODAL -->
+<div tabindex="-1" class="modal save-new-property-modal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Please specify property details</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="save-new-property-form">
+                    <label>Property name:
+                        <input type="text" name="propertyName" class="save-property-name"/>
+                    </label>
+                    <label>Is property available:<br>
+                        <label><input type="radio" name="isAvailable" value="true" class="save-is-available" checked/> Yes</label>
+                        <label><input type="radio" name="isAvailable" value="false"/> No</label>
+                    </label>
+                    <br>
+                    <label>Property type:<br>
+                        <select name="propertyType" class="save-property-type">
+                            <option>Type 1</option>
+                            <option>Type 2</option>
+                            <option>Type 3</option>
+                        </select>
+                    </label>
+                    <br>
+                    <label>Country:<br>
+                        <select name="propertyCountry" class="save-property-country">
+                            <option>Country 1</option>
+                            <option>Country 2</option>
+                            <option>Country 3</option>
+                        </select>
+                    </label>
+                    <br>
+                    <label>City:<br>
+                        <input type="text" name="propertyCity" class="save-property-city"/>
+                    </label>
+                    <label>Street:<br>
+                        <input type="text" name="propertyStreet" class="save-property-street"/>
+                    </label>
+                    <label>Postal code:<br>
+                        <input type="text" name="propertyPostalCode" class="save-property-postal-code"/>
+                    </label>
+                    <label>Province:<br>
+                        <input type="text" name="propertyProvince" class="save-property-province"/>
+                    </label>
+                    <label>Region:<br>
+                        <input type="text" name="propertyRegion" class="save-property-region"/>
+                    </label>
+                    <label>Description:<br>
+                        <textarea name="propertyDescription" class="save-property-description"></textarea>
+                    </label>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-block save-property-btn">Save property</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- ADD EVENT MODAL -->
 <div tabindex="-1" class="modal add-event-modal" role="dialog" aria-hidden="true">

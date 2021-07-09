@@ -3,11 +3,15 @@
 const propertiesContainer = $('.properties-container');
 let propertyCalendarArray = [];//TODO
 
-const addEventModal = $('.add-event-modal');
+const addPropertyBtn = $('.add-property-btn');
+addPropertyBtn.on('click', showSaveNewPropertyModal);
+
+const savePropertyBtn = $('.save-property-btn');
+savePropertyBtn.on('click', function (e){e.preventDefault()})
+
 const addEventForm = $('#add-event-form');
 addEventForm.on('submit', saveEventToDatabaseAndAddEventToCalendar);
 
-const editEventModal = $('.edit-event-modal');
 const editEventForm = $('#edit-event-form');
 editEventForm.on('submit', updateEventDataInDatabase)
 
@@ -69,7 +73,7 @@ function getAllPropertiesByUserId() {
             let calendarIdentifier = `calendar-${propertyCounter}`;
 
             createPropertyNameTabElement(propertyIdentifier, calendarIdentifier, propertyName);
-            createPropertyCardElement(propertyIdentifier);
+            createPropertyCardElement(propertyCounter, propertyIdentifier);
             createFullCalendarElement(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
             createPropertyDetailsElement(propertyIdentifier);
             createPropertyPhotoElement(propertyIdentifier, propertyPhoto);
@@ -78,14 +82,15 @@ function getAllPropertiesByUserId() {
 
             propertyCounter++
         }));
-        const propertyCards = $(`.property-card:not('.property-0')`);
-        for (let i = 0; i < propertyCards.length; i++) {
-            $(propertyCards[i]).addClass('hidden');
-        }
     });
 }
 
 getAllPropertiesByUserId();
+
+function showSaveNewPropertyModal(){
+    $('.save-new-property-modal').modal('toggle');
+}
+
 
 function convertPropertyPhotoFileDataToBlob(fileData) {
     const byteCharacters = atob(fileData);
@@ -125,9 +130,12 @@ function renderPropertyCalendar() {
     });
 }
 
-function createPropertyCardElement(propertyIdentifier) {
+function createPropertyCardElement(propertyCounter, propertyIdentifier) {
     const cardContainer = $('.property-card-container');
     const cardElement = $('<div class="property-card"></div>');
+    if(propertyCounter > 0){
+        cardElement.addClass('hidden');
+    }
     cardElement.addClass(propertyIdentifier);
     cardContainer.prepend(cardElement);
 }
@@ -245,12 +253,12 @@ function createFullCalendarElement(propertyCounter, propertyIdentifier, property
         eventStartEditable: true,
         eventResizableFromStart: true,
         select: function (selectionInfo) {
-            addEventModal.modal('toggle');
+            $('.add-event-modal').modal('toggle');
             selectionInfoEventStart = selectionInfo.startStr;
             selectionInfoEventEnd = selectionInfo.endStr;
             selectionInfoCurrentCalendarId = selectionInfo.view.calendar.customContentRenderId;
         },
-        eventClick: function (eventInfo) { //TODO event modal
+        eventClick: function (eventInfo) {
             // console.log(eventInfo);
             showEditEventModalWIthEventData(eventInfo);
         },
@@ -272,7 +280,7 @@ function createFullCalendarElement(propertyCounter, propertyIdentifier, property
 
 function saveEventToDatabaseAndAddEventToCalendar(e) {
     e.preventDefault();
-    addEventModal.modal('toggle');
+    $('.add-event-modal').modal('toggle');
 
     const customer = new Customer();
     customer.customerID = null;
@@ -314,7 +322,6 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
     });
 }
 
-//TODO
 function addEventToCalendar(event) {
     const {id, title, start, end, customer, propertyCalendar, additionalInfo} = event;
     const {propertyCalendarId} = propertyCalendar;
@@ -358,7 +365,7 @@ function updateEventStartAndEndDates(eventInfo) {
 }
 
 function showEditEventModalWIthEventData(eventInfo) {
-    editEventModal.modal('toggle');
+    $('.edit-event-modal').modal('toggle');
     currentEvent = eventInfo.event;
     const title = eventInfo.event._def.title;
     const {customerName, customerSurname, customerPhone} = eventInfo.event._def.extendedProps.customer;
@@ -426,7 +433,7 @@ function updateEventDataInDatabase(e) {
             console.log(data);
         }
     });
-    editEventModal.modal('toggle');
+    $('.edit-event-modal').modal('toggle');
 }
 
 function deleteEventFromPropertyCalendar() {
@@ -436,7 +443,7 @@ function deleteEventFromPropertyCalendar() {
         type: 'DELETE',
         url: `http://localhost:8080/api/event/delete-event-from-property-calendar/${currentEventId}`,
         success: function (response) {
-            editEventModal.modal('toggle');
+            $('.edit-event-modal').modal('toggle');
             currentEvent.remove();
         },
         error: function (data) { //TODO
