@@ -59,7 +59,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4>Please specify property details</h4>
+                <h4>Please specify the property details</h4>
             </div>
             <div class="modal-body">
                 <form method="post" id="save-new-property-form">
@@ -73,17 +73,13 @@
                     <br>
                     <label>Property type:<br>
                         <select name="propertyType" class="save-property-type">
-                            <option>Type 1</option>
-                            <option>Type 2</option>
-                            <option>Type 3</option>
+                            <option value="0" disabled selected>Please select a type</option>
                         </select>
                     </label>
                     <br>
                     <label>Country:<br>
                         <select name="propertyCountry" class="save-property-country">
-                            <option>Country 1</option>
-                            <option>Country 2</option>
-                            <option>Country 3</option>
+                            <option value="0" disabled selected>Please select a country</option>
                         </select>
                     </label>
                     <br>
@@ -119,7 +115,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4>Please specify booking details</h4>
+                <h4>Please specify the booking details</h4>
             </div>
             <div class="modal-body">
                 <form method="post" id="add-event-form">

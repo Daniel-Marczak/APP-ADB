@@ -22,16 +22,18 @@ public class PropertyRestController {
     private final PropertyAddressService propertyAddressService;
     private final PropertyRoomService propertyRoomService;
     private final PropertyPhotoService propertyPhotoService;
+    private final CountryService countryService;
 
 
     public PropertyRestController(
             PropertyService propertyService, PropertyTypeService propertyTypeService, PropertyAddressService propertyAddressService,
-            PropertyRoomService propertyRoomService, PropertyPhotoService propertyPhotoService) {
+            PropertyRoomService propertyRoomService, PropertyPhotoService propertyPhotoService, CountryService countryService) {
         this.propertyService = propertyService;
         this.propertyTypeService = propertyTypeService;
         this.propertyAddressService = propertyAddressService;
         this.propertyRoomService = propertyRoomService;
         this.propertyPhotoService = propertyPhotoService;
+        this.countryService = countryService;
     }
 
     @GetMapping(value = "/user-properties/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -43,6 +45,16 @@ public class PropertyRestController {
             property.getUser().setId(null);
         });
         return properties;
+    }
+
+    @GetMapping(value = "/get-all-property-types")
+    List<PropertyType> getAllPropertyTypes(){
+        return propertyTypeService.getAllPropertyTypes();
+    }
+
+    @GetMapping("/get-all-countries")
+    List<Country> getAllCountries(){
+        return countryService.getAllCountries();
     }
 
     //TODO PropertyPhotoRestController

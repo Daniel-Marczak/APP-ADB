@@ -14,9 +14,12 @@ public class PropertyAddress {
     @Column(unique = true, nullable = false, name = "property_address_id")
     private Long propertyAddressId;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_country_id")
+    private Country country;
+
     private String street;
     private String city;
-    private String country;
     private String postalCode;
     private String province;
     private String region;

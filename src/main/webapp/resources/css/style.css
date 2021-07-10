@@ -877,6 +877,11 @@ div.property-calendar {
     color: #000;
 }
 
+.save-property-type,
+.save-property-country {
+    width: 195px;
+    /*overflow-wrap: break-word;*/
+}
 
 
 

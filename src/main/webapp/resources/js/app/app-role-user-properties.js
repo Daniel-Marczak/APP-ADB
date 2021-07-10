@@ -72,13 +72,13 @@ function getAllPropertiesByUserId() {
             let propertyIdentifier = `property-${propertyCounter}`;
             let calendarIdentifier = `calendar-${propertyCounter}`;
 
-            createPropertyNameTabElement(propertyIdentifier, calendarIdentifier, propertyName);
-            createPropertyCardElement(propertyCounter, propertyIdentifier);
-            createFullCalendarElement(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
-            createPropertyDetailsElement(propertyIdentifier);
-            createPropertyPhotoElement(propertyIdentifier, propertyPhoto);
-            createPropertyAddressElement(propertyIdentifier, isAvailable, propertyType, propertyAddress);
-            createPropertyDescriptionElement(propertyIdentifier, propertyDescription);
+            createPropertyNameTabEl(propertyIdentifier, calendarIdentifier, propertyName);
+            createPropertyCardEl(propertyCounter, propertyIdentifier);
+            createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
+            createPropertyDetailsEl(propertyIdentifier);
+            createPropertyPhotoEl(propertyIdentifier, propertyPhoto);
+            createPropertyAddressEl(propertyIdentifier, isAvailable, propertyType, propertyAddress);
+            createPropertyDescriptionEl(propertyIdentifier, propertyDescription);
 
             propertyCounter++
         }));
@@ -86,6 +86,8 @@ function getAllPropertiesByUserId() {
 }
 
 getAllPropertiesByUserId();
+getAllPropertyTypes();
+getAllCountries();
 
 function showSaveNewPropertyModal(){
     $('.save-new-property-modal').modal('toggle');
@@ -113,13 +115,13 @@ function displayPropertyCard() {
     }
 }
 
-function createPropertyNameTabElement(propertyIdentifier, calendarIdentifier, propertyName) {
+function createPropertyNameTabEl(propertyIdentifier, calendarIdentifier, propertyName) {
     const nameTabContainer = $('.property-name-tab-container');
-    const nameTabElement = $(`<div class="property-name-tab" ></div>`);
-    const nameTextElement = $('<h3 style="margin-top: 0px"></h3>').text(propertyName);
-    nameTabElement.addClass(`${propertyIdentifier}`).addClass(`${calendarIdentifier}`);
-    nameTabElement.on('click', displayPropertyCard).on('click', renderPropertyCalendar);
-    nameTabContainer.append(nameTabElement.append(nameTextElement));
+    const nameTabEl = $(`<div class="property-name-tab" ></div>`);
+    const nameTextEl = $('<h3 style="margin-top: 0px"></h3>').text(propertyName);
+    nameTabEl.addClass(`${propertyIdentifier}`).addClass(`${calendarIdentifier}`);
+    nameTabEl.on('click', displayPropertyCard).on('click', renderPropertyCalendar);
+    nameTabContainer.append(nameTabEl.append(nameTextEl));
 }
 
 function renderPropertyCalendar() {
@@ -130,31 +132,31 @@ function renderPropertyCalendar() {
     });
 }
 
-function createPropertyCardElement(propertyCounter, propertyIdentifier) {
+function createPropertyCardEl(propertyCounter, propertyIdentifier) {
     const cardContainer = $('.property-card-container');
-    const cardElement = $('<div class="property-card"></div>');
+    const cardEl = $('<div class="property-card"></div>');
     if(propertyCounter > 0){
-        cardElement.addClass('hidden');
+        cardEl.addClass('hidden');
     }
-    cardElement.addClass(propertyIdentifier);
-    cardContainer.prepend(cardElement);
+    cardEl.addClass(propertyIdentifier);
+    cardContainer.prepend(cardEl);
 }
 
-function createPropertyDetailsElement(propertyIdentifier) {
-    const cardElement = $(`.property-card.${propertyIdentifier}`);
-    const detailsElement = $('<div class="property-details-container"></div>');
-    detailsElement.addClass(propertyIdentifier);
-    cardElement.append(detailsElement);
+function createPropertyDetailsEl(propertyIdentifier) {
+    const cardEl = $(`.property-card.${propertyIdentifier}`);
+    const detailsEl = $('<div class="property-details-container"></div>');
+    detailsEl.addClass(propertyIdentifier);
+    cardEl.append(detailsEl);
 }
 
-function createPropertyPhotoElement(propertyIdentifier, propertyPhoto) { //TODO
+function createPropertyPhotoEl(propertyIdentifier, propertyPhoto) { //TODO
     const {propertyPhotoId, fileData, fileName, fileType} = propertyPhoto;
-    const detailsElement = $(`.property-details-container.${propertyIdentifier}`);
-    const photoElement = $('<div class="property-photo"></div>');
-    const imageElement = $('<img alt="" src="" class="property-image">');
+    const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
+    const photoEl = $('<div class="property-photo"></div>');
+    const imageEl = $('<img alt="" src="" class="property-image">');
     const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
     const photoId = $(this).attr('data-photo-id');
-    const changeImageElement = $(
+    const changeImageEl = $(
         `<form method="POST" class="upload-photo" action="<c:url value='/api/property/test'/>" enctype="multipart/form-data">
             <input type="hidden" name="propertyPhotoId" value="${photoId}"/> 
             <label>Select a file to upload
@@ -163,19 +165,19 @@ function createPropertyPhotoElement(propertyIdentifier, propertyPhoto) { //TODO
             <input type="submit" value="Submit" class="hidden"/>
         </form>`
     );
-    imageElement.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
-    imageElement.attr('data-photo-id', propertyPhotoId);
-    imageElement.addClass(propertyIdentifier);
-    detailsElement.append(photoElement.append(changeImageElement).append(imageElement));
+    imageEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
+    imageEl.attr('data-photo-id', propertyPhotoId);
+    imageEl.addClass(propertyIdentifier);
+    detailsEl.append(photoEl.append(changeImageEl).append(imageEl));
 }
 
-function createPropertyAddressElement(propertyIdentifier, isAvailable, propertyType, propertyAddress) {
+function createPropertyAddressEl(propertyIdentifier, isAvailable, propertyType, propertyAddress) {
     const {propertyTypeId, propertyTypeName} = propertyType;
-    const {propertyAddressId, city, country, postalCode, province, region, street} = propertyAddress;
-    const detailsElement = $(`.property-details-container.${propertyIdentifier}`);
-    const addressElement = $('<div class="property-address">');
+    const {propertyAddressId, city, country:{countryId, countryName}, postalCode, province, region, street} = propertyAddress;
+    const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
+    const addressEl = $('<div class="property-address">');
     let isAvailableToString = (isAvailable) ? 'Yes' : 'No';
-    const addressDetailsTableElement = $(
+    const addressDetailsTableEl = $(
         `<table class="property-address-table">
             <tbody>
                 <tr><th>Available: </th><td><input value="${isAvailableToString}"></td></tr>
@@ -185,17 +187,18 @@ function createPropertyAddressElement(propertyIdentifier, isAvailable, propertyT
                 <tr><th>Postal code:</th><td><input value="${postalCode}"></td></tr>
                 <tr><th>Province: </th><td><input value="${province}"></td></tr>
                 <tr><th>Region: </th><td><input value="${region}"></td></tr>
-                <tr><th>Country: </th><td><input value="${country}"></td></tr>
+                <tr><th>Country: </th><td><input value="${countryName}"></td></tr>
             </tbody>
-        </table>`);
-    detailsElement.append(addressElement.append(addressDetailsTableElement));
+        </table>`
+    );
+    detailsEl.append(addressEl.append(addressDetailsTableEl));
 }
 
-function createPropertyDescriptionElement(propertyIdentifier, propertyDescription) {
+function createPropertyDescriptionEl(propertyIdentifier, propertyDescription) {
     const {propertyDescriptionId, descriptionText} = propertyDescription;
-    const detailsElement = $(`.property-details-container.${propertyIdentifier}`);
-    const descriptionElement = $('<div class="property-description">');
-    const descriptionTextElement = $(
+    const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
+    const descriptionEl = $('<div class="property-description">');
+    const descriptionTextEl = $(
         `<table class="property-description-table">
             <tbody>
                 <tr><th>Description</th></tr>
@@ -203,18 +206,18 @@ function createPropertyDescriptionElement(propertyIdentifier, propertyDescriptio
             </tbody>
         </table>`
     );
-    detailsElement.append(descriptionElement.append(descriptionTextElement));
+    detailsEl.append(descriptionEl.append(descriptionTextEl));
 }
 
-function createFullCalendarElement(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar) {
+function createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar) {
     const {propertyCalendarId} = propertyCalendar;
     const propertyCard = $(`.property-card.${propertyIdentifier}`);
-    const calendarElement = $(`<div id='${calendarIdentifier}' class='property-calendar'></div>`);
-    calendarElement.attr('data-property-calendar-id', propertyCalendarId)
-    calendarElement.addClass(calendarIdentifier);
-    propertyCard.get(0).append(calendarElement.get(0));
+    const calendarEl = $(`<div id='${calendarIdentifier}' class='property-calendar'></div>`);
+    calendarEl.attr('data-property-calendar-id', propertyCalendarId)
+    calendarEl.addClass(calendarIdentifier);
+    propertyCard.get(0).append(calendarEl.get(0));
 
-    let calendar = new FullCalendar.Calendar(calendarElement.get(0), {
+    let calendar = new FullCalendar.Calendar(calendarEl.get(0), {
         initialView: 'dayGridMonth',
         titleRangeSeparator: ' \u2013 ',
         height: "auto",
@@ -476,7 +479,32 @@ function addPropertyPhoto() {
     })
 }
 
+function getAllPropertyTypes(){
+    const propertyTypeSelectEl = $('.save-property-type');
+    $.get('http://localhost:8080/api/property/get-all-property-types', function (propertyTypes){
+        propertyTypes.forEach(propType => {
+            const {propertyTypeId, propertyTypeName} = propType;
+            const selectOptionEl = $(`<option value="${propertyTypeId}" class="save-property-type-option">${propertyTypeName}</option>`);
+            propertyTypeSelectEl.append(selectOptionEl);
+        });
+    });
+}
+
+function getAllCountries(){
+    const propertyCountrySelectEl = $('.save-property-country');
+    $.get('http://localhost:8080/api/property/get-all-countries', function (countries){
+        countries.forEach(country => {
+            const {countryId, countryName} = country;
+            const selectOptionEl = $(`<option value="${countryId}" class="save-property-country-option">${countryName}</option>`);
+            propertyCountrySelectEl.append(selectOptionEl);
+        });
+    });
+}
+
 ///////////////////////// CODE THAT 50% OF THE TIME WORKS EVERY TIME //////////////////////////////////////
+
+
+
 
 
 // document.addEventListener('click', function () {
