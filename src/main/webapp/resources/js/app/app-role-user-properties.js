@@ -1,19 +1,21 @@
 ///////////////////////////////////////////////////// VARIABLES ////////////////////////////////////////////////////////
 
 const propertiesContainer = $('.properties-container');
+
+let propertyCounter = 0;
 let propertyCalendarArray = [];//TODO
 
 const addPropertyBtn = $('.add-property-btn');
 addPropertyBtn.on('click', showSaveNewPropertyModal);
 
-const savePropertyBtn = $('.save-property-btn');
-savePropertyBtn.on('click', function (e){e.preventDefault()})
-
 const addEventForm = $('#add-event-form');
 addEventForm.on('submit', saveEventToDatabaseAndAddEventToCalendar);
 
 const editEventForm = $('#edit-event-form');
-editEventForm.on('submit', updateEventDataInDatabase)
+editEventForm.on('submit', updateEventDataInDatabase);
+
+const addPropertyForm = $("#save-new-property-form");
+addPropertyForm.on('submit', saveNewPropertyToDatabase);
 
 let selectionInfoEventStart;
 let selectionInfoEventEnd;
@@ -50,8 +52,7 @@ class Event {
 ///////////////////////////////////////////////////// FUNCTIONS ////////////////////////////////////////////////////////
 
 function getAllPropertiesByUserId() {
-    const userId = $('input[type=hidden]').val();
-    let propertyCounter = 0;
+    const userId = $('input[type=hidden].user-id').val();
     $.get(`http://localhost:8080/api/property/user-properties/${userId}`, function (properties) {
 
         properties.forEach((property => {
@@ -89,7 +90,7 @@ getAllPropertiesByUserId();
 getAllPropertyTypes();
 getAllCountries();
 
-function showSaveNewPropertyModal(){
+function showSaveNewPropertyModal() {
     $('.save-new-property-modal').modal('toggle');
 }
 
@@ -135,7 +136,7 @@ function renderPropertyCalendar() {
 function createPropertyCardEl(propertyCounter, propertyIdentifier) {
     const cardContainer = $('.property-card-container');
     const cardEl = $('<div class="property-card"></div>');
-    if(propertyCounter > 0){
+    if (propertyCounter > 0) {
         cardEl.addClass('hidden');
     }
     cardEl.addClass(propertyIdentifier);
@@ -173,7 +174,7 @@ function createPropertyPhotoEl(propertyIdentifier, propertyPhoto) { //TODO
 
 function createPropertyAddressEl(propertyIdentifier, isAvailable, propertyType, propertyAddress) {
     const {propertyTypeId, propertyTypeName} = propertyType;
-    const {propertyAddressId, city, country:{countryId, countryName}, postalCode, province, region, street} = propertyAddress;
+    const {propertyAddressId, city, country: {countryId, countryName}, postalCode, province, region, street } = propertyAddress;
     const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
     const addressEl = $('<div class="property-address">');
     let isAvailableToString = (isAvailable) ? 'Yes' : 'No';
@@ -259,7 +260,7 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, c
             $('.add-event-modal').modal('toggle');
             selectionInfoEventStart = selectionInfo.startStr;
             selectionInfoEventEnd = selectionInfo.endStr;
-            selectionInfoCurrentCalendarId = selectionInfo.view.calendar.customContentRenderId;
+            selectionInfoCurrentCalendarId = selectionInfo.view.calendar.el.getAttribute('data-property-calendar-id');
         },
         eventClick: function (eventInfo) {
             // console.log(eventInfo);
@@ -302,7 +303,7 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
     event.additionalInfo = addEventForm.find('textarea.add-event-additional-info').val();
     event.customer = customer;
 
-        $.ajax({
+    $.ajax({
         type: 'POST',
         url: 'http://localhost:8080/api/event/add-event-to-property-calendar',
         headers: {
@@ -311,7 +312,7 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
         },
         data: JSON.stringify(event),
         success: function (event) {
-            if(event.id !== null){
+            if (event.id !== null) {
                 addEventToCalendar(event);
             } else {
                 //TODO error modal
@@ -328,9 +329,8 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
 function addEventToCalendar(event) {
     const {id, title, start, end, customer, propertyCalendar, additionalInfo} = event;
     const {propertyCalendarId} = propertyCalendar;
-    const calendar = getCalendarByCustomContentRenderId(propertyCalendarId);
+    const calendar = getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId);
     const dbEvent = new Event();
-    console.log(event);
     dbEvent.id = id;
     dbEvent.title = title;
     dbEvent.start = start;
@@ -341,10 +341,10 @@ function addEventToCalendar(event) {
     calendar.addEvent(dbEvent);
 }
 
-function getCalendarByCustomContentRenderId(propertyCalendarId){
+function getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId) {
     let calendar;
     propertyCalendarArray.forEach(cal => {
-        if(propertyCalendarId === cal.customContentRenderId){
+        if (propertyCalendarId === parseInt(cal.el.getAttribute('data-property-calendar-id'))) {
             calendar = cal;
         }
     });
@@ -427,7 +427,7 @@ function updateEventDataInDatabase(e) {
         success: function (event) {
             const {propertyCalendar} = event
             const {propertyCalendarId} = propertyCalendar
-            const calendar = getCalendarByCustomContentRenderId(propertyCalendarId);
+            const calendar = getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId);
             calendar.getEventById(event.id).remove();
             calendar.addEvent(event);
         },
@@ -479,9 +479,9 @@ function addPropertyPhoto() {
     })
 }
 
-function getAllPropertyTypes(){
+function getAllPropertyTypes() {
     const propertyTypeSelectEl = $('.save-property-type');
-    $.get('http://localhost:8080/api/property/get-all-property-types', function (propertyTypes){
+    $.get('http://localhost:8080/api/property/get-all-property-types', function (propertyTypes) {
         propertyTypes.forEach(propType => {
             const {propertyTypeId, propertyTypeName} = propType;
             const selectOptionEl = $(`<option value="${propertyTypeId}" class="save-property-type-option">${propertyTypeName}</option>`);
@@ -490,9 +490,9 @@ function getAllPropertyTypes(){
     });
 }
 
-function getAllCountries(){
+function getAllCountries() {
     const propertyCountrySelectEl = $('.save-property-country');
-    $.get('http://localhost:8080/api/property/get-all-countries', function (countries){
+    $.get('http://localhost:8080/api/property/get-all-countries', function (countries) {
         countries.forEach(country => {
             const {countryId, countryName} = country;
             const selectOptionEl = $(`<option value="${countryId}" class="save-property-country-option">${countryName}</option>`);
@@ -501,10 +501,63 @@ function getAllCountries(){
     });
 }
 
+function saveNewPropertyToDatabase(e) {
+    e.preventDefault();
+    $('.save-new-property-modal').modal('toggle');
+    const userId = $('input[type=hidden].user-id').val();
+    const propertyForm = {
+        userId: userId,
+        propertyName: $('input[name=propertyName]').val(),
+        isAvailable: $('input[name=isAvailable]:checked').val(),
+        propertyTypeId: $('select[name=propertyType]').val(),
+        countryId: $('select[name=propertyCountry]').val(),
+        city: $('input[name=propertyCity]').val(),
+        Street: $('input[name=propertyStreet]').val(),
+        postalCode: $('input[name=propertyPostalCode]').val(),
+        province: $('input[name=propertyProvince]').val(),
+        region: $('input[name=propertyRegion]').val(),
+        propertyDescription: $('textarea[name=propertyDescription]').val(),
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost:8080/api/property/save-new-property-to-database',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        data: JSON.stringify(propertyForm),
+        success: function (property) {
+            const {
+                isAvailable,
+                propertyAddress,
+                propertyCalendar,
+                propertyDescription,
+                propertyId,
+                propertyName,
+                propertyPhoto,
+                propertyType
+            } = property
+
+            let propertyIdentifier = `property-${propertyCounter}`;
+            let calendarIdentifier = `calendar-${propertyCounter}`;
+
+            createPropertyNameTabEl(propertyIdentifier, calendarIdentifier, propertyName);
+            createPropertyCardEl(propertyCounter, propertyIdentifier);
+            createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
+            createPropertyDetailsEl(propertyIdentifier);
+            createPropertyPhotoEl(propertyIdentifier, propertyPhoto);
+            createPropertyAddressEl(propertyIdentifier, isAvailable, propertyType, propertyAddress);
+            createPropertyDescriptionEl(propertyIdentifier, propertyDescription);
+        },
+        dataType: 'json',
+        error: function (data) { //TODO
+            console.log(data);
+        }
+    });
+}
+
 ///////////////////////// CODE THAT 50% OF THE TIME WORKS EVERY TIME //////////////////////////////////////
-
-
-
 
 
 // document.addEventListener('click', function () {

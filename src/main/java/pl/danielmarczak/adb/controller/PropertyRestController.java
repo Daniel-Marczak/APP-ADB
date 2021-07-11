@@ -52,26 +52,10 @@ public class PropertyRestController {
 
     @PostMapping(value = "save-new-property-to-database")
     public Property saveNewPropertyToDatabase(@RequestBody PropertyForm propertyForm){
-        Property property = new Property();
-        property.setPropertyName(propertyForm.getPropertyName());
-        property.setIsAvailable(propertyForm.getIsAvailable());
-        property.setUser(userService.findUserById(propertyForm.getUserId()));
-        PropertyAddress propertyAddress = new PropertyAddress();
+        User user = userService.findUserById(propertyForm.getUserId());
+        PropertyType propertyType = propertyTypeService.findPropertyTypeById(propertyForm.getPropertyTypeId());
         Country country = countryService.findCountryById(propertyForm.getCountryId());
-        propertyAddress.setCountry(country);
-        propertyAddress.setCity(propertyForm.getCity());
-        propertyAddress.setStreet(propertyForm.getStreet());
-        propertyAddress.setPostalCode(propertyForm.getPostalCode());
-        propertyAddress.setProvince(propertyForm.getProvince());
-        propertyAddress.setRegion(propertyForm.getRegion());
-        property.setPropertyAddress(propertyAddress);
-        property.setPropertyCalendar(new PropertyCalendar());
-        PropertyDescription propertyDescription = new PropertyDescription();
-        propertyDescription.setDescriptionText(propertyForm.getPropertyDescription());
-        property.setPropertyDescription(propertyDescription);
-        property.setPropertyType(propertyTypeService.findPropertyTypeById(propertyForm.getPropertyTypeId()));
-        property.setPropertyPhoto(new PropertyPhoto());
-        propertyService.saveProperty(property);
+        Property property = propertyService.createNewProperty(user, propertyForm, propertyType, country);
         property.getUser().setPassword("");
         property.getUser().setRole(new Role());
         return property;
