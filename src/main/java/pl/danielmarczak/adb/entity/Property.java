@@ -9,9 +9,6 @@ import java.util.List;
 @Entity
 @Table(name = "properties")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class Property {
 
     @Id

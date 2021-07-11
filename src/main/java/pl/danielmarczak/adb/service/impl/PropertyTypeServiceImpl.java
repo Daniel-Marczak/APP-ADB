@@ -23,4 +23,9 @@ public class PropertyTypeServiceImpl implements PropertyTypeService {
     public List<PropertyType> getAllPropertyTypes() {
         return propertyTypeRepository.findAll();
     }
+
+    @Override
+    public PropertyType findPropertyTypeById(Long propertyTypeId) {
+        return propertyTypeRepository.findById(propertyTypeId).orElse(new PropertyType());
+    }
 }

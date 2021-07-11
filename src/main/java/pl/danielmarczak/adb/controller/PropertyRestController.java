@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.danielmarczak.adb.entity.*;
+import pl.danielmarczak.adb.model.PropertyForm;
 import pl.danielmarczak.adb.service.*;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.List;
 public class PropertyRestController {
 
     protected Log logger = LogFactory.getLog(this.getClass());
+    private final UserService userService;
     private final PropertyService propertyService;
     private final PropertyTypeService propertyTypeService;
     private final PropertyAddressService propertyAddressService;
@@ -26,8 +28,9 @@ public class PropertyRestController {
 
 
     public PropertyRestController(
-            PropertyService propertyService, PropertyTypeService propertyTypeService, PropertyAddressService propertyAddressService,
+            UserService userService, PropertyService propertyService, PropertyTypeService propertyTypeService, PropertyAddressService propertyAddressService,
             PropertyRoomService propertyRoomService, PropertyPhotoService propertyPhotoService, CountryService countryService) {
+        this.userService = userService;
         this.propertyService = propertyService;
         this.propertyTypeService = propertyTypeService;
         this.propertyAddressService = propertyAddressService;
@@ -47,12 +50,39 @@ public class PropertyRestController {
         return properties;
     }
 
+    @PostMapping(value = "save-new-property-to-database")
+    public Property saveNewPropertyToDatabase(@RequestBody PropertyForm propertyForm){
+        Property property = new Property();
+        property.setPropertyName(propertyForm.getPropertyName());
+        property.setIsAvailable(propertyForm.getIsAvailable());
+        property.setUser(userService.findUserById(propertyForm.getUserId()));
+        PropertyAddress propertyAddress = new PropertyAddress();
+        Country country = countryService.findCountryById(propertyForm.getCountryId());
+        propertyAddress.setCountry(country);
+        propertyAddress.setCity(propertyForm.getCity());
+        propertyAddress.setStreet(propertyForm.getStreet());
+        propertyAddress.setPostalCode(propertyForm.getPostalCode());
+        propertyAddress.setProvince(propertyForm.getProvince());
+        propertyAddress.setRegion(propertyForm.getRegion());
+        property.setPropertyAddress(propertyAddress);
+        property.setPropertyCalendar(new PropertyCalendar());
+        PropertyDescription propertyDescription = new PropertyDescription();
+        propertyDescription.setDescriptionText(propertyForm.getPropertyDescription());
+        property.setPropertyDescription(propertyDescription);
+        property.setPropertyType(propertyTypeService.findPropertyTypeById(propertyForm.getPropertyTypeId()));
+        property.setPropertyPhoto(new PropertyPhoto());
+        propertyService.saveProperty(property);
+        property.getUser().setPassword("");
+        property.getUser().setRole(new Role());
+        return property;
+    }
+
     @GetMapping(value = "/get-all-property-types")
     List<PropertyType> getAllPropertyTypes(){
         return propertyTypeService.getAllPropertyTypes();
     }
 
-    @GetMapping("/get-all-countries")
+    @GetMapping("/get-all-countries") //TODO arc
     List<Country> getAllCountries(){
         return countryService.getAllCountries();
     }

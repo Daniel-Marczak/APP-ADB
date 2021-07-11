@@ -7,4 +7,6 @@ import java.util.List;
 public interface PropertyTypeService {
 
     List<PropertyType> getAllPropertyTypes();
+
+    PropertyType findPropertyTypeById(Long propertyTypeId);
 }

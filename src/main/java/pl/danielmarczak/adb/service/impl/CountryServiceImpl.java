@@ -22,4 +22,9 @@ public class CountryServiceImpl implements CountryService {
     public List<Country> getAllCountries() {
         return countryRepository.findAll();
     }
+
+    @Override
+    public Country findCountryById(Long countryId) {
+        return countryRepository.findById(countryId).orElse(new Country()); //TODO
+    }
 }

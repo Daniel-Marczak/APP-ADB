@@ -19,7 +19,7 @@
 <div class="banner" id="banner">
     <div class="bg-overlay" style="padding: 70px 250px 100px 250px">
         <div class="container-xl" style="height: 80%; margin-top: 60px">
-            <input type="hidden" name="userId" value="${requestScope.userId}">
+            <input type="hidden" class="user-id" name="userId" value="${requestScope.userId}">
             <div class="add-property-btn-container">
                 <button class="add-property-btn">Add property</button>
             </div>
@@ -67,19 +67,21 @@
                         <input type="text" name="propertyName" class="save-property-name"/>
                     </label>
                     <label>Is property available:<br>
-                        <label><input type="radio" name="isAvailable" value="true" class="save-is-available" checked/> Yes</label>
-                        <label><input type="radio" name="isAvailable" value="false"/> No</label>
+                        <input id="isAvailableYes" type="radio" name="isAvailable" value="true" checked="checked"/>
+                        <label for="isAvailableYes">Yes</label>
+                        <input id="isAvailableNo" type="radio" name="isAvailable" value="false"/>
+                        <label for="isAvailableNo">No</label>
                     </label>
                     <br>
                     <label>Property type:<br>
                         <select name="propertyType" class="save-property-type">
-                            <option value="0" disabled selected>Please select a type</option>
+                            <option value="0" selected>Please select a type</option>
                         </select>
                     </label>
                     <br>
                     <label>Country:<br>
                         <select name="propertyCountry" class="save-property-country">
-                            <option value="0" disabled selected>Please select a country</option>
+                            <option value="0" selected>Please select a country</option>
                         </select>
                     </label>
                     <br>
