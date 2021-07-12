@@ -153,28 +153,38 @@ function createPropertyDetailsEl(propertyIdentifier) {
 function createPropertyPhotoEl(propertyIdentifier, propertyPhoto) { //TODO
     const {propertyPhotoId, fileData, fileName, fileType} = propertyPhoto;
     const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
-    const photoEl = $('<div class="property-photo"></div>');
-    const imageEl = $('<img alt="" src="" class="property-image">');
-    const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
-    const photoId = $(this).attr('data-photo-id');
-    const changeImageEl = $(
-        `<form method="POST" class="upload-photo" action="<c:url value='/api/property/test'/>" enctype="multipart/form-data">
-            <input type="hidden" name="propertyPhotoId" value="${photoId}"/> 
+    const propertyPhotoEl = $('<div class="property-photo-el"></div>');
+    const changePropertyPhotoEl = $('<div class="change-property-photo-el"></div>');
+    const changePhotoForm = $(
+        `<form class="change-property-photo-form">
+            <input type="hidden" name="propertyPhotoId" value="${propertyPhotoId}"/>
             <label>Select a file to upload
                 <input type="file" name="file" class="hidden"/>
             </label>
-            <input type="submit" value="Submit" class="hidden"/>
+            <input type="submit" value="Submit" style="display: inline-block"/>
         </form>`
     );
+    const imageDisplayEl = $('<div class="image-display-el"></div>');
+    const imageEl = $('<img alt="" src="" class="property-img">');
+    const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
     imageEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
-    imageEl.attr('data-photo-id', propertyPhotoId);
-    imageEl.addClass(propertyIdentifier);
-    detailsEl.append(photoEl.append(changeImageEl).append(imageEl));
+    detailsEl.append(propertyPhotoEl.append(changePropertyPhotoEl.append(changePhotoForm)).append(imageDisplayEl));
+    if (fileData !== null){
+        imageDisplayEl.append(imageEl);
+    }
 }
 
 function createPropertyAddressEl(propertyIdentifier, isAvailable, propertyType, propertyAddress) {
     const {propertyTypeId, propertyTypeName} = propertyType;
-    const {propertyAddressId, city, country: {countryId, countryName}, postalCode, province, region, street } = propertyAddress;
+    const {
+        propertyAddressId,
+        city,
+        country: {countryId, countryName},
+        postalCode,
+        province,
+        region,
+        street
+    } = propertyAddress;
     const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
     const addressEl = $('<div class="property-address">');
     let isAvailableToString = (isAvailable) ? 'Yes' : 'No';

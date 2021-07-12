@@ -738,107 +738,11 @@ body::-webkit-scrollbar-thumb {
     width: 350px;
 }
 
-.property-photo {
-    display: inline-block;
-    float: right;
-    margin-top: 5px;
-    margin-right: 10px;
-    width: 160px;
-    height: 160px;
-    border-radius: 5px 5px 5px 5px;
-    transition: all .2s ease-in-out;
-}
-
-.property-photo:hover {
-    transform: scale(2);
-}
-
-.upload-photo {
-    /*background-color: #1b6d85;*/
-    display: none;
-    width: 210px;
-    height: 20px;
-}
-
-.property-photo:hover form.upload-photo {
-    width: 160px;
-}
-
-.upload-photo label {
-    font-family: 'Work Sans', sans-serif;
-    font-weight: 400;
-    font-size: 4px;
-    background-color: rgba(0, 0, 0, 0.2);
-    width: 210px;
-}
-
-.upload-photo input[type="submit"] {
-    display: inline-block;
-    font-size: 4px;
-    font-family: 'Work Sans', sans-serif;
-    font-weight: 300;
-    height: 10px;
-    padding: 1px;
-    margin-bottom: 10px;
-}
-
-.property-photo:hover .upload-photo {
-    display: inline-block;
-    font-family: 'Work Sans', sans-serif;
-    font-weight: 400;
-    width: 150px;
-}
-
-.property-photo:hover .upload-photo label {
-    display: inline-block;
-    float: left;
-    font-size: 8px;
-    width: 210px;
-    height: 15px;
-    text-align: center;
-    margin-top: 1px;
-    border: rgba(204, 204, 204, 0.18) 0.001em solid;
-    border-radius: 10px 10px 10px 10px;
-    padding: 1px;
-    margin-right: 2px;
-    color: rgb(204, 204, 204);
-}
-
-.property-name-tab:hover,
-.property-photo:hover .upload-photo label:hover,
-.property-photo:hover .upload-photo input[type="submit"]:hover {
+.property-name-tab:hover {
     background-color: rgb(204, 204, 204);
     color: rgb(0, 0, 0);
     font-family: 'Work Sans', sans-serif;
     font-weight: 400;
-}
-
-.property-photo:hover .upload-photo input[type="submit"] {
-    display: inline-block;
-    /*float: right;*/
-    /*background: none;*/
-    font-size: 10px;
-    width: 40px;
-    height: 20px;
-    text-align: center;
-    border: rgba(204, 204, 204, 0.18) 0.001em solid;
-    border-radius: 10px 10px 10px 10px;
-    color: rgb(204, 204, 204);
-}
-
-.property-image {
-    display: inline-block;
-    float: right;
-    max-width: 200px;
-    width: 160px;
-    height: 160px;
-    border-radius: 5px;
-    transition: all 0.5s ease-in-out;
-}
-
-.property-image:hover .upload-photo {
-    display: inline-block;
-    /*float: left;*/
 }
 
 div.property-calendar {
@@ -880,11 +784,82 @@ div.property-calendar {
 .save-property-type,
 .save-property-country {
     width: 195px;
-    /*overflow-wrap: break-word;*/
 }
 
+.property-photo-el {
+    display: inline-block;
+    float: right;
+    width: 160px;
+    height: 180px;
+    margin: -15px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    transition-duration: 0.5s;
+}
 
+.property-photo-el:hover {
+    transform: scale(2);
+}
 
+.property-photo-el:hover .change-property-photo-form {
+    display: block;
+}
+
+.change-property-photo-el {
+    height: 20px;
+}
+
+.change-property-photo-form,
+.change-property-photo-form label,
+.change-property-photo-form input {
+    font-size: 8px;
+    font-family: 'Work Sans', sans-serif;
+}
+
+.change-property-photo-form {
+    display: none;
+}
+
+.change-property-photo-form label {
+    /*margin-top: 2px;*/
+    padding: 2px;
+    float: left;
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    width: 100px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.change-property-photo-form input[type=submit]{
+    float: right;
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    width: 50px;
+    height: 15px;
+}
+
+.image-display-el {
+    background-image: url("/resources/img/camera_icon.png");
+    background-size: 60px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color:white;
+    width: 160px;
+    height: 160px;
+    display: block;
+    float: left;
+}
+
+.property-img {
+    margin-top: 0px;
+    width: 160px;
+    height: 160px;
+    background-color: whitesmoke;
+}
 
 
 
