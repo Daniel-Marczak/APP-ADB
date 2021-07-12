@@ -71,17 +71,13 @@ public class PropertyRestController {
         return countryService.getAllCountries();
     }
 
-    //TODO PropertyPhotoRestController
-    @PostMapping(value = "/upload-property-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Boolean uploadPropertyPhoto(@RequestParam("file") MultipartFile file) throws IOException {
-        PropertyPhoto propertyPhoto = new PropertyPhoto();
+    @PostMapping(value = "/upload-property-photo/{propertyPhotoId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public PropertyPhoto uploadPropertyPhoto(@RequestParam("file") MultipartFile file, @PathVariable Long propertyPhotoId) throws IOException {
+        PropertyPhoto propertyPhoto = propertyPhotoService.getPropertyPhotoById(propertyPhotoId);
         propertyPhoto.setFileName(file.getOriginalFilename());
         propertyPhoto.setFileType(file.getContentType());
         propertyPhoto.setFileData(file.getBytes());
-        propertyPhotoService.savePropertyPhoto(propertyPhoto);
-        //TODO add photo id to property (@Tran or @Param)
-
-        return true;//TODO
+        return propertyPhotoService.savePropertyPhoto(propertyPhoto);
     }
 
 

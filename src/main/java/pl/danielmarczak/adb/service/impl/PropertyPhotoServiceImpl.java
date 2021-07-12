@@ -16,12 +16,13 @@ public class PropertyPhotoServiceImpl implements PropertyPhotoService {
 
     @Override
     public PropertyPhoto getPropertyPhotoById(Long propertyPhotoId) {
-        return propertyPhotoRepository.getPropertyPhoto(propertyPhotoId);
+        return propertyPhotoRepository.findByPropertyPhotoId(propertyPhotoId);
     }
 
     @Override
-    public void savePropertyPhoto(PropertyPhoto propertyPhoto) {
-        propertyPhotoRepository.save(propertyPhoto);
-
+    public PropertyPhoto savePropertyPhoto(PropertyPhoto propertyPhoto) {
+        return propertyPhotoRepository.save(propertyPhoto);
     }
+
+
 }

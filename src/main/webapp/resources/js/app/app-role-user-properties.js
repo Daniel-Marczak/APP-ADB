@@ -155,23 +155,55 @@ function createPropertyPhotoEl(propertyIdentifier, propertyPhoto) { //TODO
     const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
     const propertyPhotoEl = $('<div class="property-photo-el"></div>');
     const changePropertyPhotoEl = $('<div class="change-property-photo-el"></div>');
-    const changePhotoForm = $(
-        `<form class="change-property-photo-form">
-            <input type="hidden" name="propertyPhotoId" value="${propertyPhotoId}"/>
-            <label>Select a file to upload
-                <input type="file" name="file" class="hidden"/>
-            </label>
-            <input type="submit" value="Submit" style="display: inline-block"/>
+    const addPropertyPhotoForm = $(
+        `<form 
+            class="add-property-photo-form hidden" 
+            data-property-photo-id="${propertyPhotoId}" 
+            enctype="multipart/form-data">
         </form>`
     );
+    addPropertyPhotoForm.on('submit', addPropertyPhoto);
+    const fileUploadLabel = $('<label class="file-upload-label">Select a file to upload </label>');
+    fileUploadLabel.on('click', triggerFileUploadInput);
+    const fileUploadInput = $('<input type="file" name="file" class="file-upload-input hidden"/>');
+    fileUploadInput.on('change', changeLabelTextToFileName);
+    const submitBtn = $('<input type="submit" value="Submit" style="display: inline-block"/>');
+    addPropertyPhotoForm.append(fileUploadLabel).append(fileUploadInput).append(submitBtn);
+
     const imageDisplayEl = $('<div class="image-display-el"></div>');
     const imageEl = $('<img alt="" src="" class="property-img">');
     const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
     imageEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
-    detailsEl.append(propertyPhotoEl.append(changePropertyPhotoEl.append(changePhotoForm)).append(imageDisplayEl));
-    if (fileData !== null){
+    detailsEl.prepend(propertyPhotoEl.append(changePropertyPhotoEl.append(addPropertyPhotoForm)).append(imageDisplayEl));
+
+    if (fileData !== null) {
         imageDisplayEl.append(imageEl);
     }
+
+    imageEl.on('click', function () {
+        if (propertyPhotoEl.hasClass('property-photo-scale-animation')) {
+            propertyPhotoEl.toggleClass('property-photo-scale-animation');
+            addPropertyPhotoForm.addClass('hidden');
+        } else {
+            propertyPhotoEl.toggleClass('property-photo-scale-animation');
+            addPropertyPhotoForm.removeClass('hidden');
+        }
+    });
+
+    propertyPhotoEl.on('mouseenter', function () {
+        if (!propertyPhotoEl.hasClass('property-photo-scale-animation')) {
+            propertyPhotoEl.toggleClass('property-photo-scale-animation');
+            addPropertyPhotoForm.removeClass('hidden');
+        }
+    });
+}
+
+function changeLabelTextToFileName(e) {
+    $(this).prev('label').text(e.target.files[0].name);
+}
+
+function triggerFileUploadInput() {
+    $(this).next().trigger('click');
 }
 
 function createPropertyAddressEl(propertyIdentifier, isAvailable, propertyType, propertyAddress) {
@@ -449,7 +481,7 @@ function updateEventDataInDatabase(e) {
     $('.edit-event-modal').modal('toggle');
 }
 
-function deleteEventFromPropertyCalendar() {
+function deleteEventFromPropertyCalendar() { //TODO
     const currentEventData = getCurrentEventData();
     const currentEventId = currentEventData.id;
     $.ajax({
@@ -465,28 +497,28 @@ function deleteEventFromPropertyCalendar() {
     });
 }
 
-//TODO add this to 'add property form' and 'change property photo'
-function addPropertyPhoto() {
-    const formToSubmit = $('#upload-form').get(0);
+function addPropertyPhoto(e) {
+    e.preventDefault();
+    const formToSubmit = $(this).get(0);
+    const propertyPhotoId = $(this).attr('data-property-photo-id');
+    const formData = new FormData(formToSubmit);
+    const imgEl = $(this).closest('div.property-details-container').find('img.property-img');
 
-    $(formToSubmit).on('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(formToSubmit);
-
-        $.ajax({
-            url: 'http://localhost:8080/api/property/upload-property-photo',
-            type: 'POST',
-            enctype: 'multipart/form-data',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            success: function (response) { //TODO
-                console.log(response);
-            }
-        });
-    })
+    $.ajax({
+        url: `http://localhost:8080/api/property/upload-property-photo/${propertyPhotoId}`,
+        type: 'POST',
+        enctype: 'multipart/form-data',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (propertyPhoto) { //TODO
+            imgEl.removeAttr('src');
+            const {propertyPhotoId, fileData, fileName} = propertyPhoto;
+            const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
+            imgEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
+        }
+    });
 }
 
 function getAllPropertyTypes() {

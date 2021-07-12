@@ -6,5 +6,5 @@ public interface PropertyPhotoService {
 
     PropertyPhoto getPropertyPhotoById(Long propertyPhotoId);
 
-    void savePropertyPhoto(PropertyPhoto propertyPhoto);
+    PropertyPhoto savePropertyPhoto(PropertyPhoto propertyPhoto);
 }
