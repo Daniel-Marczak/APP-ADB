@@ -176,10 +176,6 @@ function createPropertyPhotoEl(propertyIdentifier, propertyPhoto) { //TODO
     imageEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
     detailsEl.prepend(propertyPhotoEl.append(changePropertyPhotoEl.append(addPropertyPhotoForm)).append(imageDisplayEl));
 
-    if (fileData !== null) {
-        imageDisplayEl.append(imageEl);
-    }
-
     imageEl.on('click', function () {
         if (propertyPhotoEl.hasClass('property-photo-scale-animation')) {
             propertyPhotoEl.toggleClass('property-photo-scale-animation');
@@ -196,6 +192,12 @@ function createPropertyPhotoEl(propertyIdentifier, propertyPhoto) { //TODO
             addPropertyPhotoForm.removeClass('hidden');
         }
     });
+
+    if (fileData === null) {
+        imageEl.addClass('hidden');
+    }
+
+    imageDisplayEl.append(imageEl);
 }
 
 function changeLabelTextToFileName(e) {
@@ -503,7 +505,6 @@ function addPropertyPhoto(e) {
     const propertyPhotoId = $(this).attr('data-property-photo-id');
     const formData = new FormData(formToSubmit);
     const imgEl = $(this).closest('div.property-details-container').find('img.property-img');
-
     $.ajax({
         url: `http://localhost:8080/api/property/upload-property-photo/${propertyPhotoId}`,
         type: 'POST',
@@ -512,10 +513,13 @@ function addPropertyPhoto(e) {
         cache: false,
         contentType: false,
         processData: false,
-        success: function (propertyPhoto) { //TODO
-            imgEl.removeAttr('src');
+        success: function (propertyPhoto) {
             const {propertyPhotoId, fileData, fileName} = propertyPhoto;
+            if (imgEl.hasClass('hidden')) {
+                imgEl.removeClass('hidden');
+            }
             const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
+            imgEl.removeAttr('src');
             imgEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
         }
     });
