@@ -3,7 +3,7 @@
 const propertiesContainer = $('.properties-container');
 
 let propertyCounter = 0;
-let propertyCalendarArray = [];//TODO
+let propertyCalendarArray = [];
 
 const addPropertyBtn = $('.add-property-btn');
 addPropertyBtn.on('click', showSaveNewPropertyModal);
@@ -55,7 +55,7 @@ function getAllPropertiesByUserId() {
     const userId = $('input[type=hidden].user-id').val();
     $.get(`http://localhost:8080/api/property/user-properties/${userId}`, function (properties) {
 
-        properties.forEach((property => {
+        $(properties).each(function(index, property) {
             const {
                 propertyId,
                 isAvailable,
@@ -73,7 +73,7 @@ function getAllPropertiesByUserId() {
             let propertyIdentifier = `property-${propertyCounter}`;
             let calendarIdentifier = `calendar-${propertyCounter}`;
 
-            createPropertyNameTabEl(propertyIdentifier, calendarIdentifier, propertyName);
+            createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, propertyName);
             createPropertyCardEl(propertyCounter, propertyIdentifier);
             createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
             createPropertyDetailsEl(propertyIdentifier);
@@ -82,7 +82,7 @@ function getAllPropertiesByUserId() {
             createPropertyDescriptionEl(propertyIdentifier, propertyDescription);
 
             propertyCounter++
-        }));
+        });
     });
 }
 
@@ -116,17 +116,31 @@ function displayPropertyCard() {
     }
 }
 
-function createPropertyNameTabEl(propertyIdentifier, calendarIdentifier, propertyName) {
+function createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, propertyName) {
     const nameTabContainer = $('.property-name-tab-container');
     const nameTabEl = $(`<div class="property-name-tab" ></div>`);
     const nameTextEl = $('<h3 style="margin-top: 0px"></h3>').text(propertyName);
     nameTabEl.addClass(`${propertyIdentifier}`).addClass(`${calendarIdentifier}`);
-    nameTabEl.on('click', displayPropertyCard).on('click', renderPropertyCalendar);
+    nameTabEl.on('click', displayPropertyCard).on('click', renderPropertyCalendar).on('click', addPropertyNameTabSelectedClass);
+    if(propertyCounter === 0){
+        nameTabEl.addClass('property-name-tab-selected');
+    }
     nameTabContainer.append(nameTabEl.append(nameTextEl));
 }
 
+function addPropertyNameTabSelectedClass(){
+    const selectedTab = $(this).get(0).classList[1];
+    $('.property-name-tab').each(function (index, value){
+        if(selectedTab === value.classList[1]){
+            $(this).addClass('property-name-tab-selected');
+        } else {
+            $(this).removeClass('property-name-tab-selected');
+        }
+    });
+}
+
 function renderPropertyCalendar() {
-    propertyCalendarArray.forEach(calendar => {
+    $(propertyCalendarArray).each(function (index, calendar){
         if (calendar.el.getAttribute('id')) {
             calendar.render();
         }
@@ -386,13 +400,13 @@ function addEventToCalendar(event) {
 }
 
 function getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId) {
-    let calendar;
-    propertyCalendarArray.forEach(cal => {
-        if (propertyCalendarId === parseInt(cal.el.getAttribute('data-property-calendar-id'))) {
-            calendar = cal;
+    let calendarById;
+    $(propertyCalendarArray).each(function (index, calendar){
+        if (propertyCalendarId === parseInt(calendar.el.getAttribute('data-property-calendar-id'))) {
+            calendarById = calendar;
         }
     });
-    return calendar;
+    return calendarById;
 }
 
 
@@ -528,8 +542,8 @@ function addPropertyPhoto(e) {
 function getAllPropertyTypes() {
     const propertyTypeSelectEl = $('.save-property-type');
     $.get('http://localhost:8080/api/property/get-all-property-types', function (propertyTypes) {
-        propertyTypes.forEach(propType => {
-            const {propertyTypeId, propertyTypeName} = propType;
+        $(propertyTypes).each(function (index, propertyType){
+            const {propertyTypeId, propertyTypeName} = propertyType;
             const selectOptionEl = $(`<option value="${propertyTypeId}" class="save-property-type-option">${propertyTypeName}</option>`);
             propertyTypeSelectEl.append(selectOptionEl);
         });
@@ -539,7 +553,7 @@ function getAllPropertyTypes() {
 function getAllCountries() {
     const propertyCountrySelectEl = $('.save-property-country');
     $.get('http://localhost:8080/api/property/get-all-countries', function (countries) {
-        countries.forEach(country => {
+        $(countries).each(function (index, country){
             const {countryId, countryName} = country;
             const selectOptionEl = $(`<option value="${countryId}" class="save-property-country-option">${countryName}</option>`);
             propertyCountrySelectEl.append(selectOptionEl);
@@ -588,7 +602,7 @@ function saveNewPropertyToDatabase(e) {
             let propertyIdentifier = `property-${propertyCounter}`;
             let calendarIdentifier = `calendar-${propertyCounter}`;
 
-            createPropertyNameTabEl(propertyIdentifier, calendarIdentifier, propertyName);
+            createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, propertyName);
             createPropertyCardEl(propertyCounter, propertyIdentifier);
             createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
             createPropertyDetailsEl(propertyIdentifier);

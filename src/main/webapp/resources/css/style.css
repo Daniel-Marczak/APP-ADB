@@ -745,6 +745,13 @@ body::-webkit-scrollbar-thumb {
     font-weight: 400;
 }
 
+.property-name-tab-selected {
+    background-color: rgb(204, 204, 204);
+    color: rgb(0, 0, 0);
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 400;
+}
+
 div.property-calendar {
     display: inline-block;
     float: left;;
