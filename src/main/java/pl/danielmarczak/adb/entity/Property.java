@@ -1,9 +1,8 @@
 package pl.danielmarczak.adb.entity;
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
 
 
 @Entity
@@ -34,10 +33,6 @@ public class Property {
     @JoinColumn(name = "fk_type_id")
     private PropertyType propertyType;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_room_id")
-    private List<PropertyRoom> propertyRooms;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_photo_id")
     private PropertyPhoto propertyPhoto;
@@ -47,6 +42,5 @@ public class Property {
     private PropertyCalendar propertyCalendar;
 
     private Boolean isAvailable;
-
 
 }

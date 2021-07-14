@@ -1,7 +1,6 @@
 package pl.danielmarczak.adb.service.impl;
 
 import org.springframework.stereotype.Service;
-import pl.danielmarczak.adb.entity.Event;
 import pl.danielmarczak.adb.entity.PropertyCalendar;
 import pl.danielmarczak.adb.repository.PropertyCalendarRepository;
 import pl.danielmarczak.adb.service.PropertyCalendarService;

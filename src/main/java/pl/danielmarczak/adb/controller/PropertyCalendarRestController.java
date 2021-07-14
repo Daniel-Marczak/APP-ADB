@@ -2,7 +2,8 @@ package pl.danielmarczak.adb.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pl.danielmarczak.adb.service.CustomerService;
 import pl.danielmarczak.adb.service.EventService;
 import pl.danielmarczak.adb.service.PropertyCalendarService;

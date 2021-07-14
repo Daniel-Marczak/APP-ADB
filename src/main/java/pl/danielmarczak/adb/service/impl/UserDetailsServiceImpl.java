@@ -6,8 +6,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import pl.danielmarczak.adb.entity.User;
 import pl.danielmarczak.adb.entity.CurrentUser;
+import pl.danielmarczak.adb.entity.User;
 import pl.danielmarczak.adb.service.UserService;
 
 import java.util.HashSet;

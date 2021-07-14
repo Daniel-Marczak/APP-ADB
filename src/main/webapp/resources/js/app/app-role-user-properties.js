@@ -14,7 +14,7 @@ addEventForm.on('submit', saveEventToDatabaseAndAddEventToCalendar);
 const editEventForm = $('#edit-event-form');
 editEventForm.on('submit', updateEventDataInDatabase);
 
-const addPropertyForm = $("#save-new-property-form");
+const addPropertyForm = $("#save-and-update-property-form");
 addPropertyForm.on('submit', saveNewPropertyToDatabase);
 
 let selectionInfoEventStart;
@@ -55,7 +55,7 @@ function getAllPropertiesByUserId() {
     const userId = $('input[type=hidden].user-id').val();
     $.get(`http://localhost:8080/api/property/user-properties/${userId}`, function (properties) {
 
-        $(properties).each(function(index, property) {
+        $(properties).each(function (index, property) {
             const {
                 propertyId,
                 isAvailable,
@@ -64,7 +64,6 @@ function getAllPropertiesByUserId() {
                 propertyCalendar,
                 propertyName,
                 propertyPhoto,
-                propertyRooms,          //TODO
                 propertyType,
                 user
             } = property
@@ -73,13 +72,13 @@ function getAllPropertiesByUserId() {
             let propertyIdentifier = `property-${propertyCounter}`;
             let calendarIdentifier = `calendar-${propertyCounter}`;
 
-            createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, propertyName);
-            createPropertyCardEl(propertyCounter, propertyIdentifier);
-            createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
-            createPropertyDetailsEl(propertyIdentifier);
-            createPropertyPhotoEl(propertyIdentifier, propertyPhoto);
-            createPropertyAddressEl(propertyIdentifier, isAvailable, propertyType, propertyAddress);
-            createPropertyDescriptionEl(propertyIdentifier, propertyDescription);
+            $('.property-name-tab-container').append(createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, propertyName));
+            $('.property-card-container')
+                .append(createPropertyCardEl(propertyCounter, propertyIdentifier)
+                    .append(createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar))
+                    .append(createPropertyDetailsEl(propertyIdentifier, isAvailable, propertyType, propertyAddress, propertyDescription))
+                    .append(createPropertyPhotoEl(propertyIdentifier, propertyPhoto))
+                );
 
             propertyCounter++
         });
@@ -91,7 +90,7 @@ getAllPropertyTypes();
 getAllCountries();
 
 function showSaveNewPropertyModal() {
-    $('.save-new-property-modal').modal('toggle');
+    $('.save-and-update-property-modal').modal('toggle');
 }
 
 
@@ -117,164 +116,31 @@ function displayPropertyCard() {
 }
 
 function createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, propertyName) {
-    const nameTabContainer = $('.property-name-tab-container');
     const nameTabEl = $(`<div class="property-name-tab" ></div>`);
     const nameTextEl = $('<h3 style="margin-top: 0px"></h3>').text(propertyName);
     nameTabEl.addClass(`${propertyIdentifier}`).addClass(`${calendarIdentifier}`);
     nameTabEl.on('click', displayPropertyCard).on('click', renderPropertyCalendar).on('click', addPropertyNameTabSelectedClass);
-    if(propertyCounter === 0){
+    if (propertyCounter === 0) {
         nameTabEl.addClass('property-name-tab-selected');
     }
-    nameTabContainer.append(nameTabEl.append(nameTextEl));
-}
-
-function addPropertyNameTabSelectedClass(){
-    const selectedTab = $(this).get(0).classList[1];
-    $('.property-name-tab').each(function (index, value){
-        if(selectedTab === value.classList[1]){
-            $(this).addClass('property-name-tab-selected');
-        } else {
-            $(this).removeClass('property-name-tab-selected');
-        }
-    });
-}
-
-function renderPropertyCalendar() {
-    $(propertyCalendarArray).each(function (index, calendar){
-        if (calendar.el.getAttribute('id')) {
-            calendar.render();
-        }
-    });
+    nameTabEl.append(nameTextEl);
+    return nameTabEl;
 }
 
 function createPropertyCardEl(propertyCounter, propertyIdentifier) {
-    const cardContainer = $('.property-card-container');
     const cardEl = $('<div class="property-card"></div>');
     if (propertyCounter > 0) {
         cardEl.addClass('hidden');
     }
     cardEl.addClass(propertyIdentifier);
-    cardContainer.prepend(cardEl);
-}
-
-function createPropertyDetailsEl(propertyIdentifier) {
-    const cardEl = $(`.property-card.${propertyIdentifier}`);
-    const detailsEl = $('<div class="property-details-container"></div>');
-    detailsEl.addClass(propertyIdentifier);
-    cardEl.append(detailsEl);
-}
-
-function createPropertyPhotoEl(propertyIdentifier, propertyPhoto) { //TODO
-    const {propertyPhotoId, fileData, fileName, fileType} = propertyPhoto;
-    const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
-    const propertyPhotoEl = $('<div class="property-photo-el"></div>');
-    const changePropertyPhotoEl = $('<div class="change-property-photo-el"></div>');
-    const addPropertyPhotoForm = $(
-        `<form 
-            class="add-property-photo-form hidden" 
-            data-property-photo-id="${propertyPhotoId}" 
-            enctype="multipart/form-data">
-        </form>`
-    );
-    addPropertyPhotoForm.on('submit', addPropertyPhoto);
-    const fileUploadLabel = $('<label class="file-upload-label">Select a file to upload </label>');
-    fileUploadLabel.on('click', triggerFileUploadInput);
-    const fileUploadInput = $('<input type="file" name="file" class="file-upload-input hidden"/>');
-    fileUploadInput.on('change', changeLabelTextToFileName);
-    const submitBtn = $('<input type="submit" value="Submit" style="display: inline-block"/>');
-    addPropertyPhotoForm.append(fileUploadLabel).append(fileUploadInput).append(submitBtn);
-
-    const imageDisplayEl = $('<div class="image-display-el"></div>');
-    const imageEl = $('<img alt="" src="" class="property-img">');
-    const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
-    imageEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
-    detailsEl.prepend(propertyPhotoEl.append(changePropertyPhotoEl.append(addPropertyPhotoForm)).append(imageDisplayEl));
-
-    imageEl.on('click', function () {
-        if (propertyPhotoEl.hasClass('property-photo-scale-animation')) {
-            propertyPhotoEl.toggleClass('property-photo-scale-animation');
-            addPropertyPhotoForm.addClass('hidden');
-        } else {
-            propertyPhotoEl.toggleClass('property-photo-scale-animation');
-            addPropertyPhotoForm.removeClass('hidden');
-        }
-    });
-
-    propertyPhotoEl.on('mouseenter', function () {
-        if (!propertyPhotoEl.hasClass('property-photo-scale-animation')) {
-            propertyPhotoEl.toggleClass('property-photo-scale-animation');
-            addPropertyPhotoForm.removeClass('hidden');
-        }
-    });
-
-    if (fileData === null) {
-        imageEl.addClass('hidden');
-    }
-
-    imageDisplayEl.append(imageEl);
-}
-
-function changeLabelTextToFileName(e) {
-    $(this).prev('label').text(e.target.files[0].name);
-}
-
-function triggerFileUploadInput() {
-    $(this).next().trigger('click');
-}
-
-function createPropertyAddressEl(propertyIdentifier, isAvailable, propertyType, propertyAddress) {
-    const {propertyTypeId, propertyTypeName} = propertyType;
-    const {
-        propertyAddressId,
-        city,
-        country: {countryId, countryName},
-        postalCode,
-        province,
-        region,
-        street
-    } = propertyAddress;
-    const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
-    const addressEl = $('<div class="property-address">');
-    let isAvailableToString = (isAvailable) ? 'Yes' : 'No';
-    const addressDetailsTableEl = $(
-        `<table class="property-address-table">
-            <tbody>
-                <tr><th>Available: </th><td><input value="${isAvailableToString}"></td></tr>
-                <tr><th>Type: </th><td><input value="${propertyTypeName}"></td></tr>
-                <tr><th>City: </th><td><input value="${city}"></td></tr>
-                <tr><th>Street: </th><td><input value="${street}"></td></tr>
-                <tr><th>Postal code:</th><td><input value="${postalCode}"></td></tr>
-                <tr><th>Province: </th><td><input value="${province}"></td></tr>
-                <tr><th>Region: </th><td><input value="${region}"></td></tr>
-                <tr><th>Country: </th><td><input value="${countryName}"></td></tr>
-            </tbody>
-        </table>`
-    );
-    detailsEl.append(addressEl.append(addressDetailsTableEl));
-}
-
-function createPropertyDescriptionEl(propertyIdentifier, propertyDescription) {
-    const {propertyDescriptionId, descriptionText} = propertyDescription;
-    const detailsEl = $(`.property-details-container.${propertyIdentifier}`);
-    const descriptionEl = $('<div class="property-description">');
-    const descriptionTextEl = $(
-        `<table class="property-description-table">
-            <tbody>
-                <tr><th>Description</th></tr>
-                <tr><td><textarea class="description-text">${descriptionText}</textarea></td></tr>
-            </tbody>
-        </table>`
-    );
-    detailsEl.append(descriptionEl.append(descriptionTextEl));
+    return cardEl;
 }
 
 function createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar) {
     const {propertyCalendarId} = propertyCalendar;
-    const propertyCard = $(`.property-card.${propertyIdentifier}`);
     const calendarEl = $(`<div id='${calendarIdentifier}' class='property-calendar'></div>`);
     calendarEl.attr('data-property-calendar-id', propertyCalendarId)
     calendarEl.addClass(calendarIdentifier);
-    propertyCard.get(0).append(calendarEl.get(0));
 
     let calendar = new FullCalendar.Calendar(calendarEl.get(0), {
         initialView: 'dayGridMonth',
@@ -338,6 +204,179 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, c
         calendar.render();
     }
     propertyCalendarArray.push(calendar);
+    return calendarEl;
+}
+
+function createPropertyDetailsEl(propertyIdentifier, isAvailable, propertyType, propertyAddress, propertyDescription) {
+    const {propertyDescriptionId, descriptionText} = propertyDescription;
+    const {propertyTypeId, propertyTypeName} = propertyType;
+    const {
+        propertyAddressId,
+        city,
+        country: {countryId, countryName},
+        postalCode,
+        province,
+        region,
+        street
+    } = propertyAddress;
+    const detailsEl = $('<div class="property-details-el"></div>');
+    detailsEl.addClass(propertyIdentifier);
+
+    const isAvailableToString = (isAvailable) ? 'Yes' : 'No';
+    const propertyDetailsTableEl = $(
+        `<table class="property-address-table">
+            <tbody>
+                <tr><th>Available: </th><td> ${isAvailableToString}</td></tr>
+                <tr><th>Type: </th><td>${propertyTypeName}</td></tr>
+                <tr><th>City: </th><td>${city}</td></tr>
+                <tr><th>Street: </th><td>${street}</td></tr>
+                <tr><th>Postal code:</th><td>${postalCode}</td></tr>
+                <tr><th>Province: </th><td>${province}</td></tr>
+                <tr><th>Region: </th><td>${region}</td></tr>
+                <tr><th>Country: </th><td>${countryName}</td></tr>
+                <tr><th>Description: </th><td>${descriptionText}</td></tr>
+            </tbody>
+        </table>`
+    );
+    detailsEl.append(propertyDetailsTableEl);
+    return detailsEl;
+}
+
+function createPropertyPhotoEl(propertyIdentifier, propertyPhoto) { //TODO
+    const {propertyPhotoId, fileData, fileName, fileType} = propertyPhoto;
+    const propertyPhotoEl = $('<div class="property-photo-el"></div>');
+    const changePropertyPhotoEl = $('<div class="change-property-photo-el"></div>');
+    const addPropertyPhotoForm = $(
+        `<form 
+            class="add-property-photo-form hidden" 
+            data-property-photo-id="${propertyPhotoId}" 
+            enctype="multipart/form-data">
+        </form>`
+    );
+    addPropertyPhotoForm.on('submit', addPropertyPhoto);
+    const fileUploadLabel = $('<label class="file-upload-label">Select a file to upload </label>');
+    fileUploadLabel.on('click', triggerFileUploadInput);
+    const fileUploadInput = $('<input type="file" name="file" class="file-upload-input hidden"/>');
+    fileUploadInput.on('change', changeLabelTextToFileName);
+    const submitBtn = $('<input type="submit" value="Submit" style="display: inline-block"/>');
+    addPropertyPhotoForm.append(fileUploadLabel).append(fileUploadInput).append(submitBtn);
+
+    const imageDisplayEl = $('<div class="image-display-el"></div>');
+    const imageEl = $('<img alt="" src="" class="property-img">');
+    const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
+    imageEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
+    propertyPhotoEl.append(changePropertyPhotoEl.append(addPropertyPhotoForm)).append(imageDisplayEl);
+
+    $(imageDisplayEl, imageEl).on('click', function () {
+        if (propertyPhotoEl.hasClass('property-photo-scale-animation')) {
+            propertyPhotoEl.toggleClass('property-photo-scale-animation');
+            addPropertyPhotoForm.addClass('hidden');
+        } else {
+            propertyPhotoEl.toggleClass('property-photo-scale-animation');
+            addPropertyPhotoForm.removeClass('hidden');
+        }
+    });
+
+    $(imageDisplayEl, imageEl).on('mouseenter', function () {
+        if (!propertyPhotoEl.hasClass('property-photo-scale-animation')) {
+            propertyPhotoEl.toggleClass('property-photo-scale-animation');
+            addPropertyPhotoForm.removeClass('hidden');
+        }
+    });
+
+    if (fileData === null) {
+        imageEl.addClass('hidden');
+    }
+    imageDisplayEl.append(imageEl);
+
+    return propertyPhotoEl;
+}
+
+function addPropertyPhoto(e) {
+    e.preventDefault();
+    const formToSubmit = $(this).get(0);
+    const propertyPhotoId = $(this).attr('data-property-photo-id');
+    const formData = new FormData(formToSubmit);
+    const imgEl = $(this).closest('div.property-photo-el').find('img.property-img');
+    $.ajax({
+        url: `http://localhost:8080/api/property/upload-property-photo/${propertyPhotoId}`,
+        type: 'POST',
+        enctype: 'multipart/form-data',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (propertyPhoto) {
+            const {propertyPhotoId, fileData, fileName} = propertyPhoto;
+            console.log(propertyPhoto);
+            if ($(imgEl).hasClass('hidden')) {
+                imgEl.removeClass('hidden');
+                console.log("hidden");
+            }
+            const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
+            imgEl.removeAttr('src');
+            imgEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
+        }
+    });
+}
+
+function getAllPropertyTypes() {
+    const propertyTypeSelectEl = $('.su-property-type');
+    $.get('http://localhost:8080/api/property/get-all-property-types', function (propertyTypes) {
+        $(propertyTypes).each(function (index, propertyType) {
+            const {propertyTypeId, propertyTypeName} = propertyType;
+            const selectOptionEl = $(`<option value="${propertyTypeId}" class="su-property-type-option">${propertyTypeName}</option>`);
+            propertyTypeSelectEl.append(selectOptionEl);
+        });
+    });
+}
+
+function getAllCountries() {
+    const propertyCountrySelectEl = $('.su-property-country');
+    $.get('http://localhost:8080/api/property/get-all-countries', function (countries) {
+        $(countries).each(function (index, country) {
+            const {countryId, countryName} = country;
+            const selectOptionEl = $(`<option value="${countryId}" class="su-property-country-option">${countryName}</option>`);
+            propertyCountrySelectEl.append(selectOptionEl);
+        });
+    });
+}
+
+function addPropertyNameTabSelectedClass() {
+    const selectedTab = $(this).get(0).classList[1];
+    $('.property-name-tab').each(function (index, value) {
+        if (selectedTab === value.classList[1]) {
+            $(this).addClass('property-name-tab-selected');
+        } else {
+            $(this).removeClass('property-name-tab-selected');
+        }
+    });
+}
+
+function changeLabelTextToFileName(e) {
+    $(this).prev('label').text(e.target.files[0].name);
+}
+
+function triggerFileUploadInput() {
+    $(this).next().trigger('click');
+}
+
+function renderPropertyCalendar() {
+    $(propertyCalendarArray).each(function (index, calendar) {
+        if (calendar.el.getAttribute('id')) {
+            calendar.render();
+        }
+    });
+}
+
+function getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId) {
+    let calendarById;
+    $(propertyCalendarArray).each(function (index, calendar) {
+        if (propertyCalendarId === parseInt(calendar.el.getAttribute('data-property-calendar-id'))) {
+            calendarById = calendar;
+        }
+    });
+    return calendarById;
 }
 
 function saveEventToDatabaseAndAddEventToCalendar(e) {
@@ -385,30 +424,10 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
 }
 
 function addEventToCalendar(event) {
-    const {id, title, start, end, customer, propertyCalendar, additionalInfo} = event;
-    const {propertyCalendarId} = propertyCalendar;
+    const {propertyCalendarId} = event.propertyCalendar;
     const calendar = getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId);
-    const dbEvent = new Event();
-    dbEvent.id = id;
-    dbEvent.title = title;
-    dbEvent.start = start;
-    dbEvent.end = end;
-    dbEvent.additionalInfo = additionalInfo;
-    dbEvent.customer = customer;
-    dbEvent.propertyCalendar = propertyCalendar;
-    calendar.addEvent(dbEvent);
+    calendar.addEvent(event);
 }
-
-function getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId) {
-    let calendarById;
-    $(propertyCalendarArray).each(function (index, calendar){
-        if (propertyCalendarId === parseInt(calendar.el.getAttribute('data-property-calendar-id'))) {
-            calendarById = calendar;
-        }
-    });
-    return calendarById;
-}
-
 
 function updateEventStartAndEndDates(eventInfo) {
     const eventId = eventInfo.event.id;
@@ -513,57 +532,9 @@ function deleteEventFromPropertyCalendar() { //TODO
     });
 }
 
-function addPropertyPhoto(e) {
-    e.preventDefault();
-    const formToSubmit = $(this).get(0);
-    const propertyPhotoId = $(this).attr('data-property-photo-id');
-    const formData = new FormData(formToSubmit);
-    const imgEl = $(this).closest('div.property-details-container').find('img.property-img');
-    $.ajax({
-        url: `http://localhost:8080/api/property/upload-property-photo/${propertyPhotoId}`,
-        type: 'POST',
-        enctype: 'multipart/form-data',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (propertyPhoto) {
-            const {propertyPhotoId, fileData, fileName} = propertyPhoto;
-            if (imgEl.hasClass('hidden')) {
-                imgEl.removeClass('hidden');
-            }
-            const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
-            imgEl.removeAttr('src');
-            imgEl.attr('src', URL.createObjectURL(imgSrc)).attr('alt', fileName);
-        }
-    });
-}
-
-function getAllPropertyTypes() {
-    const propertyTypeSelectEl = $('.save-property-type');
-    $.get('http://localhost:8080/api/property/get-all-property-types', function (propertyTypes) {
-        $(propertyTypes).each(function (index, propertyType){
-            const {propertyTypeId, propertyTypeName} = propertyType;
-            const selectOptionEl = $(`<option value="${propertyTypeId}" class="save-property-type-option">${propertyTypeName}</option>`);
-            propertyTypeSelectEl.append(selectOptionEl);
-        });
-    });
-}
-
-function getAllCountries() {
-    const propertyCountrySelectEl = $('.save-property-country');
-    $.get('http://localhost:8080/api/property/get-all-countries', function (countries) {
-        $(countries).each(function (index, country){
-            const {countryId, countryName} = country;
-            const selectOptionEl = $(`<option value="${countryId}" class="save-property-country-option">${countryName}</option>`);
-            propertyCountrySelectEl.append(selectOptionEl);
-        });
-    });
-}
-
 function saveNewPropertyToDatabase(e) {
     e.preventDefault();
-    $('.save-new-property-modal').modal('toggle');
+    $('.save-and-update-property-modal').modal('toggle');
     const userId = $('input[type=hidden].user-id').val();
     const propertyForm = {
         userId: userId,
@@ -602,13 +573,14 @@ function saveNewPropertyToDatabase(e) {
             let propertyIdentifier = `property-${propertyCounter}`;
             let calendarIdentifier = `calendar-${propertyCounter}`;
 
-            createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, propertyName);
-            createPropertyCardEl(propertyCounter, propertyIdentifier);
-            createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar);
-            createPropertyDetailsEl(propertyIdentifier);
-            createPropertyPhotoEl(propertyIdentifier, propertyPhoto);
-            createPropertyAddressEl(propertyIdentifier, isAvailable, propertyType, propertyAddress);
-            createPropertyDescriptionEl(propertyIdentifier, propertyDescription);
+            $('.property-name-tab-container').append(createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, propertyName));
+            $('.property-card-container')
+                .append(createPropertyCardEl(propertyCounter, propertyIdentifier)
+                    .append(createFullCalendarEl(propertyCounter, propertyIdentifier, propertyId, calendarIdentifier, propertyCalendar))
+                    .append(createPropertyDetailsEl(propertyIdentifier, isAvailable, propertyType, propertyAddress, propertyDescription))
+                    .append(createPropertyPhotoEl(propertyIdentifier, propertyPhoto)));
+
+            propertyCounter++
         },
         dataType: 'json',
         error: function (data) { //TODO

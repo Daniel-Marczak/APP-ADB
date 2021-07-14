@@ -730,12 +730,11 @@ body::-webkit-scrollbar-thumb {
     background-color: rgba(10, 10, 10, 0.2);
 }
 
-/*todo main block*/
-.property-details-container {
+.property-details-el {
     display: inline-block;
-    float: right;
-    height: 650px;
-    width: 350px;
+    background-color: black;
+    height: auto;
+    width: auto;
 }
 
 .property-name-tab:hover {
@@ -788,8 +787,8 @@ div.property-calendar {
     color: #000;
 }
 
-.save-property-type,
-.save-property-country {
+.su-property-type,
+.su-property-country {
     width: 195px;
 }
 
@@ -864,6 +863,13 @@ div.property-calendar {
     background-color: whitesmoke;
 }
 
+.property-address-table {
+    background-color: whitesmoke;
+}
+
+.property-description {
+    background-color: whitesmoke;
+}
 
 
 

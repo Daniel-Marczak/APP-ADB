@@ -54,17 +54,17 @@
     </div>
 </footer>
 
-<!-- SAVE NEW PROPERTY MODAL -->
-<div tabindex="-1" class="modal save-new-property-modal" role="dialog" aria-hidden="true">
+<!-- SAVE AND UPDATE PROPERTY MODAL -->
+<div tabindex="-1" class="modal save-and-update-property-modal" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h4>Please specify the property details</h4>
             </div>
             <div class="modal-body">
-                <form method="post" id="save-new-property-form">
+                <form method="post" id="save-and-update-property-form">
                     <label>Property name:
-                        <input type="text" name="propertyName" class="save-property-name"/>
+                        <input type="text" name="propertyName" class="su-property-name"/>
                     </label>
                     <label>Is property available:<br>
                         <input id="isAvailableYes" type="radio" name="isAvailable" value="true" checked="checked"/>
@@ -74,37 +74,37 @@
                     </label>
                     <br>
                     <label>Property type:<br>
-                        <select name="propertyType" class="save-property-type">
+                        <select name="propertyType" class="su-property-type">
                             <option value="0" selected>Please select a type</option>
                         </select>
                     </label>
                     <br>
                     <label>Country:<br>
-                        <select name="propertyCountry" class="save-property-country">
+                        <select name="propertyCountry" class="su-property-country">
                             <option value="0" selected>Please select a country</option>
                         </select>
                     </label>
                     <br>
                     <label>City:<br>
-                        <input type="text" name="propertyCity" class="save-property-city"/>
+                        <input type="text" name="propertyCity" class="su-property-city"/>
                     </label>
                     <label>Street:<br>
-                        <input type="text" name="propertyStreet" class="save-property-street"/>
+                        <input type="text" name="propertyStreet" class="su-property-street"/>
                     </label>
                     <label>Postal code:<br>
-                        <input type="text" name="propertyPostalCode" class="save-property-postal-code"/>
+                        <input type="text" name="propertyPostalCode" class="su-property-postal-code"/>
                     </label>
                     <label>Province:<br>
-                        <input type="text" name="propertyProvince" class="save-property-province"/>
+                        <input type="text" name="propertyProvince" class="su-property-province"/>
                     </label>
                     <label>Region:<br>
-                        <input type="text" name="propertyRegion" class="save-property-region"/>
+                        <input type="text" name="propertyRegion" class="su-property-region"/>
                     </label>
                     <label>Description:<br>
-                        <textarea name="propertyDescription" class="save-property-description"></textarea>
+                        <textarea name="propertyDescription" class="su-property-description"></textarea>
                     </label>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-block save-property-btn">Save property</button>
+                        <button type="submit" class="btn btn-primary btn-block su-property-btn">Save property</button>
                     </div>
                 </form>
             </div>

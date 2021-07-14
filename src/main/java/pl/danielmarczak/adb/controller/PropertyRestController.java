@@ -22,19 +22,17 @@ public class PropertyRestController {
     private final PropertyService propertyService;
     private final PropertyTypeService propertyTypeService;
     private final PropertyAddressService propertyAddressService;
-    private final PropertyRoomService propertyRoomService;
     private final PropertyPhotoService propertyPhotoService;
     private final CountryService countryService;
 
 
     public PropertyRestController(
             UserService userService, PropertyService propertyService, PropertyTypeService propertyTypeService, PropertyAddressService propertyAddressService,
-            PropertyRoomService propertyRoomService, PropertyPhotoService propertyPhotoService, CountryService countryService) {
+            PropertyPhotoService propertyPhotoService, CountryService countryService) {
         this.userService = userService;
         this.propertyService = propertyService;
         this.propertyTypeService = propertyTypeService;
         this.propertyAddressService = propertyAddressService;
-        this.propertyRoomService = propertyRoomService;
         this.propertyPhotoService = propertyPhotoService;
         this.countryService = countryService;
     }
