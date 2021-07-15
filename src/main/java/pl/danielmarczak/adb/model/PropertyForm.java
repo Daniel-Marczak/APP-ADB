@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class PropertyForm {
 
+    private Long propertyId;
     private Long userId;
     private String propertyName;
     private Boolean isAvailable;

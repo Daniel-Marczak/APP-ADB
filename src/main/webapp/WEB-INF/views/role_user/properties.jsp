@@ -54,22 +54,25 @@
     </div>
 </footer>
 
-<!-- SAVE AND UPDATE PROPERTY MODAL -->
-<div tabindex="-1" class="modal save-and-update-property-modal" role="dialog" aria-hidden="true">
+<!-- SAVE OR UPDATE PROPERTY MODAL -->
+<div tabindex="-1" class="modal save-or-update-property-modal" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4>Please specify the property details</h4>
+                <h4 class="add-new-property-header-txt">Please specify the property details</h4>
+                <button type="submit" class="btn btn-danger btn-block delete-property-btn hidden">Delete property</button>
             </div>
             <div class="modal-body">
-                <form method="post" id="save-and-update-property-form">
+                <form method="post" id="save-or-update-property-form">
+                    <input type="hidden" name="propertyId" class="su-property-id" value="">
+                    <input type="hidden" name="userId" class="su-property-user-id" value="${requestScope.userId}"/>
                     <label>Property name:
                         <input type="text" name="propertyName" class="su-property-name"/>
                     </label>
                     <label>Is property available:<br>
-                        <input id="isAvailableYes" type="radio" name="isAvailable" value="true" checked="checked"/>
+                        <input id="isAvailableYes" type="radio" name="isAvailable" class="su-is-available true" value="true" checked="checked"/>
                         <label for="isAvailableYes">Yes</label>
-                        <input id="isAvailableNo" type="radio" name="isAvailable" value="false"/>
+                        <input id="isAvailableNo" type="radio" name="isAvailable" class="su-is-available false" value="false"/>
                         <label for="isAvailableNo">No</label>
                     </label>
                     <br>

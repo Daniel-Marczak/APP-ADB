@@ -1,9 +1,6 @@
 package pl.danielmarczak.adb.service;
 
-import pl.danielmarczak.adb.entity.Country;
 import pl.danielmarczak.adb.entity.Property;
-import pl.danielmarczak.adb.entity.PropertyType;
-import pl.danielmarczak.adb.entity.User;
 import pl.danielmarczak.adb.model.PropertyForm;
 
 import java.util.List;
@@ -16,6 +13,12 @@ public interface PropertyService {
 
     void saveProperty(Property property);
 
-    Property createNewProperty(User user, PropertyForm propertyForm, PropertyType propertyType, Country country);
+    Property createNewProperty(PropertyForm propertyForm);
+
+    Property updateProperty(PropertyForm propertyForm);
+
+    void deleteProperty(Long propertyId);
+
+
 
 }

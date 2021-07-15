@@ -37,6 +37,16 @@ public class PropertyRestController {
         this.countryService = countryService;
     }
 
+    @GetMapping(value = "/get-all-property-types")
+    List<PropertyType> getAllPropertyTypes(){
+        return propertyTypeService.getAllPropertyTypes();
+    }
+
+    @GetMapping("/get-all-countries") //TODO arc
+    List<Country> getAllCountries(){
+        return countryService.getAllCountries();
+    }
+
     @GetMapping(value = "/user-properties/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<Property> getAllPropertiesByUserId(@PathVariable Long userId) {
         List<Property> properties = propertyService.getAllByUserId(userId);
@@ -48,34 +58,34 @@ public class PropertyRestController {
         return properties;
     }
 
-    @PostMapping(value = "save-new-property-to-database")
-    public Property saveNewPropertyToDatabase(@RequestBody PropertyForm propertyForm){
-        User user = userService.findUserById(propertyForm.getUserId());
-        PropertyType propertyType = propertyTypeService.findPropertyTypeById(propertyForm.getPropertyTypeId());
-        Country country = countryService.findCountryById(propertyForm.getCountryId());
-        Property property = propertyService.createNewProperty(user, propertyForm, propertyType, country);
+    @PostMapping(value = "save-property-to-database")
+    public Property savePropertyToDatabase(@RequestBody PropertyForm propertyForm){
+        Property property = propertyService.createNewProperty(propertyForm);
         property.getUser().setPassword("");
         property.getUser().setRole(new Role());
         return property;
     }
 
-    @GetMapping(value = "/get-all-property-types")
-    List<PropertyType> getAllPropertyTypes(){
-        return propertyTypeService.getAllPropertyTypes();
+    @PutMapping(value = "/update-property-data-in-database")
+    public Property updatePropertyDataInDatabase(@RequestBody PropertyForm propertyForm) {
+        return propertyService.updateProperty(propertyForm);
     }
 
-    @GetMapping("/get-all-countries") //TODO arc
-    List<Country> getAllCountries(){
-        return countryService.getAllCountries();
-    }
 
-    @PostMapping(value = "/upload-property-photo/{propertyPhotoId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+    @PostMapping(value = "/upload-property-photo/{propertyPhotoId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) //TODO
     public PropertyPhoto uploadPropertyPhoto(@RequestParam("file") MultipartFile file, @PathVariable Long propertyPhotoId) throws IOException {
         PropertyPhoto propertyPhoto = propertyPhotoService.getPropertyPhotoById(propertyPhotoId);
         propertyPhoto.setFileName(file.getOriginalFilename());
         propertyPhoto.setFileType(file.getContentType());
         propertyPhoto.setFileData(file.getBytes());
         return propertyPhotoService.savePropertyPhoto(propertyPhoto);
+    }
+
+    @DeleteMapping("/delete-property-from-database/{propertyId}")
+    public Boolean deletePropertyFromDatabase(@PathVariable Long propertyId){
+        propertyService.deleteProperty(propertyId);
+        return true; //TODO
     }
 
 
