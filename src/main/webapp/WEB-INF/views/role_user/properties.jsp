@@ -107,7 +107,8 @@
                         <textarea name="propertyDescription" class="su-property-description"></textarea>
                     </label>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-block su-property-btn">Save property</button>
+                        <button type="submit" class="btn btn-primary btn-block su-save-property-btn">Save property</button>
+                        <button type="submit" class="btn btn-primary btn-block su-save-changes-btn">Save changes</button>
                     </div>
                 </form>
             </div>

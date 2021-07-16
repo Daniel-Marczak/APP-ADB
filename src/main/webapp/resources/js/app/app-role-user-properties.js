@@ -81,6 +81,9 @@ function showSaveOrUpdatePropertyModal() {
     $('input.su-property-id').val("");
     deletePropertyBtn.addClass('hidden');
     $('h4.add-new-property-header-txt').removeClass('hidden');
+    $('.su-save-property-btn').removeClass('hidden');
+    $('.su-save-changes-btn').addClass('hidden');
+
 }
 
 
@@ -524,6 +527,8 @@ function deleteEventFromPropertyCalendar() { //TODO
 function editPropertyDetails(){
     deletePropertyBtn.removeClass('hidden');
     $('h4.add-new-property-header-txt').addClass('hidden');
+    $('.su-save-property-btn').addClass('hidden');
+    $('.su-save-changes-btn').removeClass('hidden');
 
     const currentPropertyTypeName = $(this).children('table').find('input.details-property-type-name').val();
     const currentCountryName = $(this).children('table').find('input.details-property-country-name').val();
