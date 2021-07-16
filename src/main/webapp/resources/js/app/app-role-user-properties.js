@@ -6,7 +6,7 @@ let propertyCounter = 0;
 let propertyCalendarArray = [];
 
 const addPropertyBtn = $('button.add-property-btn');
-addPropertyBtn.on('click', showSaveOrUpdatePropertyModal);
+addPropertyBtn.on('click', showSaveOrUpdatePropertyModalInSaveMode);
 
 const deletePropertyBtn =$('button.delete-property-btn');
 deletePropertyBtn.on('click', deletePropertyFromDatabase);
@@ -76,16 +76,14 @@ function getAllPropertiesByUserId() {
     });
 }
 
-function showSaveOrUpdatePropertyModal() {
-    $('.save-or-update-property-modal').modal('toggle');
-    $('input.su-property-id').val("");
+function showSaveOrUpdatePropertyModalInSaveMode() {
+    clearSaveOrUpdatePropertyFormFields();
     deletePropertyBtn.addClass('hidden');
     $('h4.add-new-property-header-txt').removeClass('hidden');
     $('.su-save-property-btn').removeClass('hidden');
     $('.su-save-changes-btn').addClass('hidden');
-
+    $('.save-or-update-property-modal').modal('toggle');
 }
-
 
 function convertPropertyPhotoFileDataToBlob(fileData) {
     const byteCharacters = atob(fileData);
@@ -176,7 +174,7 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
         eventStartEditable: true,
         eventResizableFromStart: true,
         select: function (selectionInfo) {
-            $('.add-or-edit-event-modal').modal('toggle');
+            clearAddOrEditEventFormFields();
             selectionInfoEventStart = selectionInfo.startStr;
             selectionInfoEventEnd = selectionInfo.endStr;
             selectionInfoCurrentCalendarId = selectionInfo.view.calendar.el.getAttribute('data-property-calendar-id');
@@ -184,6 +182,7 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
             $('button.cancel-booking-btn').addClass('hidden');
             $('button.ae-add-event-btn').removeClass('hidden');
             saveEventChangesBtn.addClass('hidden');
+            $('.add-or-edit-event-modal').modal('toggle');
         },
         eventClick: function (eventInfo) {
             // console.log(eventInfo);
@@ -304,10 +303,8 @@ function addPropertyPhoto(e) {
         processData: false,
         success: function (propertyPhoto) {
             const {propertyPhotoId, fileData, fileName} = propertyPhoto;
-            console.log(propertyPhoto);
             if ($(imgEl).hasClass('hidden')) {
                 imgEl.removeClass('hidden');
-                console.log("hidden");
             }
             const imgSrc = convertPropertyPhotoFileDataToBlob(fileData);
             imgEl.removeAttr('src');
@@ -659,7 +656,6 @@ function savOrUpdateProperty(e) {
 
 function deletePropertyFromDatabase(){
     const propertyId = $('input[type=hidden].su-property-id').val();
-    console.log(propertyId);
     $.ajax({
         type: 'DELETE',
         url: `http://localhost:8080/api/property/delete-property-from-database/${propertyId}`,
@@ -685,6 +681,26 @@ function deletePropertyFromDatabase(){
             console.log(data);
         }
     });
+}
+
+function clearAddOrEditEventFormFields(){
+    $('#add-or-edit-event-form').find('input[type=text], textarea').each(function (index, input){
+        $(input).val("");
+    });
+}
+
+function clearSaveOrUpdatePropertyFormFields(){
+    $('#save-or-update-property-form')
+        .find('input[type=hidden].su-property-id, input[type=text], textarea')
+            .each(function (index, input){$(input).val("");})
+        .end()
+        .find('input.su-is-available.true')
+            .prop('checked', true)
+        .end()
+        .find('select')
+            .each(function (index, select){
+                $(select).val(0);
+            });
 }
 
 ///////////////////////// CODE THAT 50% OF THE TIME WORKS EVERY TIME //////////////////////////////////////
