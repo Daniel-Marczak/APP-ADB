@@ -116,67 +116,36 @@
     </div>
 </div>
 
-<!-- ADD EVENT MODAL -->
-<div tabindex="-1" class="modal add-event-modal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>Please specify the booking details</h4>
-            </div>
-            <div class="modal-body">
-                <form method="post" id="add-event-form">
-                    <label>Booking tittle:
-                        <input type="text" name="title" class="add-event-title"/>
-                    </label>
-                    <label>Customer name:
-                        <input type="text" name="customerName" class="add-event-customer-name"/>
-                    </label>
-                    <label>Customer surname:
-                        <input type="text" name="customerSurname" class="add-event-customer-surname"/>
-                    </label>
-                    <label>Customer phone:
-                        <input type="text" name="customerPhone" class="add-event-customer-phone"/>
-                    </label>
-                    <label>Additional info:
-                        <textarea name="additionalInfo" class="add-event-additional-info"></textarea>
-                    </label>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-block add-event-btn">Add booking</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- EDIT EVENT MODAL -->
-<div tabindex="-1" class="modal edit-event-modal" role="dialog" aria-hidden="true">
+<!-- ADD OR EDIT EVENT MODAL -->
+<div tabindex="-1" class="modal add-or-edit-event-modal" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header">
-                    <button type="submit" class="btn btn-danger btn-block cancel-booking-btn">Cancel booking</button>
+                    <h4 class="add-event-header-text">Please specify the booking details</h4>
+                    <button type="submit" class="btn btn-danger btn-block cancel-booking-btn hidden">Cancel booking</button>
                 </div>
             </div>
             <div class="modal-body">
-                <form method="post" id="edit-event-form" >
+                <form method="post" id="add-or-edit-event-form" >
                     <label>Booking tittle:
-                        <input type="text" name="tittle" class="event-title-edit"/>
+                        <input type="text" name="tittle" class="ae-event-title"/>
                     </label>
                     <label>Customer name:
-                        <input type="text" name="customerName" class="event-customer-name-edit"/>
+                        <input type="text" name="customerName" class="ae-event-customer-name"/>
                     </label>
                     <label>Customer surname:
-                        <input type="text" name="customerSurname" class="event-customer-surname-edit"/>
+                        <input type="text" name="customerSurname" class="ae-event-customer-surname"/>
                     </label>
                     <label>Customer phone:
-                        <input type="text" name="customerPhone" class="event-customer-phone-edit"/>
+                        <input type="text" name="customerPhone" class="ae-event-customer-phone"/>
                     </label>
                     <label>Additional info:
-                        <textarea name="additionalInfo" class="event-additional-info-edit"></textarea>
+                        <textarea name="additionalInfo" class="ae-event-additional-info"></textarea>
                     </label>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-block save-event-changes-btn">Save changes</button>
+                        <button type="submit" class="btn btn-primary btn-block ae-add-event-btn">Add booking</button>
+                        <button type="submit" class="btn btn-primary btn-block ae-save-changes-btn hidden">Save changes</button>
                     </div>
                 </form>
             </div>

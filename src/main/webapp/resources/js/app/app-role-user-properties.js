@@ -11,22 +11,22 @@ addPropertyBtn.on('click', showSaveOrUpdatePropertyModal);
 const deletePropertyBtn =$('button.delete-property-btn');
 deletePropertyBtn.on('click', deletePropertyFromDatabase);
 
-const addEventForm = $('#add-event-form');
-addEventForm.on('submit', saveEventToDatabaseAndAddEventToCalendar);
-
-const editEventForm = $('#edit-event-form');
-editEventForm.on('submit', updateEventDataInDatabase);
-
 const saveOrUpdatePropertyForm = $("#save-or-update-property-form");
 saveOrUpdatePropertyForm.on('submit', savOrUpdateProperty);
+
+const addEventBtn = $('.ae-add-event-btn');
+addEventBtn.on('click', saveEventToDatabaseAndAddEventToCalendar);
+
+const saveEventChangesBtn = $('button.ae-save-changes-btn');
+saveEventChangesBtn.on('click', updateEventDataInDatabase);
+
+const cancelBookingBtn = $('.cancel-booking-btn');
+cancelBookingBtn.on('click', deleteEventFromPropertyCalendar);
 
 let selectionInfoEventStart;
 let selectionInfoEventEnd;
 let selectionInfoCurrentCalendarId;
-
 let currentEvent;
-let cancelBookingBtn = $('.cancel-booking-btn');
-cancelBookingBtn.on('click', deleteEventFromPropertyCalendar);
 
 
 ////////////////////////////////////////////////////// CLASSES /////////////////////////////////////////////////////////
@@ -165,8 +165,8 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
                     events
                 );
             }).error(function (error) {
-                const {responseJSON} = error
-                failureCallback(responseJSON)
+                const {responseJSON} = error;
+                failureCallback(responseJSON);
             });
         },
         eventTextColor: 'white',
@@ -176,14 +176,18 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
         eventStartEditable: true,
         eventResizableFromStart: true,
         select: function (selectionInfo) {
-            $('.add-event-modal').modal('toggle');
+            $('.add-or-edit-event-modal').modal('toggle');
             selectionInfoEventStart = selectionInfo.startStr;
             selectionInfoEventEnd = selectionInfo.endStr;
             selectionInfoCurrentCalendarId = selectionInfo.view.calendar.el.getAttribute('data-property-calendar-id');
+            $('h4.add-event-header-text').removeClass('hidden');
+            $('button.cancel-booking-btn').addClass('hidden');
+            $('button.ae-add-event-btn').removeClass('hidden');
+            saveEventChangesBtn.addClass('hidden');
         },
         eventClick: function (eventInfo) {
             // console.log(eventInfo);
-            showEditEventModalWIthEventData(eventInfo);
+            showAddOrEditEventModalInEditMode(eventInfo);
         },
         eventDrop: function (eventDropInfo) {
             // console.log(eventDropInfo);
@@ -373,23 +377,23 @@ function getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId) {
 
 function saveEventToDatabaseAndAddEventToCalendar(e) {
     e.preventDefault();
-    $('.add-event-modal').modal('toggle');
+    $('.add-or-edit-event-modal').modal('toggle');
 
     const customer = new Customer();
     customer.customerID = null;
-    customer.customerName = addEventForm.find('input.add-event-customer-name').val();
-    customer.customerSurname = addEventForm.find('input.add-event-customer-surname').val();
-    customer.customerPhone = addEventForm.find('input.add-event-customer-phone').val();
+    customer.customerName = $('input.ae-event-customer-name').val();
+    customer.customerSurname = $('input.ae-event-customer-surname').val();
+    customer.customerPhone = $('input.ae-event-customer-phone').val();
 
     const event = new Event();
     event.id = null;
-    event.title = addEventForm.find('input.add-event-title').val();
+    event.title = $('input.ae-event-title').val();
     event.start = selectionInfoEventStart;
     event.end = selectionInfoEventEnd;
     event.propertyCalendar = {
         propertyCalendarId: selectionInfoCurrentCalendarId,
     };
-    event.additionalInfo = addEventForm.find('textarea.add-event-additional-info').val();
+    event.additionalInfo = $('textarea.ae-event-additional-info').val();
     event.customer = customer;
 
     $.ajax({
@@ -436,17 +440,21 @@ function updateEventStartAndEndDates(eventInfo) {
     });
 }
 
-function showEditEventModalWIthEventData(eventInfo) {
-    $('.edit-event-modal').modal('toggle');
+function showAddOrEditEventModalInEditMode(eventInfo) {
     currentEvent = eventInfo.event;
     const title = eventInfo.event._def.title;
     const {customerName, customerSurname, customerPhone} = eventInfo.event._def.extendedProps.customer;
     const additionalInfo = eventInfo.event._def.extendedProps.additionalInfo;
-    editEventForm.find('input.event-title-edit').val(title);
-    editEventForm.find('input.event-customer-name-edit').val(customerName);
-    editEventForm.find('input.event-customer-surname-edit').val(customerSurname);
-    editEventForm.find('input.event-customer-phone-edit').val(customerPhone);
-    editEventForm.find('textarea.event-additional-info-edit').val(additionalInfo);
+    $('.add-or-edit-event-modal').modal('toggle');
+    $('h4.add-event-header-text').addClass('hidden');
+    $('button.cancel-booking-btn').removeClass('hidden');
+    $('button.ae-add-event-btn').addClass('hidden');
+    saveEventChangesBtn.removeClass('hidden');
+    $('input.ae-event-title').val(title);
+    $('input.ae-event-customer-name').val(customerName);
+    $('input.ae-event-customer-surname').val(customerSurname);
+    $('input.ae-event-customer-phone').val(customerPhone);
+    $('textarea.ae-event-additional-info').val(additionalInfo);
 }
 
 function getCurrentEventData() {
@@ -471,18 +479,18 @@ function updateEventDataInDatabase(e) {
     const {propertyCalendarId} = currentEventData.calendar;
     const customer = new Customer();
     customer.customerId = customerId;
-    customer.customerName = editEventForm.find('input.event-customer-name-edit').val();
-    customer.customerSurname = editEventForm.find('input.event-customer-surname-edit').val();
-    customer.customerPhone = editEventForm.find('input.event-customer-phone-edit').val();
+    customer.customerName = $('input.ae-event-customer-name').val();
+    customer.customerSurname = $('input.ae-event-customer-surname').val();
+    customer.customerPhone = $('input.ae-event-customer-phone').val();
     const event = new Event();
     event.id = currentEventData.id;
-    event.title = editEventForm.find('input.event-title-edit').val();
+    event.title = $('input.ae-event-title').val();
     event.start = currentEventData.start;
     event.end = currentEventData.end;
     event.propertyCalendar = {
         propertyCalendarId: propertyCalendarId
     };
-    event.additionalInfo = editEventForm.find('textarea.event-additional-info-edit').val();
+    event.additionalInfo = $('textarea.ae-event-additional-info').val();
     event.customer = customer;
 
     $.ajax({
@@ -505,17 +513,17 @@ function updateEventDataInDatabase(e) {
             console.log(data);
         }
     });
-    $('.edit-event-modal').modal('toggle');
+    $('.add-or-edit-event-modal').modal('toggle');
 }
 
 function deleteEventFromPropertyCalendar() { //TODO
     const currentEventData = getCurrentEventData();
     const currentEventId = currentEventData.id;
+    $('.add-or-edit-event-modal').modal('toggle');
     $.ajax({
         type: 'DELETE',
         url: `http://localhost:8080/api/event/delete-event-from-property-calendar/${currentEventId}`,
         success: function (response) {
-            $('.edit-event-modal').modal('toggle');
             currentEvent.remove();
         },
         error: function (data) { //TODO
@@ -616,7 +624,7 @@ function savOrUpdateProperty(e) {
             } else {
                 const {
                     isAvailable,
-                    propertyAddress: {city, country: { countryName}, postalCode, province, region, street},
+                    propertyAddress: {city, country: {countryName}, postalCode, province, region, street},
                     propertyDescription: {descriptionText},
                     propertyId,
                     propertyName,
