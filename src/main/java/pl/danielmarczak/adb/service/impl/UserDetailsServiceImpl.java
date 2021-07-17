@@ -28,6 +28,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user.getId() == null) {
             throw new UsernameNotFoundException("username not found");
         }
+        if(!user.isEnabled()){
+            throw new UsernameNotFoundException("registration process not completed");//TODO
+        }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
 

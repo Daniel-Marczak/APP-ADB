@@ -1,6 +1,5 @@
 package pl.danielmarczak.adb.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import pl.danielmarczak.adb.entity.User;
 import pl.danielmarczak.adb.recaptcha.ReCaptchaResponse;
-import pl.danielmarczak.adb.service.UserService;
+import pl.danielmarczak.adb.service.RegistrationService;
 
 import javax.validation.Valid;
 
@@ -18,13 +17,12 @@ import javax.validation.Valid;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final RegistrationService registrationService;
 
-    private final UserService userService;
-
-    public RegistrationController(UserService userService) {
-        this.userService = userService;
+    public RegistrationController(RestTemplate restTemplate, RegistrationService registrationService) {
+        this.restTemplate = restTemplate;
+        this.registrationService = registrationService;
     }
 
     @GetMapping
@@ -57,7 +55,7 @@ public class RegistrationController {
                 return "/registration";
             }
 
-            userService.saveUser(newUser);
+            registrationService.registerNewUser(newUser);
             return "redirect:/registration?success";
         } else {
 
