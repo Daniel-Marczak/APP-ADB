@@ -2,7 +2,9 @@ package pl.danielmarczak.adb.service;
 
 import pl.danielmarczak.adb.entity.User;
 
+import javax.mail.MessagingException;
+
 public interface RegistrationService {
 
-    void registerNewUser(User user);
+    void registerNewUserAndSendERegistrationConfirmationEmail(User user) throws MessagingException;
 }

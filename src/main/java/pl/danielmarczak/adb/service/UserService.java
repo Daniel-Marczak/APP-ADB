@@ -6,7 +6,9 @@ import pl.danielmarczak.adb.entity.User;
 
 public interface UserService {
 
-    void saveUser(User user);
+    User saveUser(User user);
+
+    void deleteUser(User user);
 
     User findFirstByUsername(String username);
 
@@ -19,5 +21,7 @@ public interface UserService {
     User findUserByUsername(String username);
 
     User findUserById(Long userId);
+
+    void setUserIsEnabled(boolean isEnabled, Long userId );
 
 }

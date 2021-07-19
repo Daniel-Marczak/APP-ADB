@@ -25,11 +25,16 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(false);
         user.setRole(roleService.findRoleById(3));
-        userRepository.save(user);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 
     @Override
@@ -60,5 +65,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserById(Long userId) {
         return userRepository.findById(userId).orElse(new User());
+    }
+
+    @Override
+    public void setUserIsEnabled(boolean isEnabled, Long userId) {
+        userRepository.setUserIsEnabled(isEnabled, userId);
     }
 }
