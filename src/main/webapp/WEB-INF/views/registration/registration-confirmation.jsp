@@ -24,7 +24,7 @@
 
                         <c:if test="${requestScope.registration == 'successful'}">
                             <div class="registration-confirmation-success-box">
-                                Your account has been activated. You can now log in.
+                                Your account has been activated. You can now sign in.
                             </div>
                         </c:if>
                         <c:if test="${requestScope.registration == 'alreadyConfirmed'}">

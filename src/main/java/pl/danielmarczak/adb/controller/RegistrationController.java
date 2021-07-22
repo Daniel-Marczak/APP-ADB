@@ -61,22 +61,17 @@ public class RegistrationController {
                         "password",
                         "This email address has already been taken."
                 ));
-                return "registration/registration";
+                return "registration?reg=failure";
             }
             if (result.hasErrors()) {
-                return "registration/registration";
+                return "registration?reg=failure";
             }
 
-            try {
-                registrationService.registerNewUserAndSendERegistrationConfirmationEmail(newUser);
-                return "redirect:/registration?success";
-            } catch (MessagingException messagingException) {
-                logger.warn(messagingException.getMessage());
-                return "redirect:/registration?failure";
-            }
+            registrationService.registerNewUserAndSendERegistrationConfirmationEmail(newUser);
+            return "redirect:/registration?reg=success";
 
         } else {
-            return "redirect:/registration?failure";
+            return "redirect:/registration?reg=failure";
         }
     }
 

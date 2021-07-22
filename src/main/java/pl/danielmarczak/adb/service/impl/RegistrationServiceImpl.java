@@ -8,7 +8,6 @@ import pl.danielmarczak.adb.service.RegistrationService;
 import pl.danielmarczak.adb.service.TokenService;
 import pl.danielmarczak.adb.service.UserService;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 @Service
@@ -27,7 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 
     @Override
-    public void registerNewUserAndSendERegistrationConfirmationEmail(User newUser) throws MessagingException {
+    public void registerNewUserAndSendERegistrationConfirmationEmail(User newUser) {
         User user = userService.saveUser(newUser);
         Token token = tokenService.createRegistrationConfirmationToken(user);
         emailService.sendRegistrationConfirmationEmail(token);
