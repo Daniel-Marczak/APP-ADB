@@ -128,8 +128,8 @@
             </div>
             <div class="modal-body">
                 <form method="post" id="add-or-edit-event-form" >
-                    <label>Booking tittle:
-                        <input type="text" name="tittle" class="ae-event-title"/>
+                    <label>Booking title:
+                        <input type="text" name="title" class="ae-event-title"/>
                     </label>
                     <label>Customer name:
                         <input type="text" name="customerName" class="ae-event-customer-name"/>

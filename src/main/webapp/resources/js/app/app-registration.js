@@ -1,27 +1,8 @@
-const recaptchaContainer = $('.recaptcha-wrapper');
-const registerBtn = $("#registration-submit-btn");
-const tooltipUsername = $('.t-username');
-const tooltipEmail = $('.t-email');
-const tooltipPassword = $('.t-password');
-const tooltipCOnfPass = $('.t-confpass');
-const tooltipContactNumber = $('.t-contact-number');
 const usernameInput = $('.username-input');
 const emailInput = $('.email-input');
 const contactNumberInput  = $('.contact-number-input');
 const passwordInput = $('.password-input');
 const confPassInput = $('.confpass-input');
-const errUsernameFmtDiv = $('.error-username-fmt');
-const errUsernameTknDiv = $('.error-username-tkn');
-const errEmailFmtDiv = $('.error-email-fmt');
-const errEmailTknDiv = $('.error-email-tkn');
-const errContactNrFmtDiv = $('.error-contact-number')
-const errPasswordDiv = $('.error-password');
-const errConfPassDiv = $('.error-password-conf');
-const usernameCheckmarkDiv = $('.username-checkmark');
-const emailCheckmarkDiv = $('.email-checkmark');
-const contactNrCheckmarkDiv = $('.contact-number-checkmark');
-const passwordCheckmarkDiv = $('.password-checkmark');
-const confPassCheckmarkDiv = $('.confpass-checkmark');
 
 let isUsernameFmtCorrect = false;
 let isUsernameAvailable = false;
@@ -39,6 +20,7 @@ let showRecaptcha = false;
 function checkIsUsernameFmtCorrect() {
     const USERNAME_REGEX = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){1,13}[a-zA-Z0-9]$/;
     const username = usernameInput.val();
+    const errUsernameFmtDiv = $('.error-username-fmt');
     if (!USERNAME_REGEX.test(username)) {
         isUsernameFmtCorrect = false;
         if (errUsernameFmtDiv.hasClass('hidden')) {
@@ -57,6 +39,7 @@ function checkIsUsernameFmtCorrect() {
 
 function checkIsUsernameAvailable() {
     const username = usernameInput.val();
+    const errUsernameTknDiv = $('.error-username-tkn');
     return $.get(`http://localhost:8080/api/registration/is-username-available?username=${username}`, function (data) {
         if (data === true) {
             isUsernameAvailable = true;
@@ -74,6 +57,7 @@ function checkIsUsernameAvailable() {
 }
 
 function validateUsername() {
+    const usernameCheckmarkDiv = $('.username-checkmark');
     if (checkIsUsernameFmtCorrect()) {
         $.when(checkIsUsernameAvailable()).done(function () {
             if (isUsernameFmtCorrect && isUsernameAvailable) {
@@ -98,6 +82,7 @@ function validateUsername() {
 function checkIsEmailFmtCorrect() {
     const EMAIL_REGEX = /^(?=.{5,60}$)([a-z0-9-_]*\.)*[a-z0-9-_]*@[a-z0-9]*\.[a-z]{2,3}$/;
     const email = emailInput.val();
+    const errEmailFmtDiv = $('.error-email-fmt');
     if (!EMAIL_REGEX.test(email)) {
         isEmailFmtCorrect = false;
         if (errEmailFmtDiv.hasClass('hidden')) {
@@ -116,6 +101,7 @@ function checkIsEmailFmtCorrect() {
 
 function checkIsEmailAvailable() {
     const email = emailInput.val();
+    const errEmailTknDiv = $('.error-email-tkn');
     return $.get(`http://localhost:8080/api/registration/is-email-available?email=${email}`, function (data) {
         if (data === true) {
             isEmailAvailable = true;
@@ -133,6 +119,8 @@ function checkIsEmailAvailable() {
 }
 
 function validateEmail() {
+    const emailCheckmarkDiv = $('.email-checkmark');
+
     if (checkIsEmailFmtCorrect()) {
         $.when(checkIsEmailAvailable()).done(function () {
             if (isEmailFmtCorrect && isEmailAvailable) {
@@ -157,6 +145,8 @@ function validateEmail() {
 function validateContactNumber(){
     const CONTACT_NUMBER_REGEX = /^([(][0-9]{1,3}[)]|^\+[0-9]{1,3})[ ]([0-9]([._\- ](?![._\- ]))?){7,15}$/;
     const contactNumber = contactNumberInput.val();
+    const errContactNrFmtDiv = $('.error-contact-number');
+    const contactNrCheckmarkDiv = $('.contact-number-checkmark');
 
     if (!CONTACT_NUMBER_REGEX.test(contactNumber)) {
         isContactNrFmtCorrect = false;
@@ -185,6 +175,9 @@ function validateContactNumber(){
 function validatePassword() {
     const PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&])(?=\S+$).{8,50}$/;
     const password = passwordInput.val();
+    const errPasswordDiv = $('.error-password');
+    const passwordCheckmarkDiv = $('.password-checkmark');
+
     if (!PASSWORD_REGEX.test(password)) {
         isPasswordFmtCorrect = false;
         if (errPasswordDiv.hasClass('hidden')) {
@@ -208,6 +201,9 @@ function validatePassword() {
 }
 
 function validateConfirmPassword() {
+    const errConfPassDiv = $('.error-password-conf');
+    const confPassCheckmarkDiv = $('.confpass-checkmark');
+
     if (passwordInput.val() !== confPassInput.val()) {
         isConfPasswordCorrect = false;
         if (errConfPassDiv.hasClass('hidden')) {
@@ -236,20 +232,21 @@ function recaptchaCallback() {
 }
 
 function validateForm() {
+    const recaptchaWrapper = $('.recaptcha-wrapper');
     if (isUsernameFmtCorrect && isUsernameAvailable && isEmailFmtCorrect && isEmailAvailable && isContactNrFmtCorrect
         && isPasswordFmtCorrect && isConfPasswordCorrect
     ) {
         showRecaptcha = true;
-        if (recaptchaContainer.hasClass('hidden')) {
-            recaptchaContainer.removeClass('hidden').toggle().fadeIn(500);
+        if (recaptchaWrapper.hasClass('hidden')) {
+            recaptchaWrapper.removeClass('hidden').toggle().fadeIn(500);
         } else {
-            recaptchaContainer.fadeIn(500);
+            recaptchaWrapper.fadeIn(500);
             showRecaptcha = false;
         }
     } else {
-        recaptchaContainer.fadeOut(500);
+        recaptchaWrapper.fadeOut(500);
         showRecaptcha = false;
-        registerBtn.addClass('hidden')
+        $('#registration-submit-btn').addClass('hidden')
     }
 }
 
@@ -257,37 +254,37 @@ function validateForm() {
 
 function showTooltip() {
     if ($(this).hasClass('username-input')) {
-        tooltipUsername.removeClass('hidden');
+        $('.t-username').removeClass('hidden');
     }
     if ($(this).hasClass('email-input')) {
-        tooltipEmail.removeClass('hidden');
+        $('.t-email').removeClass('hidden');
     }
     if ($(this).hasClass('contact-number-input')) {
-        tooltipContactNumber.removeClass('hidden');
+        $('.t-contact-number').removeClass('hidden');
     }
     if ($(this).hasClass('password-input')) {
-        tooltipPassword.removeClass('hidden');
+        $('.t-password').removeClass('hidden');
     }
     if ($(this).hasClass('confpass-input')) {
-        tooltipCOnfPass.removeClass('hidden');
+        $('.t-confpass').removeClass('hidden');
     }
 }
 
 function hideTooltip() {
     if ($(this).hasClass('username-input')) {
-        tooltipUsername.addClass('hidden');
+        $('.t-username').addClass('hidden');
     }
     if ($(this).hasClass('email-input')) {
-        tooltipEmail.addClass('hidden');
+        $('.t-email').addClass('hidden');
     }
     if ($(this).hasClass('contact-number-input')) {
-        tooltipContactNumber.addClass('hidden');
+        $('.t-contact-number').addClass('hidden');
     }
     if ($(this).hasClass('password-input')) {
-        tooltipPassword.addClass('hidden');
+        $('.t-password').addClass('hidden');
     }
     if ($(this).hasClass('confpass-input')) {
-        tooltipCOnfPass.addClass('hidden');
+        $('.t-confpass').addClass('hidden');
     }
 }
 

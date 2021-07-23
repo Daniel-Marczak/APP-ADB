@@ -8,7 +8,7 @@ let propertyCalendarArray = [];
 const addPropertyBtn = $('button.add-property-btn');
 addPropertyBtn.on('click', showSaveOrUpdatePropertyModalInSaveMode);
 
-const deletePropertyBtn =$('button.delete-property-btn');
+const deletePropertyBtn = $('button.delete-property-btn');
 deletePropertyBtn.on('click', deletePropertyFromDatabase);
 
 const saveOrUpdatePropertyForm = $("#save-or-update-property-form");
@@ -78,6 +78,7 @@ function getAllPropertiesByUserId() {
 
 function showSaveOrUpdatePropertyModalInSaveMode() {
     clearSaveOrUpdatePropertyFormFields();
+    setDefaultInputBorderColor($('#save-or-update-property-form'))
     deletePropertyBtn.addClass('hidden');
     $('h4.add-new-property-header-txt').removeClass('hidden');
     $('.su-save-property-btn').removeClass('hidden');
@@ -107,7 +108,7 @@ function displayPropertyCard() {
 }
 
 function createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, property) {
-    const { propertyId, propertyName} = property;
+    const {propertyId, propertyName} = property;
     const nameTabEl = $(`<div class="property-name-tab" data-property-id="${propertyId}"></div>`);
     const nameTextEl = $('<h3 style="margin-top: 0px"></h3>').text(propertyName);
     nameTabEl.addClass(`${propertyIdentifier}`).addClass(`${calendarIdentifier}`);
@@ -130,7 +131,7 @@ function createPropertyCardEl(propertyCounter, propertyIdentifier, property) {
 }
 
 function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdentifier, property) {
-    const {propertyCalendar:{propertyCalendarId}} = property;
+    const {propertyCalendar: {propertyCalendarId}} = property;
     const calendarEl = $(`<div id='${calendarIdentifier}' class='property-calendar'></div>`);
     calendarEl.attr('data-property-calendar-id', propertyCalendarId)
     calendarEl.addClass(calendarIdentifier);
@@ -175,6 +176,7 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
         eventResizableFromStart: true,
         select: function (selectionInfo) {
             clearAddOrEditEventFormFields();
+            setDefaultInputBorderColor($('#add-or-edit-event-form'));
             selectionInfoEventStart = selectionInfo.startStr;
             selectionInfoEventEnd = selectionInfo.endStr;
             selectionInfoCurrentCalendarId = selectionInfo.view.calendar.el.getAttribute('data-property-calendar-id');
@@ -205,14 +207,14 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
     return calendarEl;
 }
 
-function createPropertyDetailsEl(propertyIdentifier,property) {
+function createPropertyDetailsEl(propertyIdentifier, property) {
     const {propertyId, isAvailable, propertyAddress, propertyDescription, propertyName, propertyType} = property;
     const {descriptionText} = propertyDescription;
     const {propertyTypeName} = propertyType;
     const {city, country: {countryName}, postalCode, province, region, street} = propertyAddress;
     const detailsEl = $(`<div class="property-details-el" data-property-id="${propertyId}"></div>`);
     detailsEl.addClass(propertyIdentifier);
-    
+
     const propertyDetailsTableEl = $(
         `<table class="property-address-table">
             <tbody>
@@ -233,7 +235,7 @@ function createPropertyDetailsEl(propertyIdentifier,property) {
         </table>`
     );
     detailsEl.append(propertyDetailsTableEl);
-    detailsEl.on('click', editPropertyDetails)
+    detailsEl.on('click', editPropertyDetails);
     return detailsEl;
 }
 
@@ -374,46 +376,48 @@ function getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId) {
 
 function saveEventToDatabaseAndAddEventToCalendar(e) {
     e.preventDefault();
-    $('.add-or-edit-event-modal').modal('toggle');
+    if (validateEventAndPropertyFormsInputs($('#add-or-edit-event-form'))) {
+        $('.add-or-edit-event-modal').modal('toggle');
 
-    const customer = new Customer();
-    customer.customerID = null;
-    customer.customerName = $('input.ae-event-customer-name').val();
-    customer.customerSurname = $('input.ae-event-customer-surname').val();
-    customer.customerPhone = $('input.ae-event-customer-phone').val();
+        const customer = new Customer();
+        customer.customerID = null;
+        customer.customerName = $('input.ae-event-customer-name').val();
+        customer.customerSurname = $('input.ae-event-customer-surname').val();
+        customer.customerPhone = $('input.ae-event-customer-phone').val();
 
-    const event = new Event();
-    event.id = null;
-    event.title = $('input.ae-event-title').val();
-    event.start = selectionInfoEventStart;
-    event.end = selectionInfoEventEnd;
-    event.propertyCalendar = {
-        propertyCalendarId: selectionInfoCurrentCalendarId,
-    };
-    event.additionalInfo = $('textarea.ae-event-additional-info').val();
-    event.customer = customer;
+        const event = new Event();
+        event.id = null;
+        event.title = $('input.ae-event-title').val();
+        event.start = selectionInfoEventStart;
+        event.end = selectionInfoEventEnd;
+        event.propertyCalendar = {
+            propertyCalendarId: selectionInfoCurrentCalendarId,
+        };
+        event.additionalInfo = $('textarea.ae-event-additional-info').val();
+        event.customer = customer;
 
-    $.ajax({
-        type: 'POST',
-        url: 'http://localhost:8080/api/event/add-event-to-property-calendar',
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        },
-        data: JSON.stringify(event),
-        success: function (event) {
-            if (event.id !== null) {
-                addEventToCalendar(event);
-            } else {
-                //TODO error modal
-                console.log('event not saved');
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/api/event/add-event-to-property-calendar',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            data: JSON.stringify(event),
+            success: function (event) {
+                if (event.id !== null) {
+                    addEventToCalendar(event);
+                } else {
+                    //TODO error modal
+                    console.log('event not saved');
+                }
+            },
+            dataType: 'json',
+            error: function (data) { //TODO
+                console.log(data);
             }
-        },
-        dataType: 'json',
-        error: function (data) { //TODO
-            console.log(data);
-        }
-    });
+        });
+    }
 }
 
 function addEventToCalendar(event) {
@@ -438,6 +442,7 @@ function updateEventStartAndEndDates(eventInfo) {
 }
 
 function showAddOrEditEventModalInEditMode(eventInfo) {
+    setDefaultInputBorderColor($('#add-or-edit-event-form'))
     currentEvent = eventInfo.event;
     const title = eventInfo.event._def.title;
     const {customerName, customerSurname, customerPhone} = eventInfo.event._def.extendedProps.customer;
@@ -471,46 +476,48 @@ function getCurrentEventData() {
 
 function updateEventDataInDatabase(e) {
     e.preventDefault();
-    const currentEventData = getCurrentEventData();
-    const {customerId} = currentEventData.customer;
-    const {propertyCalendarId} = currentEventData.calendar;
-    const customer = new Customer();
-    customer.customerId = customerId;
-    customer.customerName = $('input.ae-event-customer-name').val();
-    customer.customerSurname = $('input.ae-event-customer-surname').val();
-    customer.customerPhone = $('input.ae-event-customer-phone').val();
-    const event = new Event();
-    event.id = currentEventData.id;
-    event.title = $('input.ae-event-title').val();
-    event.start = currentEventData.start;
-    event.end = currentEventData.end;
-    event.propertyCalendar = {
-        propertyCalendarId: propertyCalendarId
-    };
-    event.additionalInfo = $('textarea.ae-event-additional-info').val();
-    event.customer = customer;
+    if (validateEventAndPropertyFormsInputs($('#add-or-edit-event-form'))) {
+        const currentEventData = getCurrentEventData();
+        const {customerId} = currentEventData.customer;
+        const {propertyCalendarId} = currentEventData.calendar;
+        const customer = new Customer();
+        customer.customerId = customerId;
+        customer.customerName = $('input.ae-event-customer-name').val();
+        customer.customerSurname = $('input.ae-event-customer-surname').val();
+        customer.customerPhone = $('input.ae-event-customer-phone').val();
+        const event = new Event();
+        event.id = currentEventData.id;
+        event.title = $('input.ae-event-title').val();
+        event.start = currentEventData.start;
+        event.end = currentEventData.end;
+        event.propertyCalendar = {
+            propertyCalendarId: propertyCalendarId
+        };
+        event.additionalInfo = $('textarea.ae-event-additional-info').val();
+        event.customer = customer;
 
-    $.ajax({
-        type: 'PUT',
-        url: 'http://localhost:8080/api/event/update-event-data-in-database',
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        },
-        data: JSON.stringify(event),
-        success: function (event) {
-            const {propertyCalendar} = event
-            const {propertyCalendarId} = propertyCalendar
-            const calendar = getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId);
-            calendar.getEventById(event.id).remove();
-            calendar.addEvent(event);
-        },
-        dataType: 'json',
-        error: function (data) { //TODO
-            console.log(data);
-        }
-    });
-    $('.add-or-edit-event-modal').modal('toggle');
+        $.ajax({
+            type: 'PUT',
+            url: 'http://localhost:8080/api/event/update-event-data-in-database',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            data: JSON.stringify(event),
+            success: function (event) {
+                const {propertyCalendar} = event
+                const {propertyCalendarId} = propertyCalendar
+                const calendar = getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId);
+                calendar.getEventById(event.id).remove();
+                calendar.addEvent(event);
+            },
+            dataType: 'json',
+            error: function (data) { //TODO
+                console.log(data);
+            }
+        });
+        $('.add-or-edit-event-modal').modal('toggle');
+    }
 }
 
 function deleteEventFromPropertyCalendar() { //TODO
@@ -529,7 +536,8 @@ function deleteEventFromPropertyCalendar() { //TODO
     });
 }
 
-function editPropertyDetails(){
+function editPropertyDetails() {
+    setDefaultInputBorderColor('#save-or-update-property-form');
     deletePropertyBtn.removeClass('hidden');
     $('h4.add-new-property-header-txt').addClass('hidden');
     $('.su-save-property-btn').addClass('hidden');
@@ -548,18 +556,18 @@ function editPropertyDetails(){
     $('input.su-property-region').val($(this).children('table').find('input.details-property-region').val());
     $('textarea.su-property-description').val($(this).children('table').find('textarea.details-property-description').val());
 
-    if ($(this).children('table').find('input.details-property-isAvailable').val() === 'Yes'){
+    if ($(this).children('table').find('input.details-property-isAvailable').val() === 'Yes') {
         $('input.su-is-available.true').prop('checked', true);
     } else {
         $('input.su-is-available.false').prop('checked', true);
     }
-    $('option.su-property-type-option').each(function (index, option){
-        if (currentPropertyTypeName === $(option).text()){
+    $('option.su-property-type-option').each(function (index, option) {
+        if (currentPropertyTypeName === $(option).text()) {
             $(option).attr('selected', 'selected');
         }
     });
-    $('option.su-property-country-option').each(function (index, option){
-        if (currentCountryName === $(option).text()){
+    $('option.su-property-country-option').each(function (index, option) {
+        if (currentCountryName === $(option).text()) {
             $(option).attr('selected', 'selected');
         }
     });
@@ -569,92 +577,94 @@ function editPropertyDetails(){
 
 function savOrUpdateProperty(e) {
     e.preventDefault();
-    $('.save-or-update-property-modal').modal('toggle');
 
-    const propertyForm = {
-        propertyId: $('input.su-property-id').val(),
-        userId: $('input[type=hidden].user-id').val(),
-        propertyName: $('input.su-property-name').val(),
-        isAvailable: $('input.su-is-available:checked').val(),
-        propertyTypeId: $('select.su-property-type').val(),
-        countryId: $('select.su-property-country').val(),
-        city: $('input.su-property-city').val(),
-        street: $('input.su-property-street').val(),
-        postalCode: $('input.su-property-postal-code').val(),
-        province: $('input.su-property-province').val(),
-        region: $('input.su-property-region').val(),
-        propertyDescription: $('textarea.su-property-description').val(),
-    }
-
-    let type;
-    let url;
-    
-    if (propertyForm.propertyId.length < 1){
-        type = 'POST'
-       url = 'http://localhost:8080/api/property/save-property-to-database'
-    } else {
-        type = 'PUT'
-        url = 'http://localhost:8080/api/property/update-property-data-in-database'
-    }
-
-    $.ajax({
-        type: type,
-        url: url,
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        },
-        data: JSON.stringify(propertyForm),
-        success: function (property) {
-            if(propertyForm.propertyId.length < 1){
-                let propertyIdentifier = `property-${propertyCounter}`;
-                let calendarIdentifier = `calendar-${propertyCounter}`;
-                $('.property-name-tab-container')
-                    .append(createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, property));
-                $('.property-card-container')
-                    .append(createPropertyCardEl(propertyCounter, propertyIdentifier, property)
-                        .append(createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdentifier, property))
-                        .append(createPropertyDetailsEl(propertyIdentifier, property))
-                        .append(createPropertyPhotoEl(propertyIdentifier, property))
-                    );
-                propertyCounter++
-            } else {
-                const {
-                    isAvailable,
-                    propertyAddress: {city, country: {countryName}, postalCode, province, region, street},
-                    propertyDescription: {descriptionText},
-                    propertyId,
-                    propertyName,
-                    propertyType: {propertyTypeName}
-                } = property;
-                $('.property-name-tab').each(function (index, nameTab){
-                    if (parseInt($(nameTab).attr('data-property-id')) === propertyId){
-                        $(nameTab).find('h3').text(propertyName);
-                    }
-                });
-                $('.property-details-el').each(function (index, detailsElement){
-                    if (parseInt($(detailsElement).attr('data-property-id')) === propertyId){
-                        $(detailsElement).find('input.details-property-isAvailable').val((isAvailable) ? 'Yes' : 'No');
-                        $(detailsElement).find('input.details-property-type-name').val(propertyTypeName);
-                        $(detailsElement).find('input.details-property-country-name').val(countryName);
-                        $(detailsElement).find('input.details-property-city').val(city);
-                        $(detailsElement).find('input.details-property-street').val(street);
-                        $(detailsElement).find('input.details-property-postal-code').val(postalCode);
-                        $(detailsElement).find('input.details-property-province').val(province);
-                        $(detailsElement).find('input.details-property-region').val(region);
-                        $(detailsElement).find('textarea.details-property-description').text(descriptionText);
-                    }
-                });
-            }
-        },
-        dataType: 'json',
-        error: function (data) { //TODO
-            console.log(data);
+    if (validateEventAndPropertyFormsInputs($('#save-or-update-property-form'))){
+        $('.save-or-update-property-modal').modal('toggle');
+        const propertyForm = {
+            propertyId: $('input.su-property-id').val(),
+            userId: $('input[type=hidden].user-id').val(),
+            propertyName: $('input.su-property-name').val(),
+            isAvailable: $('input.su-is-available:checked').val(),
+            propertyTypeId: $('select.su-property-type').val(),
+            countryId: $('select.su-property-country').val(),
+            city: $('input.su-property-city').val(),
+            street: $('input.su-property-street').val(),
+            postalCode: $('input.su-property-postal-code').val(),
+            province: $('input.su-property-province').val(),
+            region: $('input.su-property-region').val(),
+            propertyDescription: $('textarea.su-property-description').val(),
         }
-    });
+
+        let type;
+        let url;
+
+        if (propertyForm.propertyId.length < 1) {
+            type = 'POST'
+            url = 'http://localhost:8080/api/property/save-property-to-database'
+        } else {
+            type = 'PUT'
+            url = 'http://localhost:8080/api/property/update-property-data-in-database'
+        }
+
+        $.ajax({
+            type: type,
+            url: url,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            data: JSON.stringify(propertyForm),
+            success: function (property) {
+                if (propertyForm.propertyId.length < 1) {
+                    let propertyIdentifier = `property-${propertyCounter}`;
+                    let calendarIdentifier = `calendar-${propertyCounter}`;
+                    $('.property-name-tab-container')
+                        .append(createPropertyNameTabEl(propertyCounter, propertyIdentifier, calendarIdentifier, property));
+                    $('.property-card-container')
+                        .append(createPropertyCardEl(propertyCounter, propertyIdentifier, property)
+                            .append(createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdentifier, property))
+                            .append(createPropertyDetailsEl(propertyIdentifier, property))
+                            .append(createPropertyPhotoEl(propertyIdentifier, property))
+                        );
+                    propertyCounter++
+                } else {
+                    const {
+                        isAvailable,
+                        propertyAddress: {city, country: {countryName}, postalCode, province, region, street},
+                        propertyDescription: {descriptionText},
+                        propertyId,
+                        propertyName,
+                        propertyType: {propertyTypeName}
+                    } = property;
+                    $('.property-name-tab').each(function (index, nameTab) {
+                        if (parseInt($(nameTab).attr('data-property-id')) === propertyId) {
+                            $(nameTab).find('h3').text(propertyName);
+                        }
+                    });
+                    $('.property-details-el').each(function (index, detailsElement) {
+                        if (parseInt($(detailsElement).attr('data-property-id')) === propertyId) {
+                            $(detailsElement).find('input.details-property-isAvailable').val((isAvailable) ? 'Yes' : 'No');
+                            $(detailsElement).find('input.details-property-type-name').val(propertyTypeName);
+                            $(detailsElement).find('input.details-property-country-name').val(countryName);
+                            $(detailsElement).find('input.details-property-city').val(city);
+                            $(detailsElement).find('input.details-property-street').val(street);
+                            $(detailsElement).find('input.details-property-postal-code').val(postalCode);
+                            $(detailsElement).find('input.details-property-province').val(province);
+                            $(detailsElement).find('input.details-property-region').val(region);
+                            $(detailsElement).find('textarea.details-property-description').text(descriptionText);
+                        }
+                    });
+                }
+            },
+            dataType: 'json',
+            error: function (data) { //TODO
+                console.log(data);
+            }
+        });
+    }
 }
 
-function deletePropertyFromDatabase(){
+function deletePropertyFromDatabase() {
     const propertyId = $('input[type=hidden].su-property-id').val();
     $.ajax({
         type: 'DELETE',
@@ -662,13 +672,13 @@ function deletePropertyFromDatabase(){
         success: function (response) {
             const propertyNameTabs = $('.property-name-tab');
             const propertyCards = $('.property-card');
-            propertyNameTabs.each(function (index, nameTab){
-                if ($(nameTab).attr('data-property-id') === propertyId){
+            propertyNameTabs.each(function (index, nameTab) {
+                if ($(nameTab).attr('data-property-id') === propertyId) {
                     $(nameTab).remove();
                 }
             });
-            propertyCards.each(function (index, propertyCard){
-                if ($(propertyCard).attr('data-property-id') === propertyId){
+            propertyCards.each(function (index, propertyCard) {
+                if ($(propertyCard).attr('data-property-id') === propertyId) {
                     $(propertyCard).remove();
                 }
             });
@@ -683,27 +693,74 @@ function deletePropertyFromDatabase(){
     });
 }
 
-function clearAddOrEditEventFormFields(){
-    $('#add-or-edit-event-form').find('input[type=text], textarea').each(function (index, input){
+function clearAddOrEditEventFormFields() {
+    $('#add-or-edit-event-form').find('input[type=text], textarea').each(function (index, input) {
         $(input).val("");
     });
 }
 
-function clearSaveOrUpdatePropertyFormFields(){
+function clearSaveOrUpdatePropertyFormFields() {
     $('#save-or-update-property-form')
         .find('input[type=hidden].su-property-id, input[type=text], textarea')
-            .each(function (index, input){$(input).val("");})
+        .each(function (index, input) {
+            $(input).val("");
+        })
         .end()
         .find('input.su-is-available.true')
-            .prop('checked', true)
+        .prop('checked', true)
         .end()
         .find('select')
-            .each(function (index, select){
-                $(select).val(0);
-            });
+        .each(function (index, select) {
+            $(select).val(0);
+        });
+}
+
+function validateEventAndPropertyFormsInputs(form) {
+    const INPUT_REGEX = /^.{1,25}$/;
+    const TEXTAREA_REGEX = /^.{1,250}$/;
+    let isInputValid = true;
+
+    $(form)
+        .find('input:not([type=hidden]), textarea, select')
+        .each(function (index, input) {
+            if ($(input).prop('tagName') === 'INPUT' && !INPUT_REGEX.test($(input).val())) {
+                $(input).css('border', 'rgba(230, 0, 0, 0.5) 2px solid');
+                isInputValid = false;
+            }
+            if ($(input).prop('tagName') === 'INPUT' && INPUT_REGEX.test($(input).val())) {
+                $(input).css('border', 'rgba(0, 200, 0, 0.5) 2px solid');
+            }
+
+            if ($(input).prop('tagName') === 'TEXTAREA' && !TEXTAREA_REGEX.test($(input).val())) {
+                $(input).css('border', 'rgba(230, 0, 0, 0.5) 2px solid');
+                isInputValid = false;
+            }
+            if ($(input).prop('tagName') === 'TEXTAREA' && TEXTAREA_REGEX.test($(input).val())) {
+                $(input).css('border', 'rgba(0, 200, 0, 0.5) 2px solid');
+            }
+
+            if ($(input).prop('tagName') === 'SELECT' && parseInt($(input).val(), 10) === 0){
+                $(input).css('border', 'rgba(230, 0, 0, 0.5) 2px solid');
+                isInputValid = false;
+            }
+            if ($(input).prop('tagName') === 'SELECT' && parseInt($(input).val(), 10) > 0){
+                $(input).css('border', 'rgba(0, 200, 0, 0.5) 2px solid');
+            }
+        });
+    return isInputValid;
+}
+
+function setDefaultInputBorderColor(form) {
+    $(form)
+        .find('input:not([type=hidden]), textarea, select')
+        .each(function (index, input) {
+            $(input).css('border', 'rgba(0, 0, 0, 0.1.8) 2px solid')
+        });
 }
 
 ///////////////////////// CODE THAT 50% OF THE TIME WORKS EVERY TIME //////////////////////////////////////
+
+
 
 
 // document.addEventListener('click', function () {
