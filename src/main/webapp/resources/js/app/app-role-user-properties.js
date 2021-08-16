@@ -406,7 +406,9 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
             data: JSON.stringify(event),
             success: function (event) {
                 if (event.id !== null) {
-                    addEventToCalendar(event);
+                    const {propertyCalendarId} = event.propertyCalendar;
+                    const calendar = getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId);
+                    calendar.refetchEvents();
                 } else {
                     //TODO error modal
                     console.log('event not saved');
@@ -418,12 +420,6 @@ function saveEventToDatabaseAndAddEventToCalendar(e) {
             }
         });
     }
-}
-
-function addEventToCalendar(event) {
-    const {propertyCalendarId} = event.propertyCalendar;
-    const calendar = getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId);
-    calendar.addEvent(event);
 }
 
 function updateEventStartAndEndDates(eventInfo) {
