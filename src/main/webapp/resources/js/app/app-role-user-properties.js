@@ -145,8 +145,7 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
     let calendar = new FullCalendar.Calendar(calendarEl.get(0), {
         initialView: 'dayGridMonth',
         titleRangeSeparator: ' \u2013 ',
-        height: "auto",
-        contentHeight: "auto",
+        contentHeight: 572,
         selectable: true,
         selectOverlap: false,
         fixedWeekCount: true,
@@ -156,7 +155,7 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
         headerToolbar: {
             start: '',
             center: 'title',
-            end: 'today prev,next'
+            end: 'today prev,next',
         },
         titleFormat: {
             day: '2-digit',
@@ -164,6 +163,12 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
             year: 'numeric'
         },
         displayEventTime: false,
+        eventClassNames: 'event-mouseleave',
+        editable: true,
+        dragScroll: true,
+        eventOverlap: false,
+        eventStartEditable: true,
+        eventResizableFromStart: true,
         events: function (info, successCallback, failureCallback) {
             $.get(`http://localhost:8080/api/event/get-calendar-events/${propertyCalendarId}`, function (events) {
                 successCallback(
@@ -174,12 +179,16 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
                 failureCallback(responseJSON);
             });
         },
-        eventTextColor: 'white',
-        editable: true,
-        dragScroll: true,
-        eventOverlap: false,
-        eventStartEditable: true,
-        eventResizableFromStart: true,
+        eventMouseEnter: function (mouseEnterInfo){
+            const {el, event,jsEvent, view} = mouseEnterInfo;
+            $(el).addClass('event-mouseenter');
+            $(el).removeClass('event-mouseleave');
+        },
+        eventMouseLeave: function (mouseEnterInfo){
+            const {el, event,jsEvent, view} = mouseEnterInfo;
+            $(el).removeClass('event-mouseenter');
+            $(el).addClass('event-mouseleave');
+        },
         select: function (selectionInfo) {
             clearAddOrEditEventFormFields();
             setDefaultInputBorderColor($('#add-or-edit-event-form'));

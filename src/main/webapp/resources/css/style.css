@@ -721,7 +721,6 @@ body::-webkit-scrollbar-thumb {
     background-color: rgba(10, 10, 10, 0.2);
 }
 
-
 .property-card {
     width: 1400px;
     height: 650px;
@@ -753,11 +752,48 @@ body::-webkit-scrollbar-thumb {
 
 div.property-calendar {
     display: inline-block;
-    float: left;;
-    background-color: whitesmoke;
-    height: 485px;
-    width: 500px;
-    color: black;
+    float: left;
+    padding: 10px 10px 10px 10px;
+    background-color: transparent;
+    height: 628px;
+    width: 650px;
+    color: rgb(204, 204, 204);
+}
+
+div.property-calendar td,
+div.property-calendar th {
+    border: rgb(204, 204, 204) solid 1px ;
+}
+
+a.fc-daygrid-day-number,
+a.fc-col-header-cell-cushion {
+    color: rgb(204, 204, 204);
+}
+
+.fc-day-today {
+    background-color: rgba(204, 204, 204, 0.15) !important;
+}
+
+.event-mouseleave {
+    height: 30px;
+    border-radius: 5px 5px 5px 5px;
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Oleo Script Swash Caps', cursive;
+    background-color: rgb(170, 170, 170);
+    color: rgb(50, 50, 50);
+    border: rgb(0, 0, 0) solid 1px;
+}
+
+.event-mouseenter {
+    height: 30px;
+    border-radius: 5px 5px 5px 5px;
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Oleo Script Swash Caps', cursive;
+    background-color: rgb(0, 0, 0);
+    color: rgb(204, 204, 204);
+    border: rgb(204, 204, 204) solid 1px;
 }
 
 .add-property-btn-container{
