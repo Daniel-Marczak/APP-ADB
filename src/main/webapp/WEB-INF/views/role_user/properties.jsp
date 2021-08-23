@@ -60,7 +60,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="add-new-property-header-txt">Please specify the property details</h4>
-                <button type="submit" class="btn btn-danger btn-block delete-property-btn hidden">Delete property</button>
+                <button type="submit" class="btn btn-danger btn-block delete-property-btn delete-btn hidden">Delete property</button>
+                <button type="button" class="btn btn-danger property yes-btn hidden">Yes</button>
+                <button type="button" class="btn btn-success no-btn hidden">No</button>
             </div>
             <div class="modal-body">
                 <form method="post" id="save-or-update-property-form">
@@ -123,7 +125,9 @@
             <div class="modal-header">
                 <div class="modal-header">
                     <h4 class="add-event-header-text">Please specify the booking details</h4>
-                    <button type="submit" class="btn btn-danger btn-block cancel-booking-btn hidden">Cancel booking</button>
+                    <button type="submit" class="btn btn-danger btn-block delete-booking-btn delete-btn hidden">Cancel booking</button>
+                    <button type="button" class="btn btn-danger booking yes-btn hidden">Yes</button>
+                    <button type="button" class="btn btn-success no-btn hidden">No</button>
                 </div>
             </div>
             <div class="modal-body">

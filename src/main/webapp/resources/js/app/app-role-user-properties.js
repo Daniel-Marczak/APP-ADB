@@ -9,7 +9,10 @@ const addPropertyBtn = $('button.add-property-btn');
 addPropertyBtn.on('click', showSaveOrUpdatePropertyModalInSaveMode);
 
 const deletePropertyBtn = $('button.delete-property-btn');
-deletePropertyBtn.on('click', deletePropertyFromDatabase);
+deletePropertyBtn.on('click', displayDeleteConfirmationButtons);
+
+const deletePropertyYesBtn = $('button.property.yes-btn');
+deletePropertyYesBtn.on('click', deletePropertyFromDatabase);
 
 const saveOrUpdatePropertyForm = $("#save-or-update-property-form");
 saveOrUpdatePropertyForm.on('submit', savOrUpdateProperty);
@@ -20,8 +23,11 @@ addEventBtn.on('click', saveEventToDatabaseAndAddEventToCalendar);
 const saveEventChangesBtn = $('button.ae-save-changes-btn');
 saveEventChangesBtn.on('click', updateEventDataInDatabase);
 
-const cancelBookingBtn = $('.cancel-booking-btn');
-cancelBookingBtn.on('click', deleteEventFromPropertyCalendar);
+const deleteBookingBtn = $('.delete-booking-btn');
+deleteBookingBtn.on('click', displayDeleteConfirmationButtons);
+
+const deleteBookingYesBtn = $('button.booking.yes-btn');
+deleteBookingYesBtn.on('click', deleteEventFromPropertyCalendar);
 
 let selectionInfoEventStart;
 let selectionInfoEventEnd;
@@ -181,7 +187,7 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
             selectionInfoEventEnd = selectionInfo.endStr;
             selectionInfoCurrentCalendarId = selectionInfo.view.calendar.el.getAttribute('data-property-calendar-id');
             $('h4.add-event-header-text').removeClass('hidden');
-            $('button.cancel-booking-btn').addClass('hidden');
+            $('button.delete-booking-btn').addClass('hidden');
             $('button.ae-add-event-btn').removeClass('hidden');
             saveEventChangesBtn.addClass('hidden');
             $('.add-or-edit-event-modal').modal('toggle');
@@ -445,7 +451,7 @@ function showAddOrEditEventModalInEditMode(eventInfo) {
     const additionalInfo = eventInfo.event._def.extendedProps.additionalInfo;
     $('.add-or-edit-event-modal').modal('toggle');
     $('h4.add-event-header-text').addClass('hidden');
-    $('button.cancel-booking-btn').removeClass('hidden');
+    $('button.delete-booking-btn').removeClass('hidden');
     $('button.ae-add-event-btn').addClass('hidden');
     saveEventChangesBtn.removeClass('hidden');
     $('input.ae-event-title').val(title);
@@ -726,7 +732,6 @@ function validateEventAndPropertyFormsInputs(form) {
             if ($(input).prop('tagName') === 'INPUT' && INPUT_REGEX.test($(input).val())) {
                 $(input).css('border', 'rgba(0, 200, 0, 0.5) 2px solid');
             }
-
             if ($(input).prop('tagName') === 'TEXTAREA' && !TEXTAREA_REGEX.test($(input).val())) {
                 $(input).css('border', 'rgba(230, 0, 0, 0.5) 2px solid');
                 isInputValid = false;
@@ -734,7 +739,6 @@ function validateEventAndPropertyFormsInputs(form) {
             if ($(input).prop('tagName') === 'TEXTAREA' && TEXTAREA_REGEX.test($(input).val())) {
                 $(input).css('border', 'rgba(0, 200, 0, 0.5) 2px solid');
             }
-
             if ($(input).prop('tagName') === 'SELECT' && parseInt($(input).val(), 10) === 0){
                 $(input).css('border', 'rgba(230, 0, 0, 0.5) 2px solid');
                 isInputValid = false;
@@ -754,7 +758,23 @@ function setDefaultInputBorderColor(form) {
         });
 }
 
+function displayDeleteConfirmationButtons(){
+    $(this).addClass('hidden');
+    $(this).siblings('button.yes-btn').removeClass('hidden');
+    $(this).siblings('button.no-btn').removeClass('hidden').on("click", hideDeleteConfirmationButtons);
+
+}
+
+function hideDeleteConfirmationButtons(){
+    $(this).siblings('button.delete-btn').removeClass('hidden');
+    $(this).siblings('button.yes-btn').addClass('hidden');
+    $(this).addClass('hidden');
+}
+
 ///////////////////////// CODE THAT 50% OF THE TIME WORKS EVERY TIME //////////////////////////////////////
+
+
+
 
 
 

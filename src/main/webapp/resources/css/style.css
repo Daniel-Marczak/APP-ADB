@@ -899,7 +899,10 @@ div.property-calendar {
     background: none;
 }
 
-
+.yes-btn,
+.no-btn {
+    width: 49%;
+}
 
 
 
