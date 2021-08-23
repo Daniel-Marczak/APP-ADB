@@ -760,7 +760,7 @@ function setDefaultInputBorderColor(form) {
 
 function displayDeleteConfirmationButtons(){
     $(this).addClass('hidden');
-    $(this).siblings('button.yes-btn').removeClass('hidden');
+    $(this).siblings('button.yes-btn').removeClass('hidden').on("click", hideDeleteConfirmationButtons);
     $(this).siblings('button.no-btn').removeClass('hidden').on("click", hideDeleteConfirmationButtons);
 
 }
@@ -768,6 +768,7 @@ function displayDeleteConfirmationButtons(){
 function hideDeleteConfirmationButtons(){
     $(this).siblings('button.delete-btn').removeClass('hidden');
     $(this).siblings('button.yes-btn').addClass('hidden');
+    $(this).siblings('button.no-btn').addClass('hidden');
     $(this).addClass('hidden');
 }
 
