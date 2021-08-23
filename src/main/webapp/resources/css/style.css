@@ -904,6 +904,14 @@ div.property-calendar {
     width: 49%;
 }
 
+.input-field-error {
+    border: rgba(230, 0, 0, 0.5) 2px solid;
+}
+
+.input-field-correct {
+    border: rgba(0, 200, 0, 0.5) 2px solid;
+}
+
 
 
 

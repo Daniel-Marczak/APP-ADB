@@ -726,25 +726,31 @@ function validateEventAndPropertyFormsInputs(form) {
         .find('input:not([type=hidden]), textarea, select')
         .each(function (index, input) {
             if ($(input).prop('tagName') === 'INPUT' && !INPUT_REGEX.test($(input).val())) {
-                $(input).css('border', 'rgba(230, 0, 0, 0.5) 2px solid');
+                $(input).addClass('input-field-error');
+                $(input).removeClass('input-field-correct');
                 isInputValid = false;
             }
             if ($(input).prop('tagName') === 'INPUT' && INPUT_REGEX.test($(input).val())) {
-                $(input).css('border', 'rgba(0, 200, 0, 0.5) 2px solid');
+                $(input).removeClass('input-field-error');
+                $(input).addClass('input-field-correct');
             }
             if ($(input).prop('tagName') === 'TEXTAREA' && !TEXTAREA_REGEX.test($(input).val())) {
-                $(input).css('border', 'rgba(230, 0, 0, 0.5) 2px solid');
+                $(input).addClass('input-field-error');
+                $(input).removeClass('input-field-correct');
                 isInputValid = false;
             }
             if ($(input).prop('tagName') === 'TEXTAREA' && TEXTAREA_REGEX.test($(input).val())) {
-                $(input).css('border', 'rgba(0, 200, 0, 0.5) 2px solid');
+                $(input).removeClass('input-field-error');
+                $(input).addClass('input-field-correct');
             }
             if ($(input).prop('tagName') === 'SELECT' && parseInt($(input).val(), 10) === 0){
-                $(input).css('border', 'rgba(230, 0, 0, 0.5) 2px solid');
+                $(input).addClass('input-field-error');
+                $(input).removeClass('input-field-correct');
                 isInputValid = false;
             }
             if ($(input).prop('tagName') === 'SELECT' && parseInt($(input).val(), 10) > 0){
-                $(input).css('border', 'rgba(0, 200, 0, 0.5) 2px solid');
+                $(input).removeClass('input-field-error');
+                $(input).addClass('input-field-correct');
             }
         });
     return isInputValid;
