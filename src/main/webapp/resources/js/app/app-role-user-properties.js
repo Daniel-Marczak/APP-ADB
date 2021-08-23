@@ -760,7 +760,8 @@ function setDefaultInputBorderColor(form) {
     $(form)
         .find('input:not([type=hidden]), textarea, select')
         .each(function (index, input) {
-            $(input).css('border', 'rgba(0, 0, 0, 0.1.8) 2px solid')
+            $(input).removeClass('input-field-error');
+            $(input).removeClass('input-field-correct');
         });
 }
 
