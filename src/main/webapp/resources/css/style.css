@@ -731,9 +731,11 @@ body::-webkit-scrollbar-thumb {
 
 .property-details-el {
     display: inline-block;
-    background-color: black;
+    background-color: transparent;
     height: auto;
     width: auto;
+    float: right;
+    margin: 5px;
 }
 
 .property-name-tab:hover {
@@ -760,9 +762,11 @@ div.property-calendar {
     color: rgb(204, 204, 204);
 }
 
-div.property-calendar td,
-div.property-calendar th {
-    border: rgb(204, 204, 204) solid 1px ;
+.fc-scrollgrid th,
+.fc-scrollgrid td,
+.fc-scrollgrid
+{
+    border: rgba(204, 204, 204, 0.18) solid 1px !important;
 }
 
 a.fc-daygrid-day-number,
@@ -772,6 +776,10 @@ a.fc-col-header-cell-cushion {
 
 .fc-day-today {
     background-color: rgba(204, 204, 204, 0.15) !important;
+}
+
+.fc-daygrid-week-number {
+    color: rgb(204, 204, 204) !important;
 }
 
 .event-mouseleave {
@@ -823,18 +831,19 @@ a.fc-col-header-cell-cushion {
     color: #000;
 }
 
-.su-property-type,
-.su-property-country {
-    width: 195px;
+.property-info-box {
+    height: 100%;
+    width: 320px;
+    background-color: transparent;
+    float: right;
 }
 
 .property-photo-el {
     display: inline-block;
-    float: right;
-    width: 160px;
-    height: 180px;
-    margin: -15px 5px 5px 5px;
-    border-radius: 5px 5px 5px 5px;
+    width: 316px;
+    height: 200px;
+    margin: -15px auto;
+    border-radius: 5px;
     transition-duration: 0.5s;
 }
 
@@ -858,7 +867,6 @@ a.fc-col-header-cell-cushion {
 }
 
 .add-property-photo-form label {
-    /*margin-top: 2px;*/
     padding: 2px;
     float: left;
     background-color: white;
@@ -894,13 +902,65 @@ a.fc-col-header-cell-cushion {
 
 .property-img {
     margin-top: 0px;
-    width: 160px;
-    height: 160px;
+    width: 312px;
+    height: 180px;
     background-color: whitesmoke;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 .property-address-table {
-    background-color: whitesmoke;
+    margin-top: 25px;
+    background-color: transparent;
+    border-spacing: 0px 10px;
+    border-collapse: separate;
+    cursor: pointer;
+}
+
+.property-address-table th,
+.property-address-table td{
+    border-bottom: rgba(204, 204, 204, 0.18) solid 1px;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    color: rgb(204, 204, 204);
+    font-family: 'Oleo Script Swash Caps', cursive;
+    font-size: 20px;
+}
+
+.property-address-table th {
+    width: 120px;
+}
+
+.property-address-table input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.property-address-table textarea {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    resize: none;
+    height: 110px;
+    padding-right: 10px;
+}
+
+.property-address-table textarea::-webkit-scrollbar {
+    width: 5px;
+}
+
+.property-address-table textarea::-webkit-scrollbar-track {
+    background-color: transparent;
+    border: rgb(204, 204, 204) solid 1px;
+    border-radius: 5px;
+}
+
+.property-address-table textarea::-webkit-scrollbar-thumb {
+    background-color: rgb(204, 204, 204);
+    border-radius: 5px;
 }
 
 .property-description {
@@ -946,6 +1006,44 @@ a.fc-col-header-cell-cushion {
 
 .input-field-correct {
     border: rgba(0, 200, 0, 0.5) 2px solid;
+}
+
+.su-property-type,
+.su-property-country {
+    width: 195px;
+}
+
+.modal form {
+    margin: auto;
+    width: 210px;
+}
+
+.modal textarea {
+    resize: none;
+    height: 80px;
+}
+
+.modal textarea::-webkit-scrollbar{
+    width: 5px;
+}
+
+.modal textarea::-webkit-scrollbar-track {
+    background-color: whitesmoke;
+    border: rgb(204, 204, 204) solid 1px;
+    border-radius: 5px;
+}
+
+.modal textarea::-webkit-scrollbar-thumb {
+    background-color: rgb(0, 0, 0);
+    border-radius: 5px;
+}
+
+.modal input[type=radio]:not(.false) {
+    margin-left: 55px;
+}
+
+.modal input[type=radio]:not(.true) {
+    margin-left: 15px
 }
 
 

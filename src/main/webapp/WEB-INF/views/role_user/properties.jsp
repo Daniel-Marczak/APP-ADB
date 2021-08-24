@@ -59,7 +59,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="add-new-property-header-txt">Please specify the property details</h4>
+                <h4 class="add-new-property-header-txt">Please specify property details</h4>
                 <button type="submit" class="btn btn-danger btn-block delete-property-btn delete-btn hidden">Delete property</button>
                 <button type="button" class="btn btn-danger property yes-btn hidden">Yes</button>
                 <button type="button" class="btn btn-success no-btn hidden">No</button>
@@ -70,12 +70,6 @@
                     <input type="hidden" name="userId" class="su-property-user-id" value="${requestScope.userId}"/>
                     <label>Property name:
                         <input type="text" name="propertyName" class="su-property-name"/>
-                    </label>
-                    <label>Is property available:<br>
-                        <input id="isAvailableYes" type="radio" name="isAvailable" class="su-is-available true" value="true" checked="checked"/>
-                        <label for="isAvailableYes">Yes</label>
-                        <input id="isAvailableNo" type="radio" name="isAvailable" class="su-is-available false" value="false"/>
-                        <label for="isAvailableNo">No</label>
                     </label>
                     <br>
                     <label>Property type:<br>
@@ -108,6 +102,12 @@
                     <label>Description:<br>
                         <textarea name="propertyDescription" class="su-property-description"></textarea>
                     </label>
+                    <label>Is property available:<br>
+                        <input id="isAvailableYes" type="radio" name="isAvailable" class="su-is-available true" value="true" checked="checked"/>
+                        <label for="isAvailableYes">Yes</label>
+                        <input id="isAvailableNo" type="radio" name="isAvailable" class="su-is-available false" value="false"/>
+                        <label for="isAvailableNo">No</label>
+                    </label>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary btn-block su-save-property-btn">Save property</button>
                         <button type="submit" class="btn btn-primary btn-block su-save-changes-btn">Save changes</button>
@@ -124,7 +124,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header">
-                    <h4 class="add-event-header-text">Please specify the booking details</h4>
+                    <h4 class="add-event-header-text">Please specify booking details</h4>
                     <button type="submit" class="btn btn-danger btn-block delete-booking-btn delete-btn hidden">Cancel booking</button>
                     <button type="button" class="btn btn-danger booking yes-btn hidden">Yes</button>
                     <button type="button" class="btn btn-success no-btn hidden">No</button>

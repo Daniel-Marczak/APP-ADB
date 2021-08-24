@@ -74,8 +74,11 @@ function getAllPropertiesByUserId() {
             $('.property-card-container')
                 .append(createPropertyCardEl(propertyCounter, propertyIdentifier, property)
                     .append(createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdentifier, property))
-                    .append(createPropertyDetailsEl(propertyIdentifier, property))
-                    .append(createPropertyPhotoEl(propertyIdentifier, property))
+                    .append(createPropertyInfoBox(property)
+                        .append(createPropertyPhotoEl(propertyIdentifier, property))
+                        .append(createPropertyDetailsEl(propertyIdentifier, property))
+
+                    )
                 );
             propertyCounter++
         });
@@ -220,6 +223,11 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
     }
     propertyCalendarArray.push(calendar);
     return calendarEl;
+}
+
+function createPropertyInfoBox(property){
+    const {propertyId, isAvailable, propertyAddress, propertyDescription, propertyName, propertyType} = property;
+    return $(`<div class="property-info-box" data-property-id="${propertyId}"></div>`);
 }
 
 function createPropertyDetailsEl(propertyIdentifier, property) {
