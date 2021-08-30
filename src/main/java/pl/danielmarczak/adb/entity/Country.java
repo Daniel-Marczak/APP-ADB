@@ -15,5 +15,7 @@ public class Country {
     private Long countryId;
 
     private String countryName;
+    private String currencyName;
+    private String currencyCode;
 
 }

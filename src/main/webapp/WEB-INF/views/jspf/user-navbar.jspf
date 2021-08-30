@@ -8,11 +8,11 @@
                 <a class="navbar-brand" href="<c:url value="/"/>">Accommodation Cloud</a> </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active">
+                    <li>
                         <a href="<c:url value="/properties/user-properties"/>">Properties</a>
                     </li>
                     <li>
-                        <a href="<c:url value="/user/properties#"/>" target="_parent">Menu 2</a>
+                        <a href="<c:url value="/user/update"/>">Account</a>
                     </li>
                     <li>
                         <a href="<c:url value="/user/properties#"/>">Menu 3</a>

@@ -4,10 +4,7 @@ import org.springframework.stereotype.Service;
 import pl.danielmarczak.adb.entity.*;
 import pl.danielmarczak.adb.model.PropertyForm;
 import pl.danielmarczak.adb.repository.PropertyRepository;
-import pl.danielmarczak.adb.service.CountryService;
-import pl.danielmarczak.adb.service.PropertyService;
-import pl.danielmarczak.adb.service.PropertyTypeService;
-import pl.danielmarczak.adb.service.UserService;
+import pl.danielmarczak.adb.service.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -21,18 +18,22 @@ public class PropertyServiceImpl implements PropertyService {
     private final UserService userService;
     private final PropertyTypeService propertyTypeService;
     private final CountryService countryService;
+    private final RateTypeService rateTypeService;
+    private final PriceService priceService;
 
-    public PropertyServiceImpl(PropertyRepository propertyRepository, UserService userService, PropertyTypeService propertyTypeService, CountryService countryService) {
+    public PropertyServiceImpl(PropertyRepository propertyRepository, UserService userService, PropertyTypeService propertyTypeService, CountryService countryService, RateTypeService rateTypeService, PriceService priceService) {
         this.propertyRepository = propertyRepository;
         this.userService = userService;
         this.propertyTypeService = propertyTypeService;
         this.countryService = countryService;
+        this.rateTypeService = rateTypeService;
+        this.priceService = priceService;
     }
 
 
     @Override
-    public List<Property> getAllByUserId(Long userId) {
-        return propertyRepository.getAllByUserId(userId).orElse(new ArrayList<>());
+    public List<Property> getAllByUserIdAndIsEnabledEquals(Long userId, Boolean isActive) {
+        return propertyRepository.getAllByUserIdAndIsEnabledEquals(userId, isActive).orElse(new ArrayList<>());
     }
 
     @Override
@@ -51,8 +52,10 @@ public class PropertyServiceImpl implements PropertyService {
         property.setPropertyId(propertyForm.getPropertyId());
         property.setPropertyName(propertyForm.getPropertyName());
         property.setIsAvailable(propertyForm.getIsAvailable());
+        property.setIsEnabled(true);
         property.setUser(userService.findUserById(propertyForm.getUserId()));
         property.setPropertyType(propertyTypeService.findPropertyTypeById(propertyForm.getPropertyTypeId()));
+        property.setRateType(rateTypeService.findRateTypeById(propertyForm.getRateTypeId()));
 
         PropertyAddress propertyAddress = new PropertyAddress();
         propertyAddress.setCountry(countryService.findCountryById(propertyForm.getCountryId()));
@@ -70,6 +73,12 @@ public class PropertyServiceImpl implements PropertyService {
         property.setPropertyCalendar(new PropertyCalendar());
         property.setPropertyPhoto(new PropertyPhoto());
 
+        Price price = new Price();
+        price.setAmount(propertyForm.getAmount());
+        price.setCurrency(propertyForm.getCurrency());
+        priceService.savePrice(price);
+        property.setPrice(price);
+
         return propertyRepository.save(property);
     }
 
@@ -78,6 +87,7 @@ public class PropertyServiceImpl implements PropertyService {
         property.setPropertyName(propertyForm.getPropertyName());
         property.setIsAvailable(propertyForm.getIsAvailable());
         property.setPropertyType(propertyTypeService.findPropertyTypeById(propertyForm.getPropertyTypeId()));
+        property.setRateType(rateTypeService.findRateTypeById(propertyForm.getRateTypeId()));
         property.getPropertyAddress().setCountry(countryService.findCountryById(propertyForm.getCountryId()));
         property.getPropertyAddress().setCity(propertyForm.getCity());
         property.getPropertyAddress().setStreet(propertyForm.getStreet());
@@ -85,11 +95,14 @@ public class PropertyServiceImpl implements PropertyService {
         property.getPropertyAddress().setProvince(propertyForm.getProvince());
         property.getPropertyAddress().setRegion(propertyForm.getRegion());
         property.getPropertyDescription().setDescriptionText(propertyForm.getPropertyDescription());
+        property.getPrice().setAmount(propertyForm.getAmount());
+        property.getPrice().setCurrency(propertyForm.getCurrency());
+
         return propertyRepository.save(property);
     }
 
     @Override
-    public void deleteProperty(Long propertyId) {
-        propertyRepository.deleteById(propertyId);
+    public void setPropertyIsEnabled(Boolean isActive, Long propertyId) {
+        propertyRepository.setPropertyIsEnabled(isActive, propertyId);
     }
 }

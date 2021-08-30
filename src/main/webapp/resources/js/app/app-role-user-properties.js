@@ -1,39 +1,10 @@
 ///////////////////////////////////////////////////// VARIABLES ////////////////////////////////////////////////////////
-
-const propertiesContainer = $('.properties-container');
+const addPropertyBtn = $('button.add-property-btn');
+addPropertyBtn.on('click', removePropertyModalHeaderAndButtons).on('click', displayPropertyModalInCreateMode);
 
 let propertyCounter = 0;
 let propertyCalendarArray = [];
-
-const addPropertyBtn = $('button.add-property-btn');
-addPropertyBtn.on('click', showSaveOrUpdatePropertyModalInSaveMode);
-
-const deletePropertyBtn = $('button.delete-property-btn');
-deletePropertyBtn.on('click', displayDeleteConfirmationButtons);
-
-const deletePropertyYesBtn = $('button.property.yes-btn');
-deletePropertyYesBtn.on('click', deletePropertyFromDatabase);
-
-const saveOrUpdatePropertyForm = $("#save-or-update-property-form");
-saveOrUpdatePropertyForm.on('submit', savOrUpdateProperty);
-
-const addEventBtn = $('.ae-add-event-btn');
-addEventBtn.on('click', saveEventToDatabaseAndAddEventToCalendar);
-
-const saveEventChangesBtn = $('button.ae-save-changes-btn');
-saveEventChangesBtn.on('click', updateEventDataInDatabase);
-
-const deleteBookingBtn = $('.delete-booking-btn');
-deleteBookingBtn.on('click', displayDeleteConfirmationButtons);
-
-const deleteBookingYesBtn = $('button.booking.yes-btn');
-deleteBookingYesBtn.on('click', deleteEventFromPropertyCalendar);
-
-let selectionInfoEventStart;
-let selectionInfoEventEnd;
-let selectionInfoCurrentCalendarId;
 let currentEvent;
-
 
 ////////////////////////////////////////////////////// CLASSES /////////////////////////////////////////////////////////
 
@@ -47,7 +18,7 @@ class Customer {
 }
 
 class Event {
-    constructor(id, title, start, end, calendarId, customer, additionalInfo) {
+    constructor(id, title, start, end, calendarId, customer, additionalInfo, numberOfGuests, discountSurcharge, price) {
         this.id = id;
         this.title = title;
         this.start = start;
@@ -55,6 +26,9 @@ class Event {
         this.calendarId = calendarId;
         this.additionalInfo = additionalInfo;
         this.customer = customer;
+        this.numberOfGuests = numberOfGuests;
+        this.discountSurcharge = discountSurcharge;
+        this.price = price;
     }
 }
 
@@ -62,6 +36,7 @@ class Event {
 getAllPropertiesByUserId();
 getAllPropertyTypes();
 getAllCountries();
+getAllRateTypes();
 
 function getAllPropertiesByUserId() {
     const userId = $('input[type=hidden].user-id').val();
@@ -74,10 +49,9 @@ function getAllPropertiesByUserId() {
             $('.property-card-container')
                 .append(createPropertyCardEl(propertyCounter, propertyIdentifier, property)
                     .append(createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdentifier, property))
-                    .append(createPropertyInfoBox(property)
+                    .append(createPropertyInfoBox(property, propertyIdentifier)
                         .append(createPropertyPhotoEl(propertyIdentifier, property))
                         .append(createPropertyDetailsEl(propertyIdentifier, property))
-
                     )
                 );
             propertyCounter++
@@ -85,14 +59,11 @@ function getAllPropertiesByUserId() {
     });
 }
 
-function showSaveOrUpdatePropertyModalInSaveMode() {
-    clearSaveOrUpdatePropertyFormFields();
-    setDefaultInputBorderColor($('#save-or-update-property-form'))
-    deletePropertyBtn.addClass('hidden');
-    $('h4.add-new-property-header-txt').removeClass('hidden');
-    $('.su-save-property-btn').removeClass('hidden');
-    $('.su-save-changes-btn').addClass('hidden');
-    $('.save-or-update-property-modal').modal('toggle');
+function displayPropertyModalInCreateMode() {
+    clearPropertyModalFormFields();
+    setDefaultInputBorderColor($('#create-or-update-property-form'));
+    createPropertyModalAddPropertyHeaderAndButtons();
+    $('.create-or-update-property-modal').modal('toggle');
 }
 
 function convertPropertyPhotoFileDataToBlob(fileData) {
@@ -193,27 +164,28 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
             $(el).addClass('event-mouseleave');
         },
         select: function (selectionInfo) {
-            clearAddOrEditEventFormFields();
-            setDefaultInputBorderColor($('#add-or-edit-event-form'));
-            selectionInfoEventStart = selectionInfo.startStr;
-            selectionInfoEventEnd = selectionInfo.endStr;
-            selectionInfoCurrentCalendarId = selectionInfo.view.calendar.el.getAttribute('data-property-calendar-id');
-            $('h4.add-event-header-text').removeClass('hidden');
-            $('button.delete-booking-btn').addClass('hidden');
-            $('button.ae-add-event-btn').removeClass('hidden');
-            saveEventChangesBtn.addClass('hidden');
-            $('.add-or-edit-event-modal').modal('toggle');
+            removeEventModalHeaderAndButtons();
+            clearEventModalFormFields();
+            setDefaultInputBorderColor($('#create-or-update-event-form'));
+            createSelectionInfoHiddenBox(selectionInfo);
+            createEventPriceBoxElements(this, selectionInfo.startStr, selectionInfo.endStr);
+            createEventModalAddEventHeaderAndButtons();
+            $('.create-or-update-event-modal').modal('toggle');
         },
         eventClick: function (eventInfo) {
-            // console.log(eventInfo);
-            showAddOrEditEventModalInEditMode(eventInfo);
+            const {start, end} = eventInfo.event;
+            removeEventModalHeaderAndButtons();
+            createEventModalUpdateEventButtons();
+            createEventPriceBoxElements(this, start, end);
+            displayEventModalInUpdateMode(eventInfo);
         },
         eventDrop: function (eventDropInfo) {
             // console.log(eventDropInfo);
             updateEventStartAndEndDates(eventDropInfo);
         },
         eventResize: function (eventResizeInfo) {
-            // console.log(eventResizeInfo);
+            const {event:{endStr, startStr}} = eventResizeInfo;
+            const selectedDays = calculateNumberOfSelectedDays(startStr, endStr);
             updateEventStartAndEndDates(eventResizeInfo);
         },
     });
@@ -225,16 +197,28 @@ function createFullCalendarEl(propertyCounter, propertyIdentifier, calendarIdent
     return calendarEl;
 }
 
-function createPropertyInfoBox(property){
-    const {propertyId, isAvailable, propertyAddress, propertyDescription, propertyName, propertyType} = property;
-    return $(`<div class="property-info-box" data-property-id="${propertyId}"></div>`);
+function createPropertyInfoBox(property, propertyIdentifier){
+    const {propertyId} = property;
+    return $(`<div class="property-info-box ${propertyIdentifier}" data-property-id="${propertyId}"></div>`);
 }
 
 function createPropertyDetailsEl(propertyIdentifier, property) {
-    const {propertyId, isAvailable, propertyAddress, propertyDescription, propertyName, propertyType} = property;
+    const
+        {
+            propertyId,
+            isAvailable,
+            propertyAddress,
+            propertyDescription,
+            propertyName,
+            propertyType,
+            rateType,
+            price
+        } = property;
     const {descriptionText} = propertyDescription;
     const {propertyTypeName} = propertyType;
     const {city, country: {countryName}, postalCode, province, region, street} = propertyAddress;
+    const {rateTypeId, rateTypeName} = rateType
+    const {priceId, amount, currency} = price
     const detailsEl = $(`<div class="property-details-el" data-property-id="${propertyId}"></div>`);
     detailsEl.addClass(propertyIdentifier);
 
@@ -247,6 +231,8 @@ function createPropertyDetailsEl(propertyIdentifier, property) {
                 </tr>
                 <tr><th>Available: </th><td><input type="text" class="details-property-isAvailable" value="${(isAvailable) ? 'Yes' : 'No'}" readonly/></td></tr>
                 <tr><th>Type: </th><td><input type="text" class="details-property-type-name" value="${propertyTypeName}" readonly/></td></tr>
+                <tr><th>Price: </th><td><input type="text" class="details-price" value="${amount} ${currency}" readonly/></td></tr>
+                <tr><th>Rate: </th><td><input type="text" class="details-rate-type-name" value="${rateTypeName}" readonly/></td></tr>
                 <tr><th>Country: </th><td><input type="text" class="details-property-country-name" value="${countryName}" readonly/></td></tr>
                 <tr><th>City: </th><td><input type="text" class="details-property-city" value="${city}" readonly/></td></tr>
                 <tr><th>Street: </th><td><input type="text" class="details-property-street" value="${street}" readonly/></td></tr>
@@ -258,11 +244,11 @@ function createPropertyDetailsEl(propertyIdentifier, property) {
         </table>`
     );
     detailsEl.append(propertyDetailsTableEl);
-    detailsEl.on('click', editPropertyDetails);
+    detailsEl.on('click', removePropertyModalHeaderAndButtons).on('click', displayPropertyModalInUpdateMode);
     return detailsEl;
 }
 
-function createPropertyPhotoEl(propertyIdentifier, property) { //TODO
+function createPropertyPhotoEl(propertyIdentifier, property) { //TODO empty photo format
     const {propertyPhoto: {propertyPhotoId, fileData, fileName}} = property;
     const propertyPhotoEl = $('<div class="property-photo-el"></div>');
     const changePropertyPhotoEl = $('<div class="change-property-photo-el"></div>');
@@ -339,23 +325,36 @@ function addPropertyPhoto(e) {
 }
 
 function getAllPropertyTypes() {
-    const propertyTypeSelectEl = $('.su-property-type');
+    const propertyTypeSelectEl = $('.cup-property-type');
     $.get('http://localhost:8080/api/property/get-all-property-types', function (propertyTypes) {
         $(propertyTypes).each(function (index, propertyType) {
             const {propertyTypeId, propertyTypeName} = propertyType;
-            const selectOptionEl = $(`<option value="${propertyTypeId}" class="su-property-type-option">${propertyTypeName}</option>`);
+            const selectOptionEl = $(`<option value="${propertyTypeId}" class="cup-property-type-option">${propertyTypeName}</option>`);
             propertyTypeSelectEl.append(selectOptionEl);
         });
     });
 }
 
 function getAllCountries() {
-    const propertyCountrySelectEl = $('.su-property-country');
+    const propertyCountrySelectEl = $('.cup-property-country');
+    propertyCountrySelectEl.on('change', setCountryCurrencyCode);
     $.get('http://localhost:8080/api/property/get-all-countries', function (countries) {
         $(countries).each(function (index, country) {
-            const {countryId, countryName} = country;
-            const selectOptionEl = $(`<option value="${countryId}" class="su-property-country-option">${countryName}</option>`);
+            const {countryId, countryName, currencyCode} = country;
+            const selectOptionEl = $(`<option value="${countryId}" class="cup-property-country-option">${countryName}</option>`);
+            selectOptionEl.data('data-currency-code', currencyCode);
             propertyCountrySelectEl.append(selectOptionEl);
+        });
+    });
+}
+
+function getAllRateTypes(){
+    const rateTypesSelectElement = $('.cup-rate-type');
+    $.get('http://localhost:8080/api/property/get-all-rate-types', function (rateTypes) {
+        $(rateTypes).each(function (index, rateType) {
+            const {rateTypeId, rateTypeName} = rateType;
+            const selectOptionEl = $(`<option value="${rateTypeId}" class="cup-rate-type-option">${rateTypeName}</option>`);
+            rateTypesSelectElement.append(selectOptionEl);
         });
     });
 }
@@ -397,27 +396,34 @@ function getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId) {
     return calendarById;
 }
 
-function saveEventToDatabaseAndAddEventToCalendar(e) {
+function saveEventToDatabase(e) {
     e.preventDefault();
-    if (validateEventAndPropertyFormsInputs($('#add-or-edit-event-form'))) {
-        $('.add-or-edit-event-modal').modal('toggle');
+    if (validateEventAndPropertyFormsInputs($('#create-or-update-event-form'))) {
+        $('.create-or-update-event-modal').modal('toggle');
 
         const customer = new Customer();
         customer.customerID = null;
-        customer.customerName = $('input.ae-event-customer-name').val();
-        customer.customerSurname = $('input.ae-event-customer-surname').val();
-        customer.customerPhone = $('input.ae-event-customer-phone').val();
+        customer.customerName = $('input.cue-event-customer-name').val();
+        customer.customerSurname = $('input.cue-event-customer-surname').val();
+        customer.customerPhone = $('input.cue-event-customer-phone').val();
 
         const event = new Event();
         event.id = null;
-        event.title = $('input.ae-event-title').val();
-        event.start = selectionInfoEventStart;
-        event.end = selectionInfoEventEnd;
+        event.title = $('input.cue-event-title').val();
+        event.start = $('.selection-info-event-start').val();
+        event.end = $('.selection-info-event-end').val();
         event.propertyCalendar = {
-            propertyCalendarId: selectionInfoCurrentCalendarId,
+            propertyCalendarId: $('.selection-info-current-calendar').val(),
         };
-        event.additionalInfo = $('textarea.ae-event-additional-info').val();
+        event.additionalInfo = $('textarea.cue-event-additional-info').val();
         event.customer = customer;
+        event.numberOfGuests = $('.cue-number-of-guests-input').val();
+        event.discountSurcharge = $('.cue-discount-surcharge-input').val();
+        event.price = {
+            priceId : null,
+            amount: $('.cue-amount-due-amount').val(),
+            currency: $('.cue-amount-due-currency').val(),
+        }
 
         $.ajax({
             type: 'POST',
@@ -460,22 +466,30 @@ function updateEventStartAndEndDates(eventInfo) {
     });
 }
 
-function showAddOrEditEventModalInEditMode(eventInfo) {
-    setDefaultInputBorderColor($('#add-or-edit-event-form'))
+function displayEventModalInUpdateMode(eventInfo) {
+    setDefaultInputBorderColor($('#create-or-update-event-form'));
     currentEvent = eventInfo.event;
-    const title = eventInfo.event._def.title;
-    const {customerName, customerSurname, customerPhone} = eventInfo.event._def.extendedProps.customer;
-    const additionalInfo = eventInfo.event._def.extendedProps.additionalInfo;
-    $('.add-or-edit-event-modal').modal('toggle');
-    $('h4.add-event-header-text').addClass('hidden');
-    $('button.delete-booking-btn').removeClass('hidden');
-    $('button.ae-add-event-btn').addClass('hidden');
-    saveEventChangesBtn.removeClass('hidden');
-    $('input.ae-event-title').val(title);
-    $('input.ae-event-customer-name').val(customerName);
-    $('input.ae-event-customer-surname').val(customerSurname);
-    $('input.ae-event-customer-phone').val(customerPhone);
-    $('textarea.ae-event-additional-info').val(additionalInfo);
+    const title = eventInfo.event.title;
+    const {
+        additionalInfo,
+        customer : {customerName, customerSurname, customerPhone},
+        discountSurcharge,
+        numberOfGuests,
+        price : {priceId, amount, currency}
+    } = eventInfo.event.extendedProps;
+
+    $('input.cue-event-title').val(title);
+    $('input.cue-event-customer-name').val(customerName);
+    $('input.cue-event-customer-surname').val(customerSurname);
+    $('input.cue-event-customer-phone').val(customerPhone);
+    $('textarea.cue-event-additional-info').val(additionalInfo);
+
+    $('.cue-number-of-guests-input').val(numberOfGuests);
+    $('.cue-discount-surcharge-input').val(discountSurcharge);
+    $('.cue-amount-due-amount').val(amount);
+    $('.cue-amount-due-currency').val(currency);
+
+    $('.create-or-update-event-modal').modal('toggle');
 }
 
 function getCurrentEventData() {
@@ -489,31 +503,44 @@ function getCurrentEventData() {
             propertyCalendarId: propertyCalendarId
         },
         additionalInfo: currentEvent.extendedProps.additionalInfo,
-        customer: currentEvent.extendedProps.customer
+        customer: currentEvent.extendedProps.customer,
+        discountSurcharge: currentEvent.extendedProps.discountSurcharge,
+        numberOfGuests: currentEvent.extendedProps.numberOfGuests,
+        price: currentEvent.extendedProps.price
     };
 }
 
 function updateEventDataInDatabase(e) {
     e.preventDefault();
-    if (validateEventAndPropertyFormsInputs($('#add-or-edit-event-form'))) {
+    if (validateEventAndPropertyFormsInputs($('#create-or-update-event-form'))) {
         const currentEventData = getCurrentEventData();
         const {customerId} = currentEventData.customer;
         const {propertyCalendarId} = currentEventData.calendar;
+        const {priceId} = currentEventData.price;
+
         const customer = new Customer();
         customer.customerId = customerId;
-        customer.customerName = $('input.ae-event-customer-name').val();
-        customer.customerSurname = $('input.ae-event-customer-surname').val();
-        customer.customerPhone = $('input.ae-event-customer-phone').val();
+        customer.customerName = $('input.cue-event-customer-name').val();
+        customer.customerSurname = $('input.cue-event-customer-surname').val();
+        customer.customerPhone = $('input.cue-event-customer-phone').val();
+
         const event = new Event();
         event.id = currentEventData.id;
-        event.title = $('input.ae-event-title').val();
+        event.title = $('input.cue-event-title').val();
         event.start = currentEventData.start;
         event.end = currentEventData.end;
         event.propertyCalendar = {
             propertyCalendarId: propertyCalendarId
         };
-        event.additionalInfo = $('textarea.ae-event-additional-info').val();
+        event.additionalInfo = $('textarea.cue-event-additional-info').val();
         event.customer = customer;
+        event.numberOfGuests = $('.cue-number-of-guests-input').val();
+        event.discountSurcharge = $('.cue-discount-surcharge-input').val();
+        event.price = {
+            priceId: priceId,
+            amount: $('.cue-amount-due-amount').val(),
+            currency: $('.cue-amount-due-currency').val(),
+        };
 
         $.ajax({
             type: 'PUT',
@@ -527,22 +554,21 @@ function updateEventDataInDatabase(e) {
                 const {propertyCalendar} = event
                 const {propertyCalendarId} = propertyCalendar
                 const calendar = getCalendarByDataPropertyCalendarIdAttribute(propertyCalendarId);
-                calendar.getEventById(event.id).remove();
-                calendar.addEvent(event);
+                calendar.refetchEvents();
             },
             dataType: 'json',
             error: function (data) { //TODO
                 console.log(data);
             }
         });
-        $('.add-or-edit-event-modal').modal('toggle');
+        $('.create-or-update-event-modal').modal('toggle');
     }
 }
 
 function deleteEventFromPropertyCalendar() { //TODO
     const currentEventData = getCurrentEventData();
     const currentEventId = currentEventData.id;
-    $('.add-or-edit-event-modal').modal('toggle');
+    $('.create-or-update-event-modal').modal('toggle');
     $.ajax({
         type: 'DELETE',
         url: `http://localhost:8080/api/event/delete-event-from-property-calendar/${currentEventId}`,
@@ -555,63 +581,74 @@ function deleteEventFromPropertyCalendar() { //TODO
     });
 }
 
-function editPropertyDetails() {
-    setDefaultInputBorderColor('#save-or-update-property-form');
-    deletePropertyBtn.removeClass('hidden');
-    $('h4.add-new-property-header-txt').addClass('hidden');
-    $('.su-save-property-btn').addClass('hidden');
-    $('.su-save-changes-btn').removeClass('hidden');
+function displayPropertyModalInUpdateMode() {
+    setDefaultInputBorderColor('#create-or-update-property-form');
+    createPropertyModalUpdatePropertyButtons();
 
     const currentPropertyTypeName = $(this).children('table').find('input.details-property-type-name').val();
     const currentCountryName = $(this).children('table').find('input.details-property-country-name').val();
+    const currentRateTypeName = $(this).children('table').find('input.details-rate-type-name').val();
+    const currentPrice = $(this).children('table').find('input.details-price').val();
+    const amount = currentPrice.split(' ')[0];
+    const currencyCode = currentPrice.split(' ')[1];
 
-    $('input.su-property-id').val($(this).children('table').find('input.details-property-id').val());
-    $('input.su-property-user-id').val($(this).children('table').find('input.details-user-id').val());
-    $('input.su-property-name').val($(this).children('table').find('input.details-property-name').val());
-    $('input.su-property-city').val($(this).children('table').find('input.details-property-city').val());
-    $('input.su-property-street').val($(this).children('table').find('input.details-property-street').val());
-    $('input.su-property-postal-code').val($(this).children('table').find('input.details-property-postal-code').val());
-    $('input.su-property-province').val($(this).children('table').find('input.details-property-province').val());
-    $('input.su-property-region').val($(this).children('table').find('input.details-property-region').val());
-    $('textarea.su-property-description').val($(this).children('table').find('textarea.details-property-description').val());
-
+    $('input.cup-property-id').val($(this).children('table').find('input.details-property-id').val());
+    $('input.cup-property-user-id').val($(this).children('table').find('input.details-user-id').val());
+    $('input.cup-property-name').val($(this).children('table').find('input.details-property-name').val());
+    $('input.cup-property-city').val($(this).children('table').find('input.details-property-city').val());
+    $('input.cup-property-street').val($(this).children('table').find('input.details-property-street').val());
+    $('input.cup-property-postal-code').val($(this).children('table').find('input.details-property-postal-code').val());
+    $('input.cup-property-province').val($(this).children('table').find('input.details-property-province').val());
+    $('input.cup-property-region').val($(this).children('table').find('input.details-property-region').val());
+    $('textarea.cup-property-description').val($(this).children('table').find('textarea.details-property-description').val());
+    $('input.cup-price-amount').val(amount);
+    $('input.cup-price-currency').val(currencyCode);
+    
     if ($(this).children('table').find('input.details-property-isAvailable').val() === 'Yes') {
-        $('input.su-is-available.true').prop('checked', true);
+        $('input.cup-is-available.true').prop('checked', true);
     } else {
-        $('input.su-is-available.false').prop('checked', true);
+        $('input.cup-is-available.false').prop('checked', true);
     }
-    $('option.su-property-type-option').each(function (index, option) {
+    $('option.cup-property-type-option').each(function (index, option) {
         if (currentPropertyTypeName === $(option).text()) {
             $(option).attr('selected', 'selected');
         }
     });
-    $('option.su-property-country-option').each(function (index, option) {
+    $('option.cup-rate-type-option').each(function (index, option) {
+        if (currentRateTypeName === $(option).text()) {
+            $(option).attr('selected', 'selected');
+        }
+    });
+    $('option.cup-property-country-option').each(function (index, option) {
         if (currentCountryName === $(option).text()) {
             $(option).attr('selected', 'selected');
         }
     });
 
-    $('.save-or-update-property-modal').modal('toggle');
+    $('.create-or-update-property-modal').modal('toggle');
 }
 
-function savOrUpdateProperty(e) {
+function createOrUpdatePropertyInDatabase(e) {
     e.preventDefault();
 
-    if (validateEventAndPropertyFormsInputs($('#save-or-update-property-form'))){
-        $('.save-or-update-property-modal').modal('toggle');
+    if (validateEventAndPropertyFormsInputs($('#create-or-update-property-form'))){
+        $('.create-or-update-property-modal').modal('toggle');
         const propertyForm = {
-            propertyId: $('input.su-property-id').val(),
+            propertyId: $('input.cup-property-id').val(),
             userId: $('input[type=hidden].user-id').val(),
-            propertyName: $('input.su-property-name').val(),
-            isAvailable: $('input.su-is-available:checked').val(),
-            propertyTypeId: $('select.su-property-type').val(),
-            countryId: $('select.su-property-country').val(),
-            city: $('input.su-property-city').val(),
-            street: $('input.su-property-street').val(),
-            postalCode: $('input.su-property-postal-code').val(),
-            province: $('input.su-property-province').val(),
-            region: $('input.su-property-region').val(),
-            propertyDescription: $('textarea.su-property-description').val(),
+            propertyName: $('input.cup-property-name').val(),
+            isAvailable: $('input.cup-is-available:checked').val(),
+            propertyTypeId: $('select.cup-property-type').val(),
+            rateTypeId: $('select.cup-rate-type').val(),
+            countryId: $('select.cup-property-country').val(),
+            city: $('input.cup-property-city').val(),
+            street: $('input.cup-property-street').val(),
+            postalCode: $('input.cup-property-postal-code').val(),
+            province: $('input.cup-property-province').val(),
+            region: $('input.cup-property-region').val(),
+            propertyDescription: $('textarea.cup-property-description').val(),
+            amount: $('input.cup-price-amount').val(),
+            currency: $('input.cup-price-currency').val(),
         }
 
         let type;
@@ -653,8 +690,11 @@ function savOrUpdateProperty(e) {
                         propertyDescription: {descriptionText},
                         propertyId,
                         propertyName,
-                        propertyType: {propertyTypeName}
+                        propertyType: {propertyTypeName},
+                        rateType: {rateTypeName},
+                        price : {priceId, amount, currency}
                     } = property;
+
                     $('.property-name-tab').each(function (index, nameTab) {
                         if (parseInt($(nameTab).attr('data-property-id')) === propertyId) {
                             $(nameTab).find('h3').text(propertyName);
@@ -664,6 +704,8 @@ function savOrUpdateProperty(e) {
                         if (parseInt($(detailsElement).attr('data-property-id')) === propertyId) {
                             $(detailsElement).find('input.details-property-isAvailable').val((isAvailable) ? 'Yes' : 'No');
                             $(detailsElement).find('input.details-property-type-name').val(propertyTypeName);
+                            $(detailsElement).find('input.details-rate-type-name').val(rateTypeName);
+                            $(detailsElement).find('input.details-price').val(amount + ' ' + currency);
                             $(detailsElement).find('input.details-property-country-name').val(countryName);
                             $(detailsElement).find('input.details-property-city').val(city);
                             $(detailsElement).find('input.details-property-street').val(street);
@@ -683,11 +725,11 @@ function savOrUpdateProperty(e) {
     }
 }
 
-function deletePropertyFromDatabase() {
-    const propertyId = $('input[type=hidden].su-property-id').val();
+function setPropertyIsEnabledToFalse() {
+    const propertyId = $('input[type=hidden].cup-property-id').val();
     $.ajax({
         type: 'DELETE',
-        url: `http://localhost:8080/api/property/delete-property-from-database/${propertyId}`,
+        url: `http://localhost:8080/api/property/set-property-is-enabled-to-false/${propertyId}`,
         success: function (response) {
             const propertyNameTabs = $('.property-name-tab');
             const propertyCards = $('.property-card');
@@ -704,7 +746,7 @@ function deletePropertyFromDatabase() {
             propertyNameTabs.first().addClass('property-name-tab-selected');
             propertyCards.first().removeClass('hidden');
             renderPropertyCalendar();
-            $('.save-or-update-property-modal').modal('toggle');
+            $('.create-or-update-property-modal').modal('toggle');
         },
         error: function (data) { //TODO
             console.log(data);
@@ -712,20 +754,20 @@ function deletePropertyFromDatabase() {
     });
 }
 
-function clearAddOrEditEventFormFields() {
-    $('#add-or-edit-event-form').find('input[type=text], textarea').each(function (index, input) {
+function clearEventModalFormFields() {
+    $('#create-or-update-event-form').find('input[type=text], textarea').each(function (index, input) {
         $(input).val("");
     });
 }
 
-function clearSaveOrUpdatePropertyFormFields() {
-    $('#save-or-update-property-form')
-        .find('input[type=hidden].su-property-id, input[type=text], textarea')
+function clearPropertyModalFormFields() {
+    $('#create-or-update-property-form')
+        .find('input[type=hidden].cup-property-id, input[type=text], textarea')
         .each(function (index, input) {
             $(input).val("");
         })
         .end()
-        .find('input.su-is-available.true')
+        .find('input.cup-is-available.true')
         .prop('checked', true)
         .end()
         .find('select')
@@ -734,7 +776,7 @@ function clearSaveOrUpdatePropertyFormFields() {
         });
 }
 
-function validateEventAndPropertyFormsInputs(form) {
+function validateEventAndPropertyFormsInputs(form) { //todo check if validation works properly
     const INPUT_REGEX = /^.{1,25}$/;
     const TEXTAREA_REGEX = /^.{1,250}$/;
     let isInputValid = true;
@@ -784,9 +826,8 @@ function setDefaultInputBorderColor(form) {
 
 function displayDeleteConfirmationButtons(){
     $(this).addClass('hidden');
-    $(this).siblings('button.yes-btn').removeClass('hidden').on("click", hideDeleteConfirmationButtons);
+    $(this).siblings('button.yes-btn').removeClass('hidden');
     $(this).siblings('button.no-btn').removeClass('hidden').on("click", hideDeleteConfirmationButtons);
-
 }
 
 function hideDeleteConfirmationButtons(){
@@ -796,10 +837,182 @@ function hideDeleteConfirmationButtons(){
     $(this).addClass('hidden');
 }
 
+function setCountryCurrencyCode(){
+    $('.cup-price-currency').val($('.cup-property-country option:selected').data('dataCurrencyCode'));
+}
+
+function calculateNumberOfSelectedDays(startDate, endDate){
+    const startDateTime = new Date(startDate).getTime();
+    const endDateTime =  new Date(endDate).getTime();
+    const timeDifference = endDateTime - startDateTime;
+    return timeDifference / (1000 * 60 * 60 * 24);
+}
+
+function createEventPriceBoxElements(thisCalendar, startStr, endStr){
+    const selectedDays = calculateNumberOfSelectedDays(startStr, endStr);
+    const priceAmount = $(thisCalendar.el).closest('.property-card').find('.details-price').val().split(' ')[0];
+    const priceCurrency = $(thisCalendar.el).closest('.property-card').find('.details-price').val().split(' ')[1];
+    const rateType = $(thisCalendar.el).closest('.property-card').find('.details-rate-type-name').val();
+    const eventPriceBoxEl = $(`
+        <div class="event-price-box">
+            <input type="hidden" value="${priceAmount * selectedDays}" class="cue-price-amount-base-hidden"/>
+            <input type="hidden" value="${rateType}" class="cue-rate-type-hidden"/>
+            <label class="cue-number-of-guests-label">Number of guests:
+                <input type="number" step="1" min="1" name="numberOfGuests" class="cue-number-of-guests-input"/>
+            </label>
+            <label class="cue-discount-surcharge-label">Discount/Surcharge (%):
+                <input type="number" step="0.5"  name="discountSurcharge" class="cue-discount-surcharge-input"/>
+            </label>
+            <label>Amount due:
+                <input type="number" name="amountDueAmount" class="cue-amount-due-amount" readonly/>
+                <input type="text" name="amountDueCurrency" class="cue-amount-due-currency" readonly/>
+            </label>
+        </div>
+    `);
+    eventPriceBoxEl.find('.cue-number-of-guests-input')
+        .val(1)
+        .on('change', calculateAndUpdateAmountDue);
+    eventPriceBoxEl.find('.cue-discount-surcharge-input')
+        .val(0)
+        .on('change', calculateAndUpdateAmountDue);
+    eventPriceBoxEl.find('.cue-amount-due-amount').val(priceAmount * selectedDays);
+    eventPriceBoxEl.find('.cue-amount-due-currency').val(priceCurrency);
+    $('.event-price-box').remove();
+    $('.event-details-box').append(eventPriceBoxEl);
+}
+
+function calculateAndUpdateAmountDue(){
+    const discountSurchargeEl = $('.cue-discount-surcharge-input');
+    const priceAmountBase = $('.cue-price-amount-base-hidden').val();
+    const rateType = $('.cue-rate-type-hidden').val();
+    const numberOfGuests = $('.cue-number-of-guests-input').val();
+    const discountSurchargeAmount = (priceAmountBase/100) * discountSurchargeEl.val();
+
+    if(parseFloat(discountSurchargeEl.val()) > 0) {
+        discountSurchargeEl.removeClass('text-success');
+        discountSurchargeEl.addClass('text-danger');
+    } else if (parseFloat(discountSurchargeEl.val()) < 0){
+        discountSurchargeEl.removeClass('text-danger');
+        discountSurchargeEl.addClass('text-success');
+    } else {
+        discountSurchargeEl.removeClass('text-success');
+        discountSurchargeEl.removeClass('text-danger');
+    }
+
+    if (rateType.toString() === 'Per night'){
+        $('.cue-amount-due-amount').val(parseInt(priceAmountBase) + discountSurchargeAmount);
+    }
+    else if (rateType.toString() === 'Per person per night'){
+        $('.cue-amount-due-amount').val(parseInt(priceAmountBase) * parseInt(numberOfGuests) + discountSurchargeAmount);
+    }
+}
+
+function createSelectionInfoHiddenBox(selectionInfo){
+    $('.selection-info-hidden-box').remove();
+    const currentCalendarId = selectionInfo.view.calendar.el.getAttribute('data-property-calendar-id');
+    const selectionInfoHiddenBox = $(`
+        <div class="selection-info-hidden-box hidden">
+            <input type="hidden" value="${selectionInfo.startStr}" class="selection-info-event-start"/>
+            <input type="hidden" value="${selectionInfo.endStr}" class="selection-info-event-end"/>
+            <input type="hidden" value="${currentCalendarId}" class="selection-info-current-calendar"/>
+        </div>
+    `);
+    $('.event-details-box').prepend(selectionInfoHiddenBox);
+}
+
+function createEventModalUpdateEventButtons(){
+    const cueEventModalHeader = $('.cue-modal-header');
+    const cueEventModalFooter = $('.cue-modal-footer');
+    const deleteEventBtnGroup = $(`
+        <div class="delete-event-btn-group">
+            <button type="submit" class="btn btn-danger btn-block delete-event-btn delete-btn">Cancel event</button>
+            <button type="button" class="btn btn-danger event yes-btn hidden">Yes</button>
+            <button type="button" class="btn btn-success no-btn hidden">No</button>
+        </div>  
+    `);
+    const saveEventChangesBtn = $(`
+        <button type="submit" class="btn btn-primary btn-block cue-save-event-changes-btn">Save changes</button>
+    `);
+    deleteEventBtnGroup
+        .find('.delete-event-btn').on('click', displayDeleteConfirmationButtons)
+        .end()
+        .find('.yes-btn').on('click', deleteEventFromPropertyCalendar)
+        .end()
+        .find('.no-btn').on('click', displayDeleteConfirmationButtons)
+    ;
+    saveEventChangesBtn.on('click', updateEventDataInDatabase);
+    cueEventModalHeader.append(deleteEventBtnGroup);
+    cueEventModalFooter.append(saveEventChangesBtn);
+}
+
+function removeEventModalHeaderAndButtons(){
+    $('.delete-event-btn-group').remove();
+    $('.cue-save-event-changes-btn').remove();
+    $('.cue-add-event-btn').remove();
+    $('.add-event-header-text').remove();
+}
+
+function createEventModalAddEventHeaderAndButtons(){
+    const cueEventModalHeader = $('.cue-modal-header');
+    const cueEventModalFooter = $('.cue-modal-footer');
+    const addEventH4El= $(
+        `<h4 class="add-event-header-text">Please specify event details</h4>`
+    );
+    const addEventBtn = $(`
+        <button type="submit" class="btn btn-primary btn-block cue-add-event-btn">Add event</button>
+    `);
+    cueEventModalHeader.append(addEventH4El);
+    addEventBtn.on('click', saveEventToDatabase);
+    cueEventModalFooter.append(addEventBtn);
+}
+
+function createPropertyModalAddPropertyHeaderAndButtons(){
+    const cupPropertyModalHeader = $('.cup-modal-header');
+    const cupPropertyModalFooter = $('.cup-modal-footer');
+    const addEventH4El= $(`
+        <h4 class="create-property-header-txt">Please specify property details</h4>
+    `);
+    const createPropertyBtn = $(`
+        <button type="submit" class="btn btn-primary btn-block cup-create-property-btn">Create property</button>
+    `);
+    cupPropertyModalHeader.append(addEventH4El);
+    createPropertyBtn.on('click', createOrUpdatePropertyInDatabase);
+    cupPropertyModalFooter.append(createPropertyBtn);
+}
+
+function createPropertyModalUpdatePropertyButtons(){
+    const cuePropertyModalHeader = $('.cup-modal-header');
+    const cuePropertyModalFooter = $('.cup-modal-footer');
+    const deletePropertyBtnGroup = $(`
+        <div class="delete-property-btn-group">
+            <button type="submit" class="btn btn-danger btn-block delete-property-btn delete-btn">Delete property</button>
+            <button type="button" class="btn btn-danger property yes-btn hidden">Yes</button>
+            <button type="button" class="btn btn-success no-btn hidden">No</button>
+        </div>  
+    `);
+    const updatePropertyBtn = $(`
+        <button type="submit" class="btn btn-primary btn-block cup-save-changes-btn">Save changes</button>
+    `);
+    deletePropertyBtnGroup
+        .find('.delete-property-btn').on('click', displayDeleteConfirmationButtons)
+        .end()
+        .find('.yes-btn').on('click', setPropertyIsEnabledToFalse)
+        .end()
+        .find('.no-btn').on('click', displayDeleteConfirmationButtons)
+    ;
+    updatePropertyBtn.on('click', createOrUpdatePropertyInDatabase);
+    cuePropertyModalHeader.append(deletePropertyBtnGroup);
+    cuePropertyModalFooter.append(updatePropertyBtn);
+}
+
+function removePropertyModalHeaderAndButtons(){
+    $('.delete-property-btn-group').remove();
+    $('.cup-save-changes-btn').remove();
+    $('.cup-create-property-btn').remove();
+    $('.create-property-header-txt').remove();
+}
+
 ///////////////////////// CODE THAT 50% OF THE TIME WORKS EVERY TIME //////////////////////////////////////
-
-
-
 
 
 

@@ -14,19 +14,26 @@ public class Event {
     @Column(unique = true, nullable = false)
     private Long id;
 
-    private String title;
-    private String start;
-    private String end;
-
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_customer_id")
     private Customer customer;
 
-    private String additionalInfo;
-
     @ManyToOne
     @JoinColumn(name = "fk_property_calendar_id")
     private PropertyCalendar propertyCalendar;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_event_price_id")
+    private Price price;
+
+    private String title;
+    private String start;
+    private String end;
+    private String additionalInfo;
+    private Integer numberOfGuests;
+    private Double discountSurcharge;
+
+
+
 
 }

@@ -24,17 +24,19 @@ public class PropertyRestController {
     private final PropertyAddressService propertyAddressService;
     private final PropertyPhotoService propertyPhotoService;
     private final CountryService countryService;
+    private final RateTypeService rateTypeService;
 
 
     public PropertyRestController(
             UserService userService, PropertyService propertyService, PropertyTypeService propertyTypeService, PropertyAddressService propertyAddressService,
-            PropertyPhotoService propertyPhotoService, CountryService countryService) {
+            PropertyPhotoService propertyPhotoService, CountryService countryService, RateTypeService rateTypeService) {
         this.userService = userService;
         this.propertyService = propertyService;
         this.propertyTypeService = propertyTypeService;
         this.propertyAddressService = propertyAddressService;
         this.propertyPhotoService = propertyPhotoService;
         this.countryService = countryService;
+        this.rateTypeService = rateTypeService;
     }
 
     @GetMapping(value = "/get-all-property-types")
@@ -47,9 +49,14 @@ public class PropertyRestController {
         return countryService.getAllCountries();
     }
 
+    @GetMapping("get-all-rate-types")
+    List<RateType> getAllRateTypes(){
+        return rateTypeService.getAllRateTypes();
+    }
+
     @GetMapping(value = "/user-properties/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<Property> getAllPropertiesByUserId(@PathVariable Long userId) {
-        List<Property> properties = propertyService.getAllByUserId(userId);
+        List<Property> properties = propertyService.getAllByUserIdAndIsEnabledEquals(userId, true);
         properties.forEach(property -> {
             property.getUser().setPassword("");
             property.getUser().setRole(new Role());
@@ -71,8 +78,6 @@ public class PropertyRestController {
         return propertyService.updateProperty(propertyForm);
     }
 
-
-
     @PostMapping(value = "/upload-property-photo/{propertyPhotoId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) //TODO
     public PropertyPhoto uploadPropertyPhoto(@RequestParam("file") MultipartFile file, @PathVariable Long propertyPhotoId) throws IOException {
         PropertyPhoto propertyPhoto = propertyPhotoService.getPropertyPhotoById(propertyPhotoId);
@@ -82,9 +87,9 @@ public class PropertyRestController {
         return propertyPhotoService.savePropertyPhoto(propertyPhoto);
     }
 
-    @DeleteMapping("/delete-property-from-database/{propertyId}")
-    public Boolean deletePropertyFromDatabase(@PathVariable Long propertyId){
-        propertyService.deleteProperty(propertyId);
+    @PutMapping("/set-property-is-enabled-to-false/{propertyId}")
+    public Boolean setPropertyIsEnabledToFalse(@PathVariable Long propertyId){
+        propertyService.setPropertyIsEnabled(false, propertyId);
         return true; //TODO
     }
 

@@ -10,6 +10,7 @@ public class PropertyForm {
     private String propertyName;
     private Boolean isAvailable;
     private Long propertyTypeId;
+    private Long rateTypeId;
     private Long countryId;
     private String city;
     private String street;
@@ -17,6 +18,8 @@ public class PropertyForm {
     private String province;
     private String region;
     private String propertyDescription;
+    private Double amount;
+    private String currency;
 
 
 }

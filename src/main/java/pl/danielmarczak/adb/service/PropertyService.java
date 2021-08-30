@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PropertyService {
 
-    List<Property> getAllByUserId(Long userId);
+    List<Property> getAllByUserIdAndIsEnabledEquals(Long userId, Boolean isActive);
 
     Property getPropertyById(Long propertyId);
 
@@ -17,7 +17,7 @@ public interface PropertyService {
 
     Property updateProperty(PropertyForm propertyForm);
 
-    void deleteProperty(Long propertyId);
+    void setPropertyIsEnabled(Boolean isActive, Long propertyId);
 
 
 

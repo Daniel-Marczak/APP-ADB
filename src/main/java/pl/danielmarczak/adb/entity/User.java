@@ -20,16 +20,13 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    private String email;
-
-    private String contactNumber;
-
-    private String password;
-
     @OneToOne
     @JoinColumn(name = "fk_role_id")
     private Role role;
 
+    private String email;
+    private String contactNumber;
+    private String password;
     private boolean isEnabled;
 
 

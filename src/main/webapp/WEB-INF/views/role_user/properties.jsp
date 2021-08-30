@@ -54,102 +54,105 @@
     </div>
 </footer>
 
-<!-- SAVE OR UPDATE PROPERTY MODAL -->
-<div tabindex="-1" class="modal save-or-update-property-modal" role="dialog" aria-hidden="true">
+<!-- CREATE OR UPDATE PROPERTY MODAL -->
+<div tabindex="-1" class="modal create-or-update-property-modal" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="add-new-property-header-txt">Please specify property details</h4>
-                <button type="submit" class="btn btn-danger btn-block delete-property-btn delete-btn hidden">Delete property</button>
-                <button type="button" class="btn btn-danger property yes-btn hidden">Yes</button>
-                <button type="button" class="btn btn-success no-btn hidden">No</button>
+            <div class="modal-header cup-modal-header">
             </div>
             <div class="modal-body">
-                <form method="post" id="save-or-update-property-form">
-                    <input type="hidden" name="propertyId" class="su-property-id" value="">
-                    <input type="hidden" name="userId" class="su-property-user-id" value="${requestScope.userId}"/>
+                <form method="post" id="create-or-update-property-form">
+                    <input type="hidden" name="propertyId" class="cup-property-id" value="">
+                    <input type="hidden" name="userId" class="cup-property-user-id" value="${requestScope.userId}"/>
                     <label>Property name:
-                        <input type="text" name="propertyName" class="su-property-name"/>
+                        <input type="text" name="propertyName" class="cup-property-name"/>
                     </label>
                     <br>
                     <label>Property type:<br>
-                        <select name="propertyType" class="su-property-type">
+                        <select name="propertyType" class="cup-property-type">
                             <option value="0" selected>Please select a type</option>
                         </select>
                     </label>
                     <br>
                     <label>Country:<br>
-                        <select name="propertyCountry" class="su-property-country">
+                        <select name="propertyCountry" class="cup-property-country">
                             <option value="0" selected>Please select a country</option>
                         </select>
                     </label>
                     <br>
                     <label>City:<br>
-                        <input type="text" name="propertyCity" class="su-property-city"/>
+                        <input type="text" name="propertyCity" class="cup-property-city"/>
                     </label>
                     <label>Street:<br>
-                        <input type="text" name="propertyStreet" class="su-property-street"/>
+                        <input type="text" name="propertyStreet" class="cup-property-street"/>
                     </label>
                     <label>Postal code:<br>
-                        <input type="text" name="propertyPostalCode" class="su-property-postal-code"/>
+                        <input type="text" name="propertyPostalCode" class="cup-property-postal-code"/>
                     </label>
                     <label>Province:<br>
-                        <input type="text" name="propertyProvince" class="su-property-province"/>
+                        <input type="text" name="propertyProvince" class="cup-property-province"/>
                     </label>
                     <label>Region:<br>
-                        <input type="text" name="propertyRegion" class="su-property-region"/>
+                        <input type="text" name="propertyRegion" class="cup-property-region"/>
                     </label>
                     <label>Description:<br>
-                        <textarea name="propertyDescription" class="su-property-description"></textarea>
+                        <textarea name="propertyDescription" class="cup-property-description"></textarea>
+                    </label>
+                    <br>
+                    <label>Price:<br>
+                        <input type="number" min="1" step="0.01" name="amount" class="cup-price-amount"/>
+                        <input type="text" name="currency" class="cup-price-currency" readonly/>
+                    </label>
+                    <label>Rate type:<br>
+                        <select name="rateType" class="cup-rate-type">
+                            <option value="0" selected>Please select a rate type</option>
+                        </select>
                     </label>
                     <label>Is property available:<br>
-                        <input id="isAvailableYes" type="radio" name="isAvailable" class="su-is-available true" value="true" checked="checked"/>
+                        <input id="isAvailableYes" type="radio" name="isAvailable" class="cup-is-available true" value="true" checked="checked"/>
                         <label for="isAvailableYes">Yes</label>
-                        <input id="isAvailableNo" type="radio" name="isAvailable" class="su-is-available false" value="false"/>
+                        <input id="isAvailableNo" type="radio" name="isAvailable" class="cup-is-available false" value="false"/>
                         <label for="isAvailableNo">No</label>
                     </label>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-block su-save-property-btn">Save property</button>
-                        <button type="submit" class="btn btn-primary btn-block su-save-changes-btn">Save changes</button>
+                    <div class="modal-footer cup-modal-footer">
                     </div>
                 </form>
             </div>
         </div>
+        </div>
     </div>
 </div>
 
-<!-- ADD OR EDIT EVENT MODAL -->
-<div tabindex="-1" class="modal add-or-edit-event-modal" role="dialog" aria-hidden="true">
+<!-- CREATE OR UPDATE EVENT MODAL -->
+<div tabindex="-1" class="modal create-or-update-event-modal" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-header">
-                    <h4 class="add-event-header-text">Please specify booking details</h4>
-                    <button type="submit" class="btn btn-danger btn-block delete-booking-btn delete-btn hidden">Cancel booking</button>
-                    <button type="button" class="btn btn-danger booking yes-btn hidden">Yes</button>
-                    <button type="button" class="btn btn-success no-btn hidden">No</button>
+                <div class="modal-header cue-modal-header">
                 </div>
             </div>
             <div class="modal-body">
-                <form method="post" id="add-or-edit-event-form" >
-                    <label>Booking title:
-                        <input type="text" name="title" class="ae-event-title"/>
-                    </label>
-                    <label>Customer name:
-                        <input type="text" name="customerName" class="ae-event-customer-name"/>
-                    </label>
-                    <label>Customer surname:
-                        <input type="text" name="customerSurname" class="ae-event-customer-surname"/>
-                    </label>
-                    <label>Customer phone:
-                        <input type="text" name="customerPhone" class="ae-event-customer-phone"/>
-                    </label>
-                    <label>Additional info:
-                        <textarea name="additionalInfo" class="ae-event-additional-info"></textarea>
-                    </label>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn-block ae-add-event-btn">Add booking</button>
-                        <button type="submit" class="btn btn-primary btn-block ae-save-changes-btn hidden">Save changes</button>
+                <form method="post" id="create-or-update-event-form" >
+                    <div class="event-details-box">
+                        <div class="event-info-box">
+                            <label>Event title:
+                                <input type="text" name="title" class="cue-event-title"/>
+                            </label>
+                            <label>Customer name:
+                                <input type="text" name="customerName" class="cue-event-customer-name"/>
+                            </label>
+                            <label>Customer surname:
+                                <input type="text" name="customerSurname" class="cue-event-customer-surname"/>
+                            </label>
+                            <label>Customer phone:
+                                <input type="text" name="customerPhone" class="cue-event-customer-phone"/>
+                            </label>
+                            <label>Additional info:
+                                <textarea name="additionalInfo" class="cue-event-additional-info"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer cue-modal-footer">
                     </div>
                 </form>
             </div>

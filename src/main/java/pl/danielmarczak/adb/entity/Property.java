@@ -16,6 +16,8 @@ public class Property {
     private Long propertyId;
 
     private String propertyName;
+    private Boolean isAvailable;
+    private Boolean isEnabled;
 
     @ManyToOne
     @JoinColumn(name = "fk_user_id")
@@ -41,6 +43,12 @@ public class Property {
     @JoinColumn(name = "fk_calendar_id")
     private PropertyCalendar propertyCalendar;
 
-    private Boolean isAvailable;
+    @ManyToOne
+    @JoinColumn(name = "fk_rate_type_id")
+    private RateType rateType;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_property_price_id")
+    private Price price;
 
 }
