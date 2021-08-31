@@ -11,9 +11,7 @@ let isEmailAvailable = false;
 let isContactNrFmtCorrect = false;
 let isPasswordFmtCorrect = false;
 let isConfPasswordCorrect = false;
-let isRecaptchaChecked = false
-let showRecaptcha = false;
-
+let isAccountModified = false;
 
 // USERNAME VALIDATION -------------------------------------------------------------------------------------------------
 
@@ -39,13 +37,13 @@ function checkIsUsernameFmtCorrect() {
 
 function checkIsUsernameAvailable() {
     const username = usernameInput.val();
+    const currentUsername = $('input.update-current-username').val();
     const errUsernameTknDiv = $('.error-username-tkn');
     return $.get(`http://localhost:8080/api/registration/is-username-available?username=${username}`, function (data) {
-        if (data === true) {
+        if (data === true || currentUsername === username) {
             isUsernameAvailable = true;
             errUsernameTknDiv.fadeOut(500);
-        }
-        if (data === false) {
+        } else if (data === false) {
             isUsernameAvailable = false;
             if (errUsernameTknDiv.hasClass('hidden')) {
                 errUsernameTknDiv.removeClass('hidden').toggle().fadeIn(500);
@@ -76,7 +74,6 @@ function validateUsername() {
     validateForm();
 }
 
-
 // EMAIL VALIDATION ----------------------------------------------------------------------------------------------------
 
 function checkIsEmailFmtCorrect() {
@@ -101,13 +98,13 @@ function checkIsEmailFmtCorrect() {
 
 function checkIsEmailAvailable() {
     const email = emailInput.val();
+    const currentEmail = $('input.update-current-email').val()
     const errEmailTknDiv = $('.error-email-tkn');
     return $.get(`http://localhost:8080/api/registration/is-email-available?email=${email}`, function (data) {
-        if (data === true) {
+        if (data === true || email === currentEmail) {
             isEmailAvailable = true;
             errEmailTknDiv.fadeOut(500);
-        }
-        if (data === false) {
+        } else if (data === false) {
             isEmailAvailable = false;
             if (errEmailTknDiv.hasClass('hidden')) {
                 errEmailTknDiv.removeClass('hidden').toggle().fadeIn(500);
@@ -120,7 +117,6 @@ function checkIsEmailAvailable() {
 
 function validateEmail() {
     const emailCheckmarkDiv = $('.email-checkmark');
-
     if (checkIsEmailFmtCorrect()) {
         $.when(checkIsEmailAvailable()).done(function () {
             if (isEmailFmtCorrect && isEmailAvailable) {
@@ -138,7 +134,6 @@ function validateEmail() {
     }
     validateForm();
 }
-
 
 // CONTACT NUMBER VALIDATION -------------------------------------------------------------------------------------------
 
@@ -169,7 +164,6 @@ function validateContactNumber(){
     validateForm();
 }
 
-
 // PASSWORD VALIDATION -------------------------------------------------------------------------------------------------
 
 function validatePassword() {
@@ -179,13 +173,23 @@ function validatePassword() {
     const passwordCheckmarkDiv = $('.password-checkmark');
 
     if (!PASSWORD_REGEX.test(password)) {
-        isPasswordFmtCorrect = false;
-        if (errPasswordDiv.hasClass('hidden')) {
-            errPasswordDiv.removeClass('hidden').toggle().fadeIn(500);
+        if (password){
+            isPasswordFmtCorrect = false;
+            if (errPasswordDiv.hasClass('hidden')) {
+                errPasswordDiv.removeClass('hidden').toggle().fadeIn(500);
+            } else {
+                errPasswordDiv.fadeIn(500);
+            }
+            passwordCheckmarkDiv.fadeOut(500);
         } else {
-            errPasswordDiv.fadeIn(500);
+            isPasswordFmtCorrect = true;
+            errPasswordDiv.fadeOut(500);
+            if (passwordCheckmarkDiv.hasClass('hidden')) {
+                passwordCheckmarkDiv.removeClass('hidden').toggle().fadeIn(500);
+            } else {
+                passwordCheckmarkDiv.fadeIn(500);
+            }
         }
-        passwordCheckmarkDiv.fadeOut(500);
     }
     if (PASSWORD_REGEX.test(password)) {
         isPasswordFmtCorrect = true;
@@ -212,7 +216,8 @@ function validateConfirmPassword() {
             errConfPassDiv.fadeIn(500);
         }
         confPassCheckmarkDiv.fadeOut(500);
-    } else if (passwordInput.val() === confPassInput.val()) {
+    }
+    if (passwordInput.val() === confPassInput.val()) {
         isConfPasswordCorrect = true;
         errConfPassDiv.fadeOut(500);
         if (confPassCheckmarkDiv.hasClass('hidden')) {
@@ -224,30 +229,38 @@ function validateConfirmPassword() {
     validateForm();
 }
 
-// REGISTRATION FORM VALIDATION & RECAPTCHA VISIBILITY------------------------------------------------------------------
-
-function recaptchaCallback() {
-    $('#registration-submit-btn').removeClass('hidden');
-    isRecaptchaChecked = true;
-}
+// UPDATE USER FORM VALIDATION -----------------------------------------------------------------------------------------
 
 function validateForm() {
-    const recaptchaWrapper = $('.recaptcha-wrapper');
-    if (isUsernameFmtCorrect && isUsernameAvailable && isEmailFmtCorrect && isEmailAvailable && isContactNrFmtCorrect
-        && isPasswordFmtCorrect && isConfPasswordCorrect
-    ) {
-        showRecaptcha = true;
-        if (recaptchaWrapper.hasClass('hidden')) {
-            recaptchaWrapper.removeClass('hidden').toggle().fadeIn(500);
+    if (checkIfUserChangedAccountDetails()){
+        isAccountModified = true;
+        if (isUsernameFmtCorrect && isUsernameAvailable && isEmailFmtCorrect && isEmailAvailable && isContactNrFmtCorrect
+            && isPasswordFmtCorrect && isConfPasswordCorrect
+        ) {
+            $('#update-user-submit-btn').removeClass('hidden');
         } else {
-            recaptchaWrapper.fadeIn(500);
-            showRecaptcha = false;
+            $('#update-user-submit-btn').addClass('hidden');
         }
     } else {
-        recaptchaWrapper.fadeOut(500);
-        showRecaptcha = false;
-        $('#registration-submit-btn').addClass('hidden')
+        isAccountModified = false;
+        $('#update-user-submit-btn').addClass('hidden');
     }
+}
+
+function checkIfUserChangedAccountDetails(){
+    const isChangedUsername = $('.update-current-username').val() !== usernameInput.val();
+    const isChangedEmail = $('.update-current-email').val() !== emailInput.val();
+    const isChangedNumber = $('.update-current-number').val() !== contactNumberInput.val();
+    const isPasswordChanged = !passwordInput.val();
+    return isChangedUsername || isChangedEmail || isChangedNumber || !isPasswordChanged;
+}
+
+function preValidateForm(){
+    validateUsername();
+    validateEmail();
+    validateContactNumber();
+    validatePassword();
+    validateConfirmPassword();
 }
 
 // TOOLTIPS ------------------------------------------------------------------------------------------------------------
@@ -257,7 +270,11 @@ function showTooltip() {
         $('.t-username').removeClass('hidden');
     }
     if ($(this).hasClass('email-input')) {
-        $('.t-email').removeClass('hidden');
+        $('.t-email')
+            .removeClass('hidden')
+            .css('color', 'red')
+            .css('font-weight', '500')
+        ;
     }
     if ($(this).hasClass('contact-number-input')) {
         $('.t-contact-number').removeClass('hidden');
@@ -288,18 +305,20 @@ function hideTooltip() {
     }
 }
 
-usernameInput.on('keyup change blur', validateUsername).on('focus', showTooltip).on('blur', hideTooltip);
-emailInput.on('keyup change blur', validateEmail).on('focus', showTooltip).on('blur', hideTooltip);
-contactNumberInput.on('keyup change blur', validateContactNumber).on('focus', showTooltip).on('blur', hideTooltip);
-passwordInput.on('keyup change blur', validatePassword).on('focus', showTooltip).on('blur', hideTooltip);
-confPassInput.on('keyup change blur', validateConfirmPassword).on('focus', showTooltip).on('blur', hideTooltip);
+preValidateForm();
+
+usernameInput.on('keyup change', validateUsername).on('focus', showTooltip).on('blur', hideTooltip);
+emailInput.on('keyup change', validateEmail).on('focus', showTooltip).on('blur', hideTooltip);
+contactNumberInput.on('keyup change', validateContactNumber).on('focus', showTooltip).on('blur', hideTooltip);
+passwordInput.on('keyup change', validatePassword).on('focus', showTooltip).on('blur', hideTooltip);
+confPassInput.on('keyup change', validateConfirmPassword).on('focus', showTooltip).on('blur', hideTooltip);
 
 $(document).ready(function() {
     $(window).keydown(function(event){
         if(event.keyCode === 13) {
             if (
                 !isUsernameFmtCorrect|| !isUsernameAvailable || !isEmailFmtCorrect || !isEmailAvailable ||
-                !isContactNrFmtCorrect || !isPasswordFmtCorrect || !isConfPasswordCorrect || !isRecaptchaChecked
+                !isContactNrFmtCorrect || !isPasswordFmtCorrect || !isConfPasswordCorrect || !isAccountModified
             ){
                 event.preventDefault();
                 return false;

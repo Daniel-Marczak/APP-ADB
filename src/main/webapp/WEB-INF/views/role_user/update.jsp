@@ -33,6 +33,11 @@
 
                         <c:if test="${empty param.update || param.update != 'success'}">
                             <form:form class="update-user-form" modelAttribute="user" action="/user/update">
+                                <div class="hidden current-username-and-email-box">
+                                    <input type="hidden" name="currentUsername" class="update-current-username" value="${requestScope.username}"/>
+                                    <input type="hidden" name="currentEmail" class="update-current-email" value="${requestScope.email}"/>
+                                    <input type="hidden" name="currentNumber" class="update-current-number" value="${requestScope.number}"/>
+                                </div>
                                 <div class="tooltip-container">
                                     <div class="tooltip-wrapper t-username hidden">
                                         <span>Your username can contain:</span>
@@ -47,8 +52,10 @@
                                         <span>A username must be between 3 and 15 characters.</span>
                                     </div>
                                     <div class="tooltip-wrapper t-email hidden">
-                                        <span>Valid email is required to complete registration process.</span>
-                                        <span>We will send you an email with a registration confirmation link.</span>
+                                        <span>Changing your email address will automatically log you out and you will
+                                            not be able to log in until the new email address is confirmed.
+                                        </span>
+                                        <span></span>
                                     </div>
                                     <div class="tooltip-wrapper t-contact-number hidden">
                                         <span>A valid contact number must begin with a country code.</span>
@@ -105,8 +112,7 @@
                                     Incorrect contact number format.
                                 </div>
 
-                                <form:password path="password" placeholder="password"
-                                               cssClass="password-input"/>
+                                <form:password path="password" placeholder="password" cssClass="password-input"/>
                                 <div class="password-checkmark hidden">&check;</div>
                                 <br>
                                 <form:errors path="password"/>
@@ -126,7 +132,7 @@
                                     The passwords do not match.
                                 </div>
                                 <div>
-                                    <button class="hidden" type="submit" id="registration-submit-btn">Register</button>
+                                    <button class="" type="submit" id="update-user-submit-btn">Save changes</button>
                                 </div>
                             </form:form>
                         </c:if>
@@ -155,9 +161,7 @@
         </div>
     </div>
 </footer>
-<%@include file="/WEB-INF/views/jspf/user-footer.jspf" %>
-<script src="<c:url value="/resources/js/app/app-registration.js"/>"></script>
-
-
+<%@include file="/WEB-INF/views/jspf/footer.jspf" %>
+<%--<script src="<c:url value="/resources/js/app/app-role-user-update.js"/>"></script>--%>
 </body>
 </html>

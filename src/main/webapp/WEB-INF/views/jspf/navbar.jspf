@@ -28,6 +28,9 @@
                         <li>
                             <a class="smooth-scroll-off" href="<c:url value='/properties/user-properties'/>">Property manager</a>
                         </li>
+                        <li>
+                            <a href="#" data-target=".bs-example-modal-sm" data-toggle="modal">Sign out</a>
+                        </li>
                     </sec:authorize>
                 </ul>
             </div>
