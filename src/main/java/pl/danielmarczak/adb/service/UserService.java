@@ -10,10 +10,6 @@ public interface UserService {
 
     void deleteUser(User user);
 
-    User findFirstByUsername(String username);
-
-    User findFirstByEmail(String email);
-
     boolean checkDatabaseContainsUsername(String username);
 
     boolean checkDatabaseContainsEmail(String email);
@@ -23,5 +19,11 @@ public interface UserService {
     User findUserById(Long userId);
 
     void setUserIsEnabled(boolean isEnabled, Long userId );
+
+    Boolean isEmailAvailable(String email);
+
+    Boolean isUsernameAvailable(String username);
+
+
 
 }

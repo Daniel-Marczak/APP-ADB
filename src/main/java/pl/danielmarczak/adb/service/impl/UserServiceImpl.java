@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     @Override
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -35,16 +34,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(User user) {
         userRepository.delete(user);
-    }
-
-    @Override
-    public User findFirstByUsername(String username) {
-        return userRepository.findFirstByUsername(username).orElse(new User());
-    }
-
-    @Override
-    public User findFirstByEmail(String email) {
-        return userRepository.findFirstByEmail(email).orElse(new User());
     }
 
     @Override
@@ -71,4 +60,16 @@ public class UserServiceImpl implements UserService {
     public void setUserIsEnabled(boolean isEnabled, Long userId) {
         userRepository.setUserIsEnabled(isEnabled, userId);
     }
+
+    @Override
+    public Boolean isEmailAvailable(String email) {
+        return userRepository.findFirstByEmail(email).isEmpty();
+    }
+
+    @Override
+    public Boolean isUsernameAvailable(String username) {
+        return userRepository.findUserByUsername(username).isEmpty();
+    }
+
+
 }

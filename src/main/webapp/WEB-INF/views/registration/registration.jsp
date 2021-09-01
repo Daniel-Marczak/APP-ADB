@@ -33,7 +33,7 @@
                         </c:if>
 
                         <c:if test="${empty param.reg || param.reg != 'success'}">
-                            <form:form class="registration-form" modelAttribute="newUser" action="/registration">
+                            <form:form class="registration-form" modelAttribute="user" action="/registration">
                                 <div class="tooltip-container">
                                     <div class="tooltip-wrapper t-username hidden">
                                         <span>Your username can contain:</span>
@@ -79,7 +79,7 @@
                                 <form:input path="username" placeholder="username" cssClass="username-input"/>
                                 <div class="username-checkmark hidden">&check;</div>
                                 <br>
-                                <form:errors path="username" cssClass="form-error-box error-username-fmt-form"/>
+                                <form:errors path="username" cssClass="form-error-box"/>
                                 <div class="form-error-box error-username-fmt hidden">
                                     Incorrect username format.
                                 </div>
@@ -90,7 +90,7 @@
                                 <form:input path="email" placeholder="email" cssClass="email-input"/>
                                 <div class="email-checkmark hidden">&check;</div>
                                 <br>
-                                <form:errors path="email"/>
+                                <form:errors path="email" cssClass="form-error-box"/>
                                 <div class="form-error-box error-email-fmt hidden">
                                     Incorrect email format.
                                 </div>
@@ -101,35 +101,31 @@
                                 <form:input path="contactNumber" placeholder="contact number" cssClass="contact-number-input"/>
                                 <div class="contact-number-checkmark hidden">&check;</div>
                                 <br>
-                                <form:errors path="contactNumber"/>
+                                <form:errors path="contactNumber" cssClass="form-error-box"/>
                                 <div class="form-error-box error-contact-number hidden">
                                     Incorrect contact number format.
                                 </div>
 
-                                <form:password path="password" placeholder="password"
-                                               cssClass="password-input"/>
+                                <form:password path="password" placeholder="password" cssClass="password-input"/>
                                 <div class="password-checkmark hidden">&check;</div>
                                 <br>
-                                <form:errors path="password"/>
+                                <form:errors path="password" cssClass="form-error-box"/>
                                 <div class="form-error-box error-password hidden">
                                     Password does not meet requirements.
                                 </div>
 
-                                <div>
-                                    <label style="margin: 0">
-                                        <input type="password" name="confirmPassword" placeholder="confirm password"
-                                               class="confpass-input">
-                                    </label>
-                                    <div class="confpass-checkmark hidden">&check;</div>
-                                </div>
-
+                                <form:password path="confPassword" placeholder="confirm password" cssClass="confpass-input"/>
+                                <div class="confpass-checkmark hidden">&check;</div>
+                                <br>
+                                <form:errors path="password" cssClass="form-error-box"/>
                                 <div class="form-error-box error-password-conf hidden">
                                     The passwords do not match.
                                 </div>
 
                                 <div class="recaptcha-wrapper hidden">
                                     <div class="g-recaptcha" data-theme="dark" data-callback="recaptchaCallback"
-                                         data-sitekey="6LeK3OkaAAAAAHMJXvPWVGX13y8hPugCQLbYAtwe"></div>
+                                         data-sitekey="6LeK3OkaAAAAAHMJXvPWVGX13y8hPugCQLbYAtwe">
+                                    </div>
                                 </div>
                                 <div>
                                     <button class="hidden" type="submit" id="registration-submit-btn">Register</button>

@@ -40,38 +40,47 @@ public class RegistrationController {
 
     @GetMapping
     public String showRegistrationForm(Model model) {
-        model.addAttribute("newUser", new User());
+        model.addAttribute("user", new User());
         return "registration/registration";
     }
 
     @PostMapping
     public String processRegistrationForm(
-            @ModelAttribute("newUser") @Valid User newUser, BindingResult result,
-            @RequestParam(name = "g-recaptcha-response") String recaptchaResponse,
-            @RequestParam String confirmPassword
+            @ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+            @RequestParam(name = "g-recaptcha-response") String recaptchaResponse
     ) {
         String url = "https://www.google.com/recaptcha/api/siteverify";
         String params = "?secret=6LeK3OkaAAAAAG3u4n12ei20nI4gvqaPbWRw6aq9&response=" + recaptchaResponse;
         ReCaptchaResponse reCaptchaResponse = restTemplate.exchange(url + params, HttpMethod.POST, null, ReCaptchaResponse.class).getBody();
 
+        assert reCaptchaResponse != null;
         if (reCaptchaResponse.isSuccess()) {
-            if (!newUser.getPassword().equals(confirmPassword)) {
-                result.addError(new FieldError(
-                        "newUser",
-                        "password",
-                        "This email address has already been taken."
-                ));
-                return "registration?reg=failure";
+            if (bindingResult.hasErrors()) {
+                return "registration/registration";
             }
-            if (result.hasErrors()) {
-                return "registration?reg=failure";
+            if (!user.getPassword().equals(user.getConfPassword())) {
+                bindingResult.addError(new FieldError("user", "password", "The passwords do not match."));
+                return "registration/registration";
             }
 
-            registrationService.registerNewUserAndSendERegistrationConfirmationEmail(newUser);
+            boolean isEmailAvailable = userService.isEmailAvailable(user.getEmail());
+            boolean isUsernameAvailable = userService.isUsernameAvailable(user.getUsername());
+
+            if (!isEmailAvailable || !isUsernameAvailable){
+                if (!isEmailAvailable){
+                    bindingResult.addError(new FieldError("user", "email", "This email has already been taken."));
+                }
+                if (!isUsernameAvailable) {
+                    bindingResult.addError(new FieldError("user", "username", "This username has already been taken."));
+                }
+                return "registration/registration";
+            }
+
+            registrationService.registerNewUserAndSendERegistrationConfirmationEmail(user);
             return "redirect:/registration?reg=success";
 
         } else {
-            return "redirect:/registration?reg=failure";
+            return "registration/registration";
         }
     }
 

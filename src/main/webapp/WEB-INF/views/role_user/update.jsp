@@ -25,12 +25,6 @@
                                 Your account has been updated.
                             </div>
                         </c:if>
-                        <c:if test="${param.update == 'failure'}">
-                            <div class="update-confirmation-failure-box">
-                                Your account has not been updated.
-                            </div>
-                        </c:if>
-
                         <c:if test="${empty param.update || param.update != 'success'}">
                             <form:form class="update-user-form" modelAttribute="user" action="/user/update">
                                 <div class="hidden current-username-and-email-box">
@@ -96,7 +90,7 @@
                                 <form:input path="email" placeholder="email" cssClass="email-input"/>
                                 <div class="email-checkmark hidden">&check;</div>
                                 <br>
-                                <form:errors path="email"/>
+                                <form:errors path="email" cssClass="form-error-box"/>
                                 <div class="form-error-box error-email-fmt hidden">
                                     Incorrect email format.
                                 </div>
@@ -107,7 +101,7 @@
                                 <form:input path="contactNumber" placeholder="contact number" cssClass="contact-number-input"/>
                                 <div class="contact-number-checkmark hidden">&check;</div>
                                 <br>
-                                <form:errors path="contactNumber"/>
+                                <form:errors path="contactNumber" cssClass="form-error-box"/>
                                 <div class="form-error-box error-contact-number hidden">
                                     Incorrect contact number format.
                                 </div>
@@ -115,7 +109,9 @@
                                 <form:password path="password" placeholder="password" cssClass="password-input"/>
                                 <div class="password-checkmark hidden">&check;</div>
                                 <br>
-                                <form:errors path="password"/>
+                                <c:if test="${requestScope.error =='password'}">
+                                    <form:errors path="password" cssClass="form-error-box"/>
+                                </c:if>
                                 <div class="form-error-box error-password hidden">
                                     Password does not meet requirements.
                                 </div>
@@ -162,6 +158,6 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
-<%--<script src="<c:url value="/resources/js/app/app-role-user-update.js"/>"></script>--%>
+<script src="<c:url value="/resources/js/app/app-role-user-update.js"/>"></script>
 </body>
 </html>
