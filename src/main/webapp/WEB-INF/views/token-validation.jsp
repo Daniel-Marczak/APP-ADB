@@ -20,33 +20,43 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="banner-text">
-                        <h2 style="margin-bottom: 50px">Registration</h2>
 
-                        <c:if test="${requestScope.registration == 'successful'}">
-                            <div class="registration-confirmation-success-box">
-                                Your account has been activated. You can now sign in.
+                        <c:if test="${requestScope.validation == 'registrationSuccess'}">
+                            <h2 style="margin-bottom: 50px">Registration completed!</h2>
+                            <div class="token-validation-success-box">
+                                Your registration has been successfully completed. You can now sign in.
                             </div>
                         </c:if>
-                        <c:if test="${requestScope.registration == 'alreadyConfirmed'}">
-                            <div class="registration-confirmation-success-box">
-                                The account associated with this email address has already been activated.
+                        <c:if test="${requestScope.validation == 'updateSuccess'}">
+                            <h2 style="margin-bottom: 50px">Update completed!</h2>
+                            <div class="token-validation-success-box">
+                                Your email address has been successfully updated. You can now sign in.
                             </div>
                         </c:if>
-                        <c:if test="${requestScope.registration == 'tokenExpired'}">
-                            <div class="registration-confirmation-failure-box">
-                                Your registration token has expired.
-                            </div>
-                        </c:if>
-                        <c:if test="${requestScope.registration == 'emptyToken'}">
-                            <div class="registration-confirmation-failure-box">
-                                You cannot activation your account without a valid registration token.<br>
-                            </div>
+                        <c:if test="${requestScope.token == 'expired' || requestScope.token == 'confirmed' || requestScope.token == 'empty'}">
+                            <h2 style="margin-bottom: 50px">Oops!</h2>
+                            <c:if test="${requestScope.token == 'confirmed'}">
+                                <div class="token-validation-error-box">
+                                    The account associated with this token has already been activated.
+                                </div>
+                            </c:if>
+                            <c:if test="${requestScope.token == 'expired'}">
+                                <div class="token-validation-error-box">
+                                    Your token has expired.
+                                </div>
+                            </c:if>
+                            <c:if test="${requestScope.token == 'empty'}">
+                                <div class="token-validation-error-box">
+                                    You cannot activation your account without a valid token.<br>
+                                </div>
+                            </c:if>
                         </c:if>
 
                         <div class="link-box">
                             <a href="<c:url value="/login"/>" class="registration-link">Sign in</a>
                             <a href="<c:url value="/reset-password"/>" class="reset-password-link">Reset password</a>
                         </div>
+
                     </div>
                 </div>
             </div>

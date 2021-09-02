@@ -35,10 +35,6 @@ public class User {
     private String password;
 
     @Transient
-    @Pattern(
-            regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&])(?=\\S+$).{8,}$",
-            message = "{validation.error-conf-pass-fmt}"
-    )
     private String confPassword;
 
     //todo regex

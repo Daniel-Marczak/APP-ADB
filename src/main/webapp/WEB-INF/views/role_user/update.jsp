@@ -28,9 +28,9 @@
                         <c:if test="${empty param.update || param.update != 'success'}">
                             <form:form class="update-user-form" modelAttribute="user" action="/user/update">
                                 <div class="hidden current-username-and-email-box">
-                                    <input type="hidden" name="currentUsername" class="update-current-username" value="${requestScope.username}"/>
-                                    <input type="hidden" name="currentEmail" class="update-current-email" value="${requestScope.email}"/>
-                                    <input type="hidden" name="currentNumber" class="update-current-number" value="${requestScope.number}"/>
+                                    <input type="hidden" name="currentUsername" class="update-current-username" value="${requestScope.currentUsername}"/>
+                                    <input type="hidden" name="currentEmail" class="update-current-email" value="${requestScope.currentEmail}"/>
+                                    <input type="hidden" name="currentNumber" class="update-current-number" value="${requestScope.currentNumber}"/>
                                 </div>
                                 <div class="tooltip-container">
                                     <div class="tooltip-wrapper t-username hidden">
@@ -116,17 +116,14 @@
                                     Password does not meet requirements.
                                 </div>
 
-                                <div>
-                                    <label style="margin: 0">
-                                        <input type="password" name="confirmPassword" placeholder="confirm password"
-                                               class="confpass-input">
-                                    </label>
-                                    <div class="confpass-checkmark hidden">&check;</div>
+                                <form:password path="confPassword" placeholder="confirm password" cssClass="confpass-input"/>
+                                <div class="confpass-checkmark hidden">&check;</div>
+                                <br>
+                                <form:errors path="confPassword" cssClass="form-error-box"/>
+                                <div class="form-error-box error-password-conf hidden">
+                                    Passwords do not match.
                                 </div>
 
-                                <div class="form-error-box error-password-conf hidden">
-                                    The passwords do not match.
-                                </div>
                                 <div>
                                     <button class="" type="submit" id="update-user-submit-btn">Save changes</button>
                                 </div>
@@ -158,6 +155,6 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
-<script src="<c:url value="/resources/js/app/app-role-user-update.js"/>"></script>
+<%--<script src="<c:url value="/resources/js/app/app-role-user-update.js"/>"></script>--%>
 </body>
 </html>

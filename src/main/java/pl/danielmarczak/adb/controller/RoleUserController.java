@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import pl.danielmarczak.adb.entity.CurrentUser;
 import pl.danielmarczak.adb.entity.User;
+import pl.danielmarczak.adb.model.EmailContent;
 import pl.danielmarczak.adb.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,12 +28,12 @@ public class RoleUserController {
     }
 
     @GetMapping("/update")
-    public String updateUser(Model model, HttpSession session, HttpServletRequest request){
-        User user = (User) session.getAttribute("user");
+    public String updateUser(Model model, HttpServletRequest request, @AuthenticationPrincipal CurrentUser currentUser){
+        User user = currentUser.getUser();
         model.addAttribute("user", user);
-        request.setAttribute("username", user.getUsername());
-        request.setAttribute("email", user.getEmail());
-        request.setAttribute("number", user.getContactNumber());
+        request.setAttribute("currentUsername", user.getUsername());
+        request.setAttribute("currentEmail", user.getEmail());
+        request.setAttribute("currentNumber", user.getContactNumber());
 
         return "role_user/update";
     }
@@ -40,7 +41,7 @@ public class RoleUserController {
     @PostMapping("/update")
     public String updateUser(
             @ModelAttribute("user") @Valid User user, BindingResult bindingResult, @AuthenticationPrincipal CurrentUser currentUser,
-            HttpServletRequest request
+            HttpServletRequest request, HttpSession session
     ){
         Optional<FieldError> passwordFieldErrorOptional = Optional.ofNullable(bindingResult.getFieldError("password"));
         boolean isPasswordEmpty = false;
@@ -58,18 +59,22 @@ public class RoleUserController {
         boolean isUserEmail = user.getEmail().equals(currentUser.getUser().getEmail());
         boolean isUserUsername = user.getUsername().equals(currentUser.getUser().getUsername());
 
-        if (!isEmailAvailable && !isUserEmail || !isUsernameAvailable && !isUserUsername){
+        if (!isEmailAvailable && !isUserEmail || !isUsernameAvailable && !isUserUsername || !user.getPassword().equals(user.getConfPassword())){
             if (!isEmailAvailable && !isUserEmail){
                 bindingResult.addError(new FieldError("user", "email", "This email has already been taken."));
             }
             if (!isUsernameAvailable && !isUserUsername) {
                 bindingResult.addError(new FieldError("user", "username", "This username has already been taken."));
             }
+            if (!user.getPassword().equals(user.getConfPassword())) {
+                bindingResult.addError(new FieldError("user", "confPassword", "Passwords do not match."));
+            }
             return "role_user/update";
         }
 
-        if (bindingResult.getFieldErrorCount() == 1 && isPasswordEmpty || bindingResult.getFieldErrorCount() == 0) {
+        if (bindingResult.getFieldErrorCount() == 1 && isPasswordEmpty || bindingResult.getFieldErrorCount() == 0 ) {
             //todo update user
+            userService.updateUser(user,currentUser,session);
 
             return "redirect:/user/update?update=success";
         }

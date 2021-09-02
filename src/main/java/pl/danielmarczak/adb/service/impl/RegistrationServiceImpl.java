@@ -3,6 +3,8 @@ package pl.danielmarczak.adb.service.impl;
 import org.springframework.stereotype.Service;
 import pl.danielmarczak.adb.entity.Token;
 import pl.danielmarczak.adb.entity.User;
+import pl.danielmarczak.adb.enums.TokenTypeEnum;
+import pl.danielmarczak.adb.model.EmailContent;
 import pl.danielmarczak.adb.service.EmailService;
 import pl.danielmarczak.adb.service.RegistrationService;
 import pl.danielmarczak.adb.service.TokenService;
@@ -26,9 +28,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 
     @Override
-    public void registerNewUserAndSendERegistrationConfirmationEmail(User newUser) {
-        User user = userService.saveUser(newUser);
-        Token token = tokenService.createRegistrationConfirmationToken(user);
-        emailService.sendRegistrationConfirmationEmail(token);
+    public void registerUserAndSendERegistrationEmail(User user) {
+        EmailContent emailContent = new EmailContent();
+        emailContent.setSubject("User registration");
+        emailContent.setContentHeader("Thank you for signing up.");
+        emailContent.setContentBody(
+                "To finish the registration process and activate your account you need to "
+                + "verify your email address by clicking on the activation button below."
+        );
+        Token token = tokenService.createToken(userService.saveUser(user), TokenTypeEnum.USER_REGISTRATION);
+        emailService.sendEmail(token, emailContent);
     }
 }

@@ -9,17 +9,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import pl.danielmarczak.adb.entity.Token;
 import pl.danielmarczak.adb.entity.User;
 import pl.danielmarczak.adb.recaptcha.ReCaptchaResponse;
 import pl.danielmarczak.adb.service.RegistrationService;
-import pl.danielmarczak.adb.service.TokenService;
 import pl.danielmarczak.adb.service.UserService;
 
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/registration")
@@ -28,20 +23,18 @@ public class RegistrationController {
     protected Log logger = LogFactory.getLog(this.getClass());
     private final RestTemplate restTemplate;
     private final RegistrationService registrationService;
-    private final TokenService tokenService;
     private final UserService userService;
 
-    public RegistrationController(RestTemplate restTemplate, RegistrationService registrationService, TokenService tokenService, UserService userService) {
+    public RegistrationController(RestTemplate restTemplate, RegistrationService registrationService, UserService userService) {
         this.restTemplate = restTemplate;
         this.registrationService = registrationService;
-        this.tokenService = tokenService;
         this.userService = userService;
     }
 
     @GetMapping
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
-        return "registration/registration";
+        return "registration";
     }
 
     @PostMapping
@@ -56,11 +49,11 @@ public class RegistrationController {
         assert reCaptchaResponse != null;
         if (reCaptchaResponse.isSuccess()) {
             if (bindingResult.hasErrors()) {
-                return "registration/registration";
+                return "registration";
             }
             if (!user.getPassword().equals(user.getConfPassword())) {
                 bindingResult.addError(new FieldError("user", "password", "The passwords do not match."));
-                return "registration/registration";
+                return "registration";
             }
 
             boolean isEmailAvailable = userService.isEmailAvailable(user.getEmail());
@@ -73,39 +66,15 @@ public class RegistrationController {
                 if (!isUsernameAvailable) {
                     bindingResult.addError(new FieldError("user", "username", "This username has already been taken."));
                 }
-                return "registration/registration";
+                return "registration";
             }
 
-            registrationService.registerNewUserAndSendERegistrationConfirmationEmail(user);
+            registrationService.registerUserAndSendERegistrationEmail(user);
             return "redirect:/registration?reg=success";
 
         } else {
-            return "registration/registration";
+            return "registration";
         }
-    }
-
-    @GetMapping(value = "/confirmation")
-    public String registrationConfirmation(@RequestParam(name = "dta", required = false) String dta, HttpServletRequest request) {
-
-        Token token = tokenService.findTokenByData(dta);
-        if (dta != null && token.getData() != null) {
-            if (LocalDateTime.now().withNano(0).isBefore(token.getExpiresAt()) && token.getConfirmedAt() == null) {
-                token.setConfirmedAt(LocalDateTime.now().withNano(0));
-                tokenService.saveToken(token);
-                userService.setUserIsEnabled(true, token.getUser().getId());
-                request.setAttribute("registration", "successful");
-            } else if (!LocalDateTime.now().withNano(0).isBefore(token.getExpiresAt()) && token.getConfirmedAt() == null) {
-                request.setAttribute("registration", "tokenExpired");
-                tokenService.deleteToken(token);
-                userService.deleteUser(token.getUser());
-            } else if (token.getConfirmedAt() != null) {
-                request.setAttribute("registration", "alreadyConfirmed");
-            }
-        } else {
-            request.setAttribute("registration", "emptyToken");
-        }
-
-        return "registration/registration-confirmation";
     }
 
 }

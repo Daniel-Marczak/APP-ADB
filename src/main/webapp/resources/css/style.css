@@ -983,7 +983,8 @@ a.fc-col-header-cell-cushion {
     background-color: whitesmoke;
 }
 
-.registration-confirmation-failure-box,
+.reg-validation-error-box,
+.token-validation-error-box,
 .update-confirmation-failure-box {
     display: block;
     margin: 5px auto;
@@ -998,7 +999,8 @@ a.fc-col-header-cell-cushion {
     background: none;
 }
 
-.registration-confirmation-success-box,
+.reg-validation-error-box,
+.token-validation-success-box,
 .update-confirmation-success-box {
     display: block;
     border: rgba(204, 204, 204, 0.18) 1px solid;

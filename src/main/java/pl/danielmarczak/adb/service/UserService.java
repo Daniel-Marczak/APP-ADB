@@ -1,7 +1,10 @@
 package pl.danielmarczak.adb.service;
 
 
+import pl.danielmarczak.adb.entity.CurrentUser;
 import pl.danielmarczak.adb.entity.User;
+
+import javax.servlet.http.HttpSession;
 
 
 public interface UserService {
@@ -23,6 +26,8 @@ public interface UserService {
     Boolean isEmailAvailable(String email);
 
     Boolean isUsernameAvailable(String username);
+
+    void updateUser(User user, CurrentUser currentUser, HttpSession session);
 
 
 

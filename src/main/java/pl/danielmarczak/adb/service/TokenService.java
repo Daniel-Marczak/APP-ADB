@@ -2,6 +2,7 @@ package pl.danielmarczak.adb.service;
 
 import pl.danielmarczak.adb.entity.Token;
 import pl.danielmarczak.adb.entity.User;
+import pl.danielmarczak.adb.enums.TokenTypeEnum;
 
 public interface TokenService {
 
@@ -11,5 +12,5 @@ public interface TokenService {
 
     Token findTokenByData(String data);
 
-    Token createRegistrationConfirmationToken(User user);
+    Token createToken(User user, TokenTypeEnum tokenType);
 }

@@ -26,13 +26,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication
-    ) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
         User user = currentUser.getUser();
         HttpSession session = request.getSession();
-        session.setAttribute("user", user);
 
         if (user.isEnabled()) {
             handle(request, response, authentication);

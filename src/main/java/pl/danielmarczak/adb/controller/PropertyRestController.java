@@ -18,22 +18,19 @@ import java.util.List;
 public class PropertyRestController {
 
     protected Log logger = LogFactory.getLog(this.getClass());
-    private final UserService userService;
     private final PropertyService propertyService;
     private final PropertyTypeService propertyTypeService;
-    private final PropertyAddressService propertyAddressService;
     private final PropertyPhotoService propertyPhotoService;
     private final CountryService countryService;
     private final RateTypeService rateTypeService;
 
 
     public PropertyRestController(
-            UserService userService, PropertyService propertyService, PropertyTypeService propertyTypeService, PropertyAddressService propertyAddressService,
-            PropertyPhotoService propertyPhotoService, CountryService countryService, RateTypeService rateTypeService) {
-        this.userService = userService;
+            PropertyService propertyService, PropertyTypeService propertyTypeService, PropertyPhotoService propertyPhotoService,
+            CountryService countryService, RateTypeService rateTypeService
+    ){
         this.propertyService = propertyService;
         this.propertyTypeService = propertyTypeService;
-        this.propertyAddressService = propertyAddressService;
         this.propertyPhotoService = propertyPhotoService;
         this.countryService = countryService;
         this.rateTypeService = rateTypeService;

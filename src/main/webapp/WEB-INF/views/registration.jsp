@@ -22,12 +22,12 @@
                     <div class="banner-text" style="height: 75%">
                         <h2 style="margin-bottom: 50px">Registration</h2>
                         <c:if test="${param.reg == 'success'}">
-                            <div class="registration-confirmation-success-box">
+                            <div class="reg-validation-success-box">
                                 The registration email with your account activation link has been sent. Please, check your email.
                             </div>
                         </c:if>
                         <c:if test="${param.reg == 'failure'}">
-                            <div class="registration-confirmation-failure-box">
+                            <div class="reg-validation-error-box">
                                 Your account has not been created due to a registration error.
                             </div>
                         </c:if>

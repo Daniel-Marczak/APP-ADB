@@ -6,9 +6,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.danielmarczak.adb.entity.Token;
 import pl.danielmarczak.adb.entity.User;
+import pl.danielmarczak.adb.enums.TokenTypeEnum;
 import pl.danielmarczak.adb.repository.TokenRepository;
+import pl.danielmarczak.adb.repository.UserRepository;
 import pl.danielmarczak.adb.service.TokenService;
-import pl.danielmarczak.adb.service.UserService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -21,11 +22,11 @@ public class TokenServiceImpl implements TokenService {
 
     protected Log logger = LogFactory.getLog(this.getClass());
     private final TokenRepository tokenRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public TokenServiceImpl(TokenRepository tokenRepository, UserService userService) {
+    public TokenServiceImpl(TokenRepository tokenRepository, UserRepository userRepository) {
         this.tokenRepository = tokenRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class TokenServiceImpl implements TokenService {
         tokens.forEach(token -> {
             if (!LocalDateTime.now().withNano(0).isBefore(token.getExpiresAt()) && token.getConfirmedAt() == null){
                 tokenRepository.delete(token);
-                userService.deleteUser(token.getUser());
+                userRepository.delete(token.getUser());
             }
         });
     }
@@ -55,12 +56,13 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Token createRegistrationConfirmationToken(User user) {
+    public Token createToken(User user, TokenTypeEnum tokenType) {
         Token token = new Token();
         token.setUser(user);
         token.setCreatedAt(LocalDateTime.now().withNano(0));
-        token.setExpiresAt(LocalDateTime.now().withNano(0).plusMinutes(15));
+        token.setExpiresAt(LocalDateTime.now().withNano(0).plusHours(24));
         token.setData(UUID.randomUUID().toString());
+        token.setType(tokenType);
         tokenRepository.save(token);
         return token;
     }

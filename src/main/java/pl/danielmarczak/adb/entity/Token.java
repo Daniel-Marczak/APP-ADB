@@ -1,6 +1,7 @@
 package pl.danielmarczak.adb.entity;
 
 import lombok.Data;
+import pl.danielmarczak.adb.enums.TokenTypeEnum;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,9 @@ public class Token {
     @ManyToOne
     @JoinColumn(name = "fk_user_id")
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    private TokenTypeEnum type;
 
     private String data;
 
