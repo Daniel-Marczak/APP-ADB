@@ -134,8 +134,8 @@
                         </c:if>
 
                         <div class="link-box">
-                            <a href="<c:url value="/login"/>" class="registration-link">Sign in</a>
-                            <a href="<c:url value="/reset-password"/>" class="reset-password-link">Reset password</a>
+                            <a href="<c:url value="/login"/>" class="sign-in-link">Sign in</a>
+                            <a href="<c:url value="/password-reset"/>" class="reset-password-link">Reset password</a>
                         </div>
                     </div>
                 </div>

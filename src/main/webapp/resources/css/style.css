@@ -527,13 +527,29 @@ body::-webkit-scrollbar-thumb {
     background-color: rgb(70, 50, 70);
 }
 
-.login-form {
+.login-form,
+.password-reset-form {
     margin: auto;
     width: 300px;
     display: inline-block;
 }
 
-.login-form input {
+.password-reset-form button {
+    width: max-content;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    padding: 12px 35px;
+    color: #ccc;
+    display: inline-block;
+    border-radius: 25px 25px 25px 25px;
+    font-size: 15px;
+    margin-top: 25px;
+    margin-bottom: 50px;
+    background: none;
+    transition-duration: 0.5s;
+}
+
+.login-form input,
+.password-reset-form input {
     border: rgba(204, 204, 204, 0.18) 1px solid;
     padding: 12px 35px;
     color: #ccc;
@@ -552,35 +568,40 @@ body::-webkit-scrollbar-thumb {
 
 .login-form input:hover,
 .registration-form input:hover,
-.update-user-form input:hover {
+.update-user-form input:hover,
+.password-reset-form input:hover {
     background-color: #ccc;
     color: rgb(0, 0, 0);
 }
 
 .login-form input::-webkit-input-placeholder,
 .registration-form input::-webkit-input-placeholder,
-.update-user-form input::-webkit-input-placeholder {
+.update-user-form input::-webkit-input-placeholder,
+.password-reset-form input::-webkit-input-placeholder {
     color: #ccc !important;
     font-weight: 400;
 }
 
 .login-form input:-moz-placeholder,
 .registration-form input:-moz-placeholder, textarea:-moz-placeholder,
-.update-user-form input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
+.update-user-form input:-moz-placeholder, textarea:-moz-placeholder,
+.password-reset-form input:-moz-placeholder { /* Firefox 18- */
     color: #ccc !important;
     font-weight: 400;
 }
 
 .login-form input::-moz-placeholder,
 .registration-form input::-moz-placeholder, textarea::-moz-placeholder,
-.update-user-form input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 19+ */
+.update-user-form input::-moz-placeholder, textarea::-moz-placeholder,
+.password-reset-form input::-moz-placeholder { /* Firefox 19+ */
     color: #ccc !important;
     font-weight: 400;
 }
 
 .login-form input:-ms-input-placeholder,
 .registration-form input:-ms-input-placeholder, textarea:-ms-input-placeholder,
-.update-user-form input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+.update-user-form input:-ms-input-placeholder, textarea:-ms-input-placeholder,
+.password-reset-form input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     color: #ccc !important;
     font-weight: 400;
 }
@@ -604,7 +625,8 @@ body::-webkit-scrollbar-thumb {
 
 .login-form button:hover,
 .registration-form button:hover,
-.update-user-form button:hover {
+.update-user-form button:hover,
+.password-reset-form button:hover{
     background-color: #ccc;
     color: #000;
 }
@@ -649,7 +671,8 @@ body::-webkit-scrollbar-thumb {
     width: 300px;
 }
 
-.registration-link {
+.registration-link,
+.sign-in-link {
     float: left;
     color: rgb(100, 100, 100);
     text-decoration: underline;

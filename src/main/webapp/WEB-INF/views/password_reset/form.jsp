@@ -1,6 +1,5 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -17,28 +16,39 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="banner-text">
-                        <h2 style="margin-bottom: 50px">Sign in</h2>
-                        <form class="login-form" action="<c:url value="/login"/>" method="post">
-                            <sec:csrfInput />
-                            <label>
-                                <input type="text" class="username-input" name="username" placeholder="username">
-                            </label>
-                            <label>
-                                <input type="password" class="password-input hidden" name="password" placeholder="password">
-                            </label>
-                            <div>
-                                <button type="submit" class="sign-in-btn hidden" style="display: none">Sign in</button>
-                            </div>
-                        </form>
-                        <c:if test="${param.error.equals('credentials')}">
-                            <div class="form-error-box">
-                                Incorrect username or password.
+                        <h2 style="margin-bottom: 50px">Password reset</h2>
+                        <c:if test="${empty requestScope.success}">
+                            <div class="reg-validation-success-box">
+                                Enter your email and we'll send you a link with instructions how to get back into your account.
                             </div>
                         </c:if>
+                        <c:if test="${requestScope.success.equals('sent')}">
+                            <div class="reg-validation-success-box">
+                                We have successfully processed your request. Please, check your inbox.
+                            </div>
+                        </c:if>
+                        <form class="password-reset-form" action="<c:url value="/password-reset"/>" method="post">
+                            <label style="display: block;">
+                                <input type="text" name="email" placeholder="email">
+                            </label>
+                            <c:if test="${requestScope.error.equals('format')}">
+                                <div class="form-error-box">
+                                    Incorrect email format.
+                                </div>
+                            </c:if>
+                            <c:if test="${requestScope.error.equals('empty')}">
+                                <div class="form-error-box">
+                                    Incorrect email address.
+                                </div>
+                            </c:if>
+                            <div>
+                                <button name="password-reset-submit-btn">Reset my password</button>
+                            </div>
+                        </form>
                     </div>
                     <div class="link-box">
-                        <a href="<c:url value="/registration"/>" class="registration-link">Register</a>
-                        <a href="<c:url value="/password-reset"/>" class="reset-password-link">Reset my password</a>
+                        <a href="<c:url value="/login"/>" class="sign-in-link">Sign in</a>
+                        <a href="<c:url value="/registration"/>" class="reset-password-link">Registration</a>
                     </div>
                 </div>
             </div>
@@ -65,7 +75,6 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
-<script src="<c:url value="/resources/js/app/app-login.js"/>"></script>
 
 </body>
 </html>

@@ -5,6 +5,7 @@ import pl.danielmarczak.adb.entity.CurrentUser;
 import pl.danielmarczak.adb.entity.User;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 
 public interface UserService {
@@ -19,6 +20,8 @@ public interface UserService {
 
     User findUserByUsername(String username);
 
+    Optional<User> findUserByEmail(String email);
+
     User findUserById(Long userId);
 
     void setUserIsEnabled(boolean isEnabled, Long userId );
@@ -27,7 +30,9 @@ public interface UserService {
 
     Boolean isUsernameAvailable(String username);
 
-    void updateUser(User user, CurrentUser currentUser, HttpSession session);
+    User updateUser(User user, CurrentUser currentUser);
+
+    void setUserPassword(String password, Long userId);
 
 
 

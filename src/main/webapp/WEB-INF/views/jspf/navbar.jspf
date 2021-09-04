@@ -9,7 +9,7 @@
                 <a class="navbar-brand" href="<c:url value="/"/> ">Accommodation Cloud</a> </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active">
+                    <li>
                         <a href="<c:url value="/#banner"/>">Home</a>
                     </li>
                     <li>

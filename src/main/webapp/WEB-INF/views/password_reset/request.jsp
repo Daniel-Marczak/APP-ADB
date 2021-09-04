@@ -17,20 +17,32 @@
                 <div class="col-md-12">
                     <div class="banner-text">
                         <h2 style="margin-bottom: 50px">Password reset</h2>
-                        <p>
+                        <c:if test="${empty requestScope.success}">
+                            <div class="reg-validation-success-box">
                             Enter your email and we'll send you a link with instructions how to get back into your account.
-                        </p>
-                        <form class="login-form" action="<c:url value="/login"/>" method="post">
+                            </div>
+                        </c:if>
+                        <c:if test="${requestScope.success.equals('sent')}">
+                            <div class="reg-validation-success-box">
+                                We have successfully processed your request. Please, check your inbox.
+                            </div>
+                        </c:if>
+                        <form class="password-reset-form" action="<c:url value="/password-reset"/>" method="post">
                             <label style="display: block;">
-                                <input type="password" name="password" placeholder="email">
+                                <input type="text" name="email" placeholder="email">
                             </label>
-                            <c:if test="${!empty param.test.equals('test')}">
+                            <c:if test="${requestScope.error.equals('format')}">
                                 <div class="form-error-box">
                                     Incorrect email format.
                                 </div>
                             </c:if>
+                            <c:if test="${requestScope.error.equals('empty')}">
+                                <div class="form-error-box">
+                                    Incorrect email address.
+                                </div>
+                            </c:if>
                             <div>
-                                <button style="width: 300px; padding-left: 5px; padding-right: 5px" type="submit" name="login-submit-btn">Send me the password reset email</button>
+                                <button name="password-reset-submit-btn">Reset my password</button>
                             </div>
                         </form>
                     </div>

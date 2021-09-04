@@ -14,6 +14,7 @@ import pl.danielmarczak.adb.service.TokenService;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -51,8 +52,8 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Token findTokenByData(String data) {
-        return tokenRepository.findByData(data).orElse(new Token());//TODO
+    public Optional<Token> findTokenByData(String data) {
+        return tokenRepository.findByData(data);//TODO
     }
 
     @Override

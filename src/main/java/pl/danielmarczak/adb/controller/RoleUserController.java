@@ -9,7 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import pl.danielmarczak.adb.entity.CurrentUser;
 import pl.danielmarczak.adb.entity.User;
-import pl.danielmarczak.adb.model.EmailContent;
+import pl.danielmarczak.adb.service.EmailService;
 import pl.danielmarczak.adb.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +22,11 @@ import java.util.Optional;
 public class RoleUserController {
 
     private final UserService userService;
+    private final EmailService emailService;
 
-    public RoleUserController(UserService userService) {
+    public RoleUserController(UserService userService, EmailService emailService) {
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @GetMapping("/update")
@@ -72,10 +74,12 @@ public class RoleUserController {
             return "role_user/update";
         }
 
-        if (bindingResult.getFieldErrorCount() == 1 && isPasswordEmpty || bindingResult.getFieldErrorCount() == 0 ) {
-            //todo update user
-            userService.updateUser(user,currentUser,session);
-
+        if (bindingResult.getFieldErrorCount() == 1 && isPasswordEmpty || !bindingResult.hasErrors() ) {
+            User dbUser = userService.updateUser(user,currentUser);
+            if (!user.getEmail().equals(currentUser.getUser().getEmail())){
+                emailService.sendUserEmailUpdateEmail(dbUser);
+                session.invalidate();
+            }
             return "redirect:/user/update?update=success";
         }
         else if (bindingResult.getFieldErrorCount() > 0 && !isPasswordEmpty){
