@@ -137,14 +137,17 @@
                             <label>Event title:
                                 <input type="text" name="title" class="cue-event-title"/>
                             </label>
-                            <label>Customer name:
+                            <label>Customer's name:
                                 <input type="text" name="customerName" class="cue-event-customer-name"/>
                             </label>
-                            <label>Customer surname:
+                            <label>Customer's surname:
                                 <input type="text" name="customerSurname" class="cue-event-customer-surname"/>
                             </label>
-                            <label>Customer phone:
+                            <label>Customer's phone:
                                 <input type="text" name="customerPhone" class="cue-event-customer-phone"/>
+                            </label>
+                            <label>Customer's Email:
+                                <input type="text" name="customerEmail" class="cue-event-customer-email"/>
                             </label>
                             <label>Additional info:
                                 <textarea name="additionalInfo" class="cue-event-additional-info"></textarea>

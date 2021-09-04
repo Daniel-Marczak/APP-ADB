@@ -9,11 +9,12 @@ let currentEvent;
 ////////////////////////////////////////////////////// CLASSES /////////////////////////////////////////////////////////
 
 class Customer {
-    constructor(customerID, customerName, customerSurname, customerPhone) {
+    constructor(customerID, customerName, customerSurname, customerPhone, customerEmail) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.customerSurname = customerSurname;
         this.customerPhone = customerPhone;
+        this.customerEmail = customerEmail;
     }
 }
 
@@ -406,6 +407,7 @@ function saveEventToDatabase(e) {
         customer.customerName = $('input.cue-event-customer-name').val();
         customer.customerSurname = $('input.cue-event-customer-surname').val();
         customer.customerPhone = $('input.cue-event-customer-phone').val();
+        customer.customerEmail = $('input.cue-event-customer-email').val();
 
         const event = new Event();
         event.id = null;
@@ -472,7 +474,7 @@ function displayEventModalInUpdateMode(eventInfo) {
     const title = eventInfo.event.title;
     const {
         additionalInfo,
-        customer : {customerName, customerSurname, customerPhone},
+        customer : {customerName, customerSurname, customerPhone, customerEmail},
         discountSurcharge,
         numberOfGuests,
         price : {priceId, amount, currency}
@@ -482,6 +484,7 @@ function displayEventModalInUpdateMode(eventInfo) {
     $('input.cue-event-customer-name').val(customerName);
     $('input.cue-event-customer-surname').val(customerSurname);
     $('input.cue-event-customer-phone').val(customerPhone);
+    $('input.cue-event-customer-email').val(customerEmail);
     $('textarea.cue-event-additional-info').val(additionalInfo);
 
     $('.cue-number-of-guests-input').val(numberOfGuests);
@@ -523,6 +526,7 @@ function updateEventDataInDatabase(e) {
         customer.customerName = $('input.cue-event-customer-name').val();
         customer.customerSurname = $('input.cue-event-customer-surname').val();
         customer.customerPhone = $('input.cue-event-customer-phone').val();
+        customer.customerEmail = $('input.cue-event-customer-email').val();
 
         const event = new Event();
         event.id = currentEventData.id;
