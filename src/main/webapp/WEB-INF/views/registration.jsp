@@ -22,14 +22,14 @@
                     <div class="banner-text" style="height: 75%">
                         <h2 style="margin-bottom: 50px">Registration</h2>
                         <c:if test="${param.reg == 'success'}">
-                            <div class="reg-validation-success-box">
+                            <h3>
                                 The registration email with your account activation link has been sent. Please, check your email.
-                            </div>
+                            </h3>
                         </c:if>
                         <c:if test="${param.reg == 'failure'}">
-                            <div class="reg-validation-error-box">
+                            <h3 class="text-error">
                                 Your account has not been created due to a registration error.
-                            </div>
+                            </h3>
                         </c:if>
 
                         <c:if test="${empty param.reg || param.reg != 'success'}">
@@ -135,7 +135,7 @@
 
                         <div class="link-box">
                             <a href="<c:url value="/login"/>" class="sign-in-link">Sign in</a>
-                            <a href="<c:url value="/password-reset"/>" class="reset-password-link">Reset password</a>
+                            <a href="<c:url value="/password-reset/request"/>" class="reset-password-link">Reset password</a>
                         </div>
                     </div>
                 </div>
@@ -163,7 +163,7 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
-<script src="<c:url value="/resources/js/app/app-registration.js"/>"></script>
+<script src="<c:url value="/resources/js/app/registration.js"/>"></script>
 
 
 </body>

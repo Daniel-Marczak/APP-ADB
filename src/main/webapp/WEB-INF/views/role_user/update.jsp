@@ -21,9 +21,9 @@
                     <div class="banner-text" style="height: 75%">
                         <h2 style="margin-bottom: 50px">Account details</h2>
                         <c:if test="${param.update == 'success'}">
-                            <div class="update-confirmation-success-box">
+                            <h3>
                                 Your account has been updated.
-                            </div>
+                            </h3>
                         </c:if>
                         <c:if test="${empty param.update || param.update != 'success'}">
                             <form:form class="update-user-form" modelAttribute="user" action="/user/update">
@@ -155,6 +155,6 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
-<%--<script src="<c:url value="/resources/js/app/app-role-user-update.js"/>"></script>--%>
+<script src="<c:url value="/resources/js/app/role-user-update.js"/>"></script>
 </body>
 </html>

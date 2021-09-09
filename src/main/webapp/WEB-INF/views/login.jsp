@@ -38,7 +38,7 @@
                     </div>
                     <div class="link-box">
                         <a href="<c:url value="/registration"/>" class="registration-link">Register</a>
-                        <a href="<c:url value="/password-reset"/>" class="reset-password-link">Reset my password</a>
+                        <a href="<c:url value="/password-reset/request"/>" class="reset-password-link">Reset my password</a>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
-<script src="<c:url value="/resources/js/app/app-login.js"/>"></script>
+<script src="<c:url value="/resources/js/app/login.js"/>"></script>
 
 </body>
 </html>

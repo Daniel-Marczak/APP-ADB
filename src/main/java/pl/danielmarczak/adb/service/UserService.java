@@ -4,7 +4,6 @@ package pl.danielmarczak.adb.service;
 import pl.danielmarczak.adb.entity.CurrentUser;
 import pl.danielmarczak.adb.entity.User;
 
-import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 

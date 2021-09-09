@@ -10,12 +10,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RestController
-@RequestMapping("/api/registration")
-public class RegistrationRestController {
+@RequestMapping("/api/validation")
+public class ValidationRestController {
 
     private final UserService userService;
 
-    public RegistrationRestController(UserService userService) {
+    public ValidationRestController(UserService userService) {
         this.userService = userService;
     }
 

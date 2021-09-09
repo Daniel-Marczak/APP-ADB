@@ -40,7 +40,7 @@ function checkIsUsernameFmtCorrect() {
 function checkIsUsernameAvailable() {
     const username = usernameInput.val();
     const errUsernameTknDiv = $('.error-username-tkn');
-    return $.get(`http://localhost:8080/api/registration/is-username-available?username=${username}`, function (data) {
+    return $.get(`http://localhost:8080/api/validation/is-username-available?username=${username}`, function (data) {
         if (data === true) {
             isUsernameAvailable = true;
             errUsernameTknDiv.fadeOut(500);
@@ -102,7 +102,7 @@ function checkIsEmailFmtCorrect() {
 function checkIsEmailAvailable() {
     const email = emailInput.val();
     const errEmailTknDiv = $('.error-email-tkn');
-    return $.get(`http://localhost:8080/api/registration/is-email-available?email=${email}`, function (data) {
+    return $.get(`http://localhost:8080/api/validation/is-email-available?email=${email}`, function (data) {
         if (data === true) {
             isEmailAvailable = true;
             errEmailTknDiv.fadeOut(500);

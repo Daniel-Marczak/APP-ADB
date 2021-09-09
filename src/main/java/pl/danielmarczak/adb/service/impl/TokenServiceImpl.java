@@ -40,6 +40,11 @@ public class TokenServiceImpl implements TokenService {
         tokenRepository.delete(token);
     }
 
+    @Override
+    public Optional<Token> findTokenById(Long tokenId) {
+        return tokenRepository.findById(tokenId);
+    }
+
     @Scheduled(cron = "0 0 0 * * *")
     public void deleteExpiredTokens() {
         List<Token> tokens = tokenRepository.findAll();

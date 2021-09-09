@@ -17,34 +17,44 @@
                 <div class="col-md-12">
                     <div class="banner-text">
                         <h2 style="margin-bottom: 50px">Password reset</h2>
-                        <c:if test="${empty requestScope.success}">
-                            <div class="reg-validation-success-box">
-                            Enter your email and we'll send you a link with instructions how to get back into your account.
-                            </div>
+                        <c:if test="${empty requestScope.send}">
+                            <h3>
+                                Enter your email and we'll send you a link with instructions how to get back into your account.
+                            </h3>
                         </c:if>
-                        <c:if test="${requestScope.success.equals('sent')}">
-                            <div class="reg-validation-success-box">
+                        <c:if test="${requestScope.send.equals('success')}">
+                            <h3>
                                 We have successfully processed your request. Please, check your inbox.
-                            </div>
+                            </h3>
                         </c:if>
-                        <form class="password-reset-form" action="<c:url value="/password-reset"/>" method="post">
-                            <label style="display: block;">
-                                <input type="text" name="email" placeholder="email">
-                            </label>
-                            <c:if test="${requestScope.error.equals('format')}">
-                                <div class="form-error-box">
-                                    Incorrect email format.
+                        <c:if test="${empty requestScope.send}">
+                            <form class="password-reset-form" action="<c:url value="/password-reset/request"/>" method="post">
+                                <label style="display: block;">
+                                    <input type="text" class="password-reset-email" name="email" placeholder="email">
+                                </label>
+                                <c:if test="${requestScope.error.equals('format')}">
+                                    <div class="form-error-box">
+                                        Incorrect email format.
+                                    </div>
+                                </c:if>
+                                <c:if test="${requestScope.error.equals('empty')}">
+                                    <div class="form-error-box">
+                                        Incorrect email address.
+                                    </div>
+                                </c:if>
+                                <c:if test="${empty requestScope.error}">
+                                    <div class="form-error-box error-email-fmt">
+                                        Incorrect email format.
+                                    </div>
+                                    <div class="form-error-box error-email-dne">
+                                        Incorrect email address.
+                                    </div>
+                                </c:if>
+                                <div>
+                                    <button type="submit" class="password-reset-submit-btn">Reset my password</button>
                                 </div>
-                            </c:if>
-                            <c:if test="${requestScope.error.equals('empty')}">
-                                <div class="form-error-box">
-                                    Incorrect email address.
-                                </div>
-                            </c:if>
-                            <div>
-                                <button name="password-reset-submit-btn">Reset my password</button>
-                            </div>
-                        </form>
+                            </form>
+                        </c:if>
                     </div>
                     <div class="link-box">
                         <a href="<c:url value="/login"/>" class="registration-link">Sign in</a>
@@ -75,6 +85,8 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
+<script src="<c:url value="/resources/js/app/password-reset-request.js"/>"></script>
+
 
 </body>
 </html>

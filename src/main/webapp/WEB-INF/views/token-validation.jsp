@@ -23,38 +23,38 @@
 
                         <c:if test="${requestScope.validation == 'registrationSuccess'}">
                             <h2 style="margin-bottom: 50px">Registration completed!</h2>
-                            <div class="token-validation-success-box">
+                            <h3>
                                 Your registration has been successfully completed. You can now sign in.
-                            </div>
+                            </h3>
                         </c:if>
                         <c:if test="${requestScope.validation == 'updateSuccess'}">
                             <h2 style="margin-bottom: 50px">Update completed!</h2>
-                            <div class="token-validation-success-box">
+                            <h3>
                                 Your email address has been successfully updated. You can now sign in.
-                            </div>
+                            </h3>
                         </c:if>
                         <c:if test="${requestScope.token == 'expired' || requestScope.token == 'confirmed' || requestScope.token == 'empty'}">
                             <h2 style="margin-bottom: 50px">Oops!</h2>
                             <c:if test="${requestScope.token == 'confirmed'}">
-                                <div class="token-validation-error-box">
+                                <h3 class="text-error">
                                     The account associated with this token has already been activated.
-                                </div>
+                                </h3>
                             </c:if>
                             <c:if test="${requestScope.token == 'expired'}">
-                                <div class="token-validation-error-box">
+                                <h3 class="text-error">
                                     Your token has expired.
-                                </div>
+                                </h3>
                             </c:if>
                             <c:if test="${requestScope.token == 'empty'}">
-                                <div class="token-validation-error-box">
+                                <h3 class="text-error">
                                     You cannot activation your account without a valid token.<br>
-                                </div>
+                                </h3>
                             </c:if>
                         </c:if>
 
                         <div class="link-box">
                             <a href="<c:url value="/login"/>" class="registration-link">Sign in</a>
-                            <a href="<c:url value="/reset-password"/>" class="reset-password-link">Reset password</a>
+                            <a href="<c:url value="/password-reset"/>" class="reset-password-link">Reset password</a>
                         </div>
 
                     </div>

@@ -1006,38 +1006,6 @@ a.fc-col-header-cell-cushion {
     background-color: whitesmoke;
 }
 
-.reg-validation-error-box,
-.token-validation-error-box,
-.update-confirmation-failure-box {
-    display: block;
-    margin: 5px auto;
-    padding: 10px;
-    width: max-content;
-    height: 40px;
-    color: red;
-    font-weight: 500;
-    border: rgba(204, 204, 204, 0.18) 1px solid;
-    border-radius: 25px 25px 25px 25px;
-    font-size: 15px;
-    background: none;
-}
-
-.reg-validation-error-box,
-.token-validation-success-box,
-.update-confirmation-success-box {
-    display: block;
-    border: rgba(204, 204, 204, 0.18) 1px solid;
-    margin: 5px auto;
-    padding: 10px;
-    width: max-content;
-    height: 40px;
-    color: #ccc;
-    font-weight: 500;
-    border-radius: 25px 25px 25px 25px;
-    font-size: 15px;
-    background: none;
-}
-
 .yes-btn,
 .no-btn {
     width: 49%;
@@ -1127,6 +1095,10 @@ a.fc-col-header-cell-cushion {
 
 .add-event-header-text {
     text-align: center;
+}
+
+.text-error {
+    color: red;
 }
 
 

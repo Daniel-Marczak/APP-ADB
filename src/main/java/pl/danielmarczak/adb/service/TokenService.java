@@ -12,6 +12,8 @@ public interface TokenService {
 
     void deleteToken(Token token);
 
+    Optional<Token> findTokenById(Long tokenId);
+
     Optional<Token> findTokenByData(String data);
 
     Token createToken(User user, TokenTypeEnum tokenType);

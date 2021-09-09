@@ -164,6 +164,6 @@
 
 <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
 <script src="<c:url value="/resources/js/fullcalendar/main.js"/> "></script>
-<script src="<c:url value="/resources/js/app/app-role-user-properties.js"/>" type="module"></script>
+<script src="<c:url value="/resources/js/app/role-user-properties.js"/>" type="module"></script>
 </body>
 </html>
