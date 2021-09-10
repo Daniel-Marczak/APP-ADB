@@ -135,7 +135,7 @@
 
                         <div class="link-box">
                             <a href="<c:url value="/login"/>" class="sign-in-link">Sign in</a>
-                            <a href="<c:url value="/password-reset/request"/>" class="reset-password-link">Reset password</a>
+                            <a href="<c:url value="/password-reset/request"/>" class="password-reset-link">Reset password</a>
                         </div>
                     </div>
                 </div>

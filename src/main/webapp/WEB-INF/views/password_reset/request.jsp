@@ -28,10 +28,13 @@
                             </h3>
                         </c:if>
                         <c:if test="${empty requestScope.send}">
-                            <form class="password-reset-form" action="<c:url value="/password-reset/request"/>" method="post">
-                                <label style="display: block;">
-                                    <input type="text" class="password-reset-email" name="email" placeholder="email">
-                                </label>
+                            <form class="password-reset-request" action="<c:url value="/password-reset/request"/>" method="post">
+                                <div class="d-inline-block">
+                                    <label>
+                                        <input type="text" class="password-reset-email" name="email" placeholder="email">
+                                    </label>
+                                </div>
+                                <div class="email-checkmark hidden">&check;</div>
                                 <c:if test="${requestScope.error.equals('format')}">
                                     <div class="form-error-box">
                                         Incorrect email format.
@@ -42,23 +45,21 @@
                                         Incorrect email address.
                                     </div>
                                 </c:if>
-                                <c:if test="${empty requestScope.error}">
-                                    <div class="form-error-box error-email-fmt">
+                                    <div class="form-error-box error-email-fmt hidden">
                                         Incorrect email format.
                                     </div>
-                                    <div class="form-error-box error-email-dne">
+                                    <div class="form-error-box error-email-dne hidden">
                                         Incorrect email address.
                                     </div>
-                                </c:if>
                                 <div>
-                                    <button type="submit" class="password-reset-submit-btn">Reset my password</button>
+                                    <button type="submit" class="password-reset-submit-btn hidden">Send request</button>
                                 </div>
                             </form>
                         </c:if>
                     </div>
                     <div class="link-box">
                         <a href="<c:url value="/login"/>" class="registration-link">Sign in</a>
-                        <a href="<c:url value="/registration"/>" class="reset-password-link">Registration</a>
+                        <a href="<c:url value="/registration"/>" class="password-reset-link">Registration</a>
                     </div>
                 </div>
             </div>
