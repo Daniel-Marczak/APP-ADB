@@ -212,7 +212,7 @@ function validateConfirmPassword() {
             errConfPassDiv.fadeIn(500);
         }
         confPassCheckmarkDiv.fadeOut(500);
-    } else if (passwordInput.val() === confPassInput.val()) {
+    } else if (passwordInput.val() === confPassInput.val() && confPassInput.val().length > 0) {
         isConfPasswordCorrect = true;
         errConfPassDiv.fadeOut(500);
         if (confPassCheckmarkDiv.hasClass('hidden')) {

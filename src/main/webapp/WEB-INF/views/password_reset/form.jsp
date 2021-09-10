@@ -23,7 +23,7 @@
                             </h3>
                             <div class="link-box">
                                 <a href="<c:url value="/login"/>" class="sign-in-link">Sign in</a>
-                                <a href="<c:url value="/"/>" class="reset-password-link">Home</a>
+                                <a href="<c:url value="/"/>" class="password-reset-link">Home</a>
                             </div>
                         </c:if>
                         <c:if test="${requestScope.error.equals('t/c/f')}">
@@ -35,24 +35,52 @@
                             <form class="password-reset-form" action="<c:url value="/password-reset/form"/>" method="post">
                                 <input type="hidden" name="userId" value="${requestScope.userId}">
                                 <input type="hidden" name="tokenId" value="${requestScope.tokenId}">
-                                <label style="display: block;">
-                                    <input type="password" name="password" placeholder="password">
-                                </label>
+                                <div class="tooltip-container">
+                                    <div class="tooltip-wrapper t-password hidden">
+                                        <span>Your password must follow these rules:</span>
+                                        <ul style="padding-left: 20px">
+                                            <li>must contain at least 8 characters</li>
+                                            <li>must contain at least one lower case letter</li>
+                                            <li>must contain at least one upper case letter</li>
+                                            <li>must contain at least one digit</li>
+                                            <li>must contain at least one special character (!,&nbsp;@, #, $, %, &, *)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="tooltip-wrapper t-confpass hidden">
+                                        <span>Please make sure passwords match.</span>
+                                    </div>
+                                </div>
+                                <div class="d-inline-block">
+                                    <label>
+                                        <input class="password-input" type="password" name="password" placeholder="password">
+                                    </label>
+                                </div>
+                                <div class="password-checkmark hidden">&check;</div>
+                                <div class="form-error-box error-password hidden">
+                                    Password does not meet requirements.
+                                </div>
                                 <c:if test="${requestScope.error.equals('format')}">
                                     <div class="form-error-box error-password">
                                         Password does not meet requirements.
                                     </div>
                                 </c:if>
-                                <label style="display: block;">
-                                    <input type="password" name="confirmPassword" placeholder="confirm password">
-                                </label>
+                                <br>
+                                <div class="d-inline-block">
+                                    <label>
+                                        <input class="confpass-input" type="password" name="confirmPassword" placeholder="confirm password">
+                                    </label>
+                                </div>
+                                <div class="confpass-checkmark hidden">&check;</div>
+                                <div class="form-error-box error-password-conf hidden">
+                                    Passwords do not match.
+                                </div>
                                 <c:if test="${requestScope.error.equals('confirmation')}">
                                     <div class="form-error-box error-password-conf">
                                         Passwords do not match.
                                     </div>
                                 </c:if>
                                 <div>
-                                    <button type="submit" name="password-reset-submit-btn ">Reset my password</button>
+                                    <button type="submit" class="password-reset-submit-btn hidden">Reset my password</button>
                                 </div>
                             </form>
                         </c:if>
@@ -82,6 +110,7 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
+<script src="<c:url value="/resources/js/app/password-reset-form.js"/>"></script>
 
 </body>
 </html>
