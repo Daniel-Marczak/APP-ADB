@@ -189,19 +189,22 @@
                 </div>
             </div>
             <div class="col-md-7 col-sm-offset-0 col-sm-6 col-xs-offset-1 col-xs-10">
-                <div class="contact-form">
-                    <form role="form">
+                <div class="contact-form-div">
+                    <form role="form" class="contact-form">
                         <div class="col-md-6">
-                            <input type="text" class="form-control" id="name" placeholder="Name">
+                            <input type="text" class="form-control contact-input contact-name" id="name" placeholder="Name">
+                            <label class="text-error error-name hidden">Valid name is required.</label>
                         </div>
                         <div class="col-md-6">
-                            <input type="email" class="form-control" id="email" placeholder="Email">
+                            <input type="email" class="form-control contact-input contact-email" id="email" placeholder="Email">
+                            <label class="text-error error-email hidden">Valid email is required.</label>
                         </div>
                         <div class="col-md-12">
-                            <textarea class="form-control" placeholder="Message" rows="6"></textarea>
+                            <textarea class="form-control contact-textarea" placeholder="Message" rows="6"minlength="10" maxlength="255"></textarea>
+                            <label class="text-error error-text hidden">The message must be 10 to 255 characters long.</label>
                         </div>
                         <div class="col-md-12 text-center">
-                            <button type="submit" class="contact-button">Send Message</button>
+                            <button type="submit" class="contact-button hidden">Send Message</button>
                         </div>
                     </form>
                 </div>

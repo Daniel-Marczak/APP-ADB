@@ -362,7 +362,7 @@ a {
     line-height: 35px;
 }
 
-.contact-form {
+.contact-form-div {
     margin-top: 45px;
 }
 
@@ -390,20 +390,36 @@ a {
     border-bottom: 2px solid #242424;
 }
 
-div.contact input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-    color: #242424 !important;
+
+.contact-input::-webkit-input-placeholder, .contact-textarea::-webkit-input-placeholder {
+    color:rgba(0, 0, 0, 0.3) !important;
 }
 
-div.contact input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
-    color: #242424 !important;
+.contact-input:-moz-placeholder, .contact-textarea:-moz-placeholder { /* Firefox 18- */
+    color:rgba(0, 0, 0, 0.3) !important;
 }
 
-div.contact input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 19+ */
-    color: #242424 !important;
+.contact-input::-moz-placeholder, .contact-textarea::-moz-placeholder { /* Firefox 19+ */
+    color:rgba(0, 0, 0, 0.3) !important;
 }
 
-div.contact input:-ms-input-placeholder, textarea:-ms-input-placeholder {
-    color: #242424 !important;
+.contact-input:-ms-input-placeholder, .contact-textarea:-ms-input-placeholder {
+    color:rgba(0, 0, 0, 0.3) !important;
+}
+
+.contact-textarea::-webkit-scrollbar {
+    width: 5px;
+}
+
+.contact-textarea::-webkit-scrollbar-track {
+    background-color: transparent;
+    border: rgb(204, 204, 204) solid 1px;
+    border-radius: 5px;
+}
+
+.contact-textarea::-webkit-scrollbar-thumb {
+    background-color: rgba(235, 35, 60,0.9);
+    border-radius: 5px;
 }
 
 .contact-button {

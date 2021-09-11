@@ -61,3 +61,72 @@ $(document).ready(function () {
         });
     });
 })
+
+$(document).ready(function () {
+    const contactSubmitBtn = $('.contact-button');
+    const nameInput = $('.contact-name');
+    const emailInput = $('.contact-email');
+    const textInput = $('.contact-textarea');
+
+    function validateContactMessage() {
+        const USERNAME_REGEX = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){1,13}[a-zA-Z0-9]$/;
+        const EMAIL_REGEX = /^(?=.{5,60}$)([a-z0-9-_]*\.)*[a-z0-9-_]*@[a-z0-9]*\.[a-z]{2,3}$/;
+        const TEXT_REGEX = /^[a-zA-Z0-9!?/@#$%&*+\-=()_:;,. \[\]]{10,255}$/;
+
+        const nameErrorLabel = $('.error-name');
+        const emailErrorLabel = $('.error-email');
+        const textErrorLabel = $('.error-text');
+
+        if (nameInput.prop('readonly') === false && USERNAME_REGEX.test(nameInput.val()) && EMAIL_REGEX.test(emailInput.val()) && TEXT_REGEX.test(textInput.val())) {
+            contactSubmitBtn.removeClass('hidden');
+        } else {
+            contactSubmitBtn.addClass('hidden');
+        }
+        if (USERNAME_REGEX.test(nameInput.val())) {
+            nameErrorLabel.addClass('hidden');
+        } else {
+            nameErrorLabel.removeClass('hidden');
+        }
+        if (EMAIL_REGEX.test(emailInput.val())) {
+            emailErrorLabel.addClass('hidden');
+        } else {
+            emailErrorLabel.removeClass('hidden');
+        }
+        if (TEXT_REGEX.test(textInput.val())) {
+            textErrorLabel.addClass('hidden');
+        } else {
+            textErrorLabel.removeClass('hidden');
+        }
+    }
+
+    function saveContactMessage(event) {
+        event.preventDefault();
+        nameInput.prop('readonly', true);
+        emailInput.prop('readonly', true);
+        textInput.prop('readonly', true);
+        contactSubmitBtn.addClass('hidden');
+        $.post(`http://localhost:8080/contact-message/save`,
+            {
+                name: nameInput.val(),
+                email: emailInput.val(),
+                text: textInput.val(),
+            },
+            function (response) {
+                if (response) {
+                    window.alert(`
+                        Dear ${nameInput.val()}, we have received your message.\n
+                        We will try to write back as soon as possible.
+                    `);
+                } else {
+                    window.alert(`
+                        Dear ${nameInput.val()}, something went wrong and\n 
+                        we haven't been able to send your message.\n
+                        Please, try again later.
+                    `);
+                }
+            });
+    }
+
+    $('.contact-name, .contact-email, .contact-textarea').on('change keyup blur', validateContactMessage);
+    contactSubmitBtn.click(saveContactMessage);
+});
