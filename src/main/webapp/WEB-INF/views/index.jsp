@@ -18,8 +18,6 @@
                     <div class="banner-text">
                         <h2>Welcome to <span>Accommodation Cloud</span></h2>
                         <p>We make managing your accommodation business simple.</p>
-                        <a href="<c:url value="/login"/>" class="banner-button">Sign in</a>
-                        <a href="<c:url value="/registration"/>" class="banner-button">Register</a>
                     </div>
                 </div>
             </div>

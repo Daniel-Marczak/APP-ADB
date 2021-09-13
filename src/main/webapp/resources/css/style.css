@@ -103,7 +103,9 @@ a {
     color: #E1DBDB;
 }
 
-.nav > li > a:focus, .nav > li > a:hover, .nav > li > a:focus, .nav > li.active > a {
+.nav > li > a:focus, .nav > li > a:hover, .nav > li > a:focus, .nav > li.active > a,
+.login-a:hover,
+.registration-a:hover {
     background-color: #665566;
     color: #fff;
     border-bottom: 2px solid #EB233C;
@@ -1133,7 +1135,36 @@ a.fc-col-header-cell-cushion {
     display: block;
 }
 
+.host-dropdown:hover + div {
+    display: block;
+}
 
+.host-dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    float: none;
+    width: min-content;
+    height: 80px;
+    background-color: yellow;
+}
+
+.host-dropdown-content:hover {
+    display: block;
+}
+
+.host-dropdown-content a {
+    display: block;
+    padding: 10px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    width: 100px;
+    text-decoration: none;
+    text-align: center;
+    color: whitesmoke;
+    background: rgb(68, 51, 68) none repeat scroll 0% 0%;
+}
 
 
 

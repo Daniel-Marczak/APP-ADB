@@ -24,6 +24,15 @@
                     <li>
                         <a href="<c:url value="/#contact"/>">Contact Us</a>
                     </li>
+                    <sec:authorize access="!hasRole('USER')">
+                        <li>
+                            <a class="smooth-scroll-off host-dropdown">Host</a>
+                            <div class="host-dropdown-content">
+                                <a class="login-a smooth-scroll-off" href="<c:url value="/login"/>">Sign in</a>
+                                <a class="registration-a smooth-scroll-off" href="<c:url value="/registration"/>">Register</a>
+                            </div>
+                        </li>
+                    </sec:authorize>
                     <sec:authorize access="hasRole('USER')">
                         <li>
                             <a class="smooth-scroll-off" href="<c:url value='/properties/user-properties'/>">Property manager</a>
