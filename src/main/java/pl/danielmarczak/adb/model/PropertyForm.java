@@ -12,7 +12,7 @@ public class PropertyForm {
     private Long propertyTypeId;
     private Long rateTypeId;
     private Long countryId;
-    private String city;
+    private String location;
     private String street;
     private String postalCode;
     private String province;

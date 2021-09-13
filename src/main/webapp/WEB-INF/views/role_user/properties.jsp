@@ -80,8 +80,8 @@
                         </select>
                     </label>
                     <br>
-                    <label>City:<br>
-                        <input type="text" name="propertyCity" class="cup-property-city"/>
+                    <label>Location:<br>
+                        <input type="text" name="propertyLocation" class="cup-property-location"/>
                     </label>
                     <label>Street:<br>
                         <input type="text" name="propertyStreet" class="cup-property-street"/>

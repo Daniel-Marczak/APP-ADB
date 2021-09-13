@@ -59,7 +59,7 @@ public class PropertyServiceImpl implements PropertyService {
 
         PropertyAddress propertyAddress = new PropertyAddress();
         propertyAddress.setCountry(countryService.findCountryById(propertyForm.getCountryId()));
-        propertyAddress.setCity(propertyForm.getCity());
+        propertyAddress.setLocation(propertyForm.getLocation());
         propertyAddress.setStreet(propertyForm.getStreet());
         propertyAddress.setPostalCode(propertyForm.getPostalCode());
         propertyAddress.setProvince(propertyForm.getProvince());
@@ -89,7 +89,7 @@ public class PropertyServiceImpl implements PropertyService {
         property.setPropertyType(propertyTypeService.findPropertyTypeById(propertyForm.getPropertyTypeId()));
         property.setRateType(rateTypeService.findRateTypeById(propertyForm.getRateTypeId()));
         property.getPropertyAddress().setCountry(countryService.findCountryById(propertyForm.getCountryId()));
-        property.getPropertyAddress().setCity(propertyForm.getCity());
+        property.getPropertyAddress().setLocation(propertyForm.getLocation());
         property.getPropertyAddress().setStreet(propertyForm.getStreet());
         property.getPropertyAddress().setPostalCode(propertyForm.getPostalCode());
         property.getPropertyAddress().setProvince(propertyForm.getProvince());

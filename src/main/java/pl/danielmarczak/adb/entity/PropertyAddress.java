@@ -18,8 +18,8 @@ public class PropertyAddress {
     @JoinColumn(name = "fk_country_id")
     private Country country;
 
+    private String location;
     private String street;
-    private String city;
     private String postalCode;
     private String province;
     private String region;

@@ -217,7 +217,7 @@ function createPropertyDetailsEl(propertyIdentifier, property) {
         } = property;
     const {descriptionText} = propertyDescription;
     const {propertyTypeName} = propertyType;
-    const {city, country: {countryName}, postalCode, province, region, street} = propertyAddress;
+    const {location, country: {countryName}, postalCode, province, region, street} = propertyAddress;
     const {rateTypeId, rateTypeName} = rateType
     const {priceId, amount, currency} = price
     const detailsEl = $(`<div class="property-details-el" data-property-id="${propertyId}"></div>`);
@@ -235,7 +235,7 @@ function createPropertyDetailsEl(propertyIdentifier, property) {
                 <tr><th>Price: </th><td><input type="text" class="details-price" value="${amount} ${currency}" readonly/></td></tr>
                 <tr><th>Rate: </th><td><input type="text" class="details-rate-type-name" value="${rateTypeName}" readonly/></td></tr>
                 <tr><th>Country: </th><td><input type="text" class="details-property-country-name" value="${countryName}" readonly/></td></tr>
-                <tr><th>City: </th><td><input type="text" class="details-property-city" value="${city}" readonly/></td></tr>
+                <tr><th>Location: </th><td><input type="text" class="details-property-location" value="${location}" readonly/></td></tr>
                 <tr><th>Street: </th><td><input type="text" class="details-property-street" value="${street}" readonly/></td></tr>
                 <tr><th>Postal code: </th><td><input type="text" class="details-property-postal-code" value="${postalCode}" readonly/></td></tr>
                 <tr><th>Province: </th><td><input type="text" class="details-property-province" value="${province}" readonly/></td></tr>
@@ -599,7 +599,7 @@ function displayPropertyModalInUpdateMode() {
     $('input.cup-property-id').val($(this).children('table').find('input.details-property-id').val());
     $('input.cup-property-user-id').val($(this).children('table').find('input.details-user-id').val());
     $('input.cup-property-name').val($(this).children('table').find('input.details-property-name').val());
-    $('input.cup-property-city').val($(this).children('table').find('input.details-property-city').val());
+    $('input.cup-property-location').val($(this).children('table').find('input.details-property-location').val());
     $('input.cup-property-street').val($(this).children('table').find('input.details-property-street').val());
     $('input.cup-property-postal-code').val($(this).children('table').find('input.details-property-postal-code').val());
     $('input.cup-property-province').val($(this).children('table').find('input.details-property-province').val());
@@ -645,7 +645,7 @@ function createOrUpdatePropertyInDatabase(e) {
             propertyTypeId: $('select.cup-property-type').val(),
             rateTypeId: $('select.cup-rate-type').val(),
             countryId: $('select.cup-property-country').val(),
-            city: $('input.cup-property-city').val(),
+            location: $('input.cup-property-location').val(),
             street: $('input.cup-property-street').val(),
             postalCode: $('input.cup-property-postal-code').val(),
             province: $('input.cup-property-province').val(),
@@ -690,7 +690,7 @@ function createOrUpdatePropertyInDatabase(e) {
                 } else {
                     const {
                         isAvailable,
-                        propertyAddress: {city, country: {countryName}, postalCode, province, region, street},
+                        propertyAddress: {location, country: {countryName}, postalCode, province, region, street},
                         propertyDescription: {descriptionText},
                         propertyId,
                         propertyName,
@@ -711,7 +711,7 @@ function createOrUpdatePropertyInDatabase(e) {
                             $(detailsElement).find('input.details-rate-type-name').val(rateTypeName);
                             $(detailsElement).find('input.details-price').val(amount + ' ' + currency);
                             $(detailsElement).find('input.details-property-country-name').val(countryName);
-                            $(detailsElement).find('input.details-property-city').val(city);
+                            $(detailsElement).find('input.details-property-location').val(location);
                             $(detailsElement).find('input.details-property-street').val(street);
                             $(detailsElement).find('input.details-property-postal-code').val(postalCode);
                             $(detailsElement).find('input.details-property-province').val(province);
