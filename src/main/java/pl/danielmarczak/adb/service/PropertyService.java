@@ -19,6 +19,8 @@ public interface PropertyService {
 
     void setPropertyIsEnabled(Boolean isActive, Long propertyId);
 
+    List<Property> findAllByIsAvailableEquals(Boolean isAvailable);
+
 
 
 }

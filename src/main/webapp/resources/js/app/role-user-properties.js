@@ -731,10 +731,12 @@ function createOrUpdatePropertyInDatabase(e) {
 
 function setPropertyIsEnabledToFalse() {
     const propertyId = $('input[type=hidden].cup-property-id').val();
-    $.ajax({
-        type: 'DELETE',
-        url: `http://localhost:8080/api/property/set-property-is-enabled-to-false/${propertyId}`,
-        success: function (response) {
+
+    $.post(`http://localhost:8080/api/property/set-property-is-enabled-to-false`,{
+        propertyId: propertyId
+    },
+    function (response) {
+        if (response) {
             const propertyNameTabs = $('.property-name-tab');
             const propertyCards = $('.property-card');
             propertyNameTabs.each(function (index, nameTab) {
@@ -751,9 +753,8 @@ function setPropertyIsEnabledToFalse() {
             propertyCards.first().removeClass('hidden');
             renderPropertyCalendar();
             $('.create-or-update-property-modal').modal('toggle');
-        },
-        error: function (data) { //TODO
-            console.log(data);
+        } else {
+            console.log(response);
         }
     });
 }

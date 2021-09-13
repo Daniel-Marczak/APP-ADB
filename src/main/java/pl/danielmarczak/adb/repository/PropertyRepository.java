@@ -19,4 +19,6 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     @Query("UPDATE Property p SET p.isEnabled = ?1 WHERE p.propertyId = ?2")
     void setPropertyIsEnabled(Boolean isEnabled, Long propertyId);
 
+    List<Property> findAllByIsAvailableEquals(Boolean isAvailable);
+
 }

@@ -105,4 +105,9 @@ public class PropertyServiceImpl implements PropertyService {
     public void setPropertyIsEnabled(Boolean isActive, Long propertyId) {
         propertyRepository.setPropertyIsEnabled(isActive, propertyId);
     }
+
+    @Override
+    public List<Property> findAllByIsAvailableEquals(Boolean isAvailable) {
+        return propertyRepository.findAllByIsAvailableEquals(isAvailable);
+    }
 }

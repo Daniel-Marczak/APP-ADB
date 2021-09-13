@@ -84,9 +84,9 @@ public class PropertyRestController {
         return propertyPhotoService.savePropertyPhoto(propertyPhoto);
     }
 
-    @PutMapping("/set-property-is-enabled-to-false/{propertyId}")
-    public Boolean setPropertyIsEnabledToFalse(@PathVariable Long propertyId){
-        propertyService.setPropertyIsEnabled(false, propertyId);
+    @PostMapping("/set-property-is-enabled-to-false")
+    public Boolean setPropertyIsEnabledToFalse(@RequestParam Long propertyId){
+        propertyService.setPropertyIsEnabled(false, propertyId);//todo get, set, validate
         return true; //TODO
     }
 

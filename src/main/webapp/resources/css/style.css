@@ -1166,6 +1166,56 @@ a.fc-col-header-cell-cushion {
     background: rgb(68, 51, 68) none repeat scroll 0% 0%;
 }
 
+.reservation-form {
+
+}
+
+.location-input-div {
+    display: inline-block;
+    background-color: bisque;
+}
+
+.location-input-label {
+    display: block
+}
+
+.location-input {
+    margin: 15px;
+}
+
+.location-input-item-label {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    float: none;
+}
+
+.location-input-item {
+    display: block;
+    margin-left: 15px;
+}
+
+
+.date-selection-div {
+    display: inline-block;
+    background-color: wheat;
+}
+
+.event-start-input-label {
+
+}
+
+.event-start-input{
+    margin: 15px 0px 15px 15px;
+}
+.event-end-input-label {
+
+}
+
+.event-end-input {
+    margin: 15px 15px 15px 0px;
+}
+
 
 
 
