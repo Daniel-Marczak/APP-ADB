@@ -97,6 +97,11 @@ $(document).ready(function () {
         } else {
             textErrorLabel.removeClass('hidden');
         }
+        if (nameInput.val().length === 0 && emailInput.val().length === 0 && textInput.val().length === 0){
+            nameErrorLabel.addClass('hidden');
+            emailErrorLabel.addClass('hidden');
+            textErrorLabel.addClass('hidden');
+        }
     }
 
     function saveContactMessage(event) {
