@@ -1183,22 +1183,51 @@ a.fc-col-header-cell-cushion {
     margin: 15px;
 }
 
-.location-input-item-label {
+.location-item-span-box {
+    width: 225px;
     display: block;
     position: absolute;
     z-index: 1;
     float: none;
+    padding: 15px;
 }
 
-.location-input-item {
-    display: block;
-    margin-left: 15px;
+.location-item-span {
+    padding: 2px 0px 2px 1px;
+    border: none;
+    float: left;
+    width: 100%;
+    background-color: white;
 }
 
+.location-item-span:hover {
+    cursor: pointer;
+}
+
+.location-item-span:hover .match-span,
+.location-item-span:hover .suggestion-span {
+    text-decoration: underline;
+}
+
+.match-span {
+    float: left;
+    color: black;
+    font-weight: 700;
+    font-family: 'Work Sans', sans-serif;
+
+}
+
+.suggestion-span {
+    float: left;
+    color: grey;
+    font-weight: 600;
+    font-family: 'Work Sans', sans-serif;
+}
 
 .date-selection-div {
     display: inline-block;
     background-color: wheat;
+    position:relative;
 }
 
 .event-start-input-label {

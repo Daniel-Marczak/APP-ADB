@@ -21,6 +21,8 @@ public interface PropertyService {
 
     List<Property> findAllByIsAvailableEquals(Boolean isAvailable);
 
+    List<Property> findAllByLocationName(String locationName);
+
 
 
 }

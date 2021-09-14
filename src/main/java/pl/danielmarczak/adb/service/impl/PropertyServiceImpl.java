@@ -110,4 +110,9 @@ public class PropertyServiceImpl implements PropertyService {
     public List<Property> findAllByIsAvailableEquals(Boolean isAvailable) {
         return propertyRepository.findAllByIsAvailableEquals(isAvailable);
     }
+
+    @Override
+    public List<Property> findAllByLocationName(String locationName) {
+        return propertyRepository.findAllByLocationName(locationName);
+    }
 }

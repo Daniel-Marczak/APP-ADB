@@ -26,40 +26,25 @@
 </div>
 <div class="features">
     <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-sm-6 col-xs-12">
-                <div class="feature-box media">
-                    <div class="icon-box text-center pull-left media-object"> <i class="icon-user-following"></i> </div>
-                    <div class="feature-text media-body">
-                        <h4>You ...</h4>
-                        <p class="feature-detail">
-                             register your accommodation business.
-                        </p>
+        <div class="col-lg-10 col-lg-offset-1 text-center text reservation-form-div">
+            <form class="reservation-form" method="get" action="<c:url value="/reservation/search-result"/>">
+                <div class="location-input-div">
+                    <label class="location-input-label">
+                        <input type="text" name="location" class="location-input">
+                    </label>
+                    <div class="location-item-span-box">
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 col-sm-6 col-xs-12">
-                <div class="feature-box media pull-left">
-                    <div class="icon-box text-center pull-left media-object"> <i class="icon-user"></i> </div>
-                    <div class="feature-text media-body">
-                        <h4>We ...</h4>
-                        <p class="feature-detail">
-                            provide a business managing tool.
-                        </p>
-                    </div>
+                <div class="date-selection-div">
+                    <label class="event-start-input-label">
+                        <input type="date" name="eventStart" class="event-start-input">
+                    </label>
+                    <label class="event-end-input-label">
+                        <input type="date" name="eventEnd" class="event-end-input">
+                    </label>
                 </div>
-            </div>
-            <div class="col-md-4 col-sm-6 col-xs-12">
-                <div class="feature-box media pull-left">
-                    <div class="icon-box text-center pull-left media-object"> <i class="icon-people"></i> </div>
-                    <div class="feature-text media-body">
-                        <h4>Together ...</h4>
-                        <p class="feature-detail">
-                            we can achieve more.
-                        </p>
-                    </div>
-                </div>
-            </div>
+                <button type="submit" style="display: inline-block">Search</button>
+            </form>
         </div>
     </div>
 </div>
@@ -90,9 +75,7 @@
 <%--                <a href="#" class="view-more">View More Items</a> </div>--%>
             <!-- /.col-lg-10 -->
         </div>
-        <!-- /.row -->
     </div>
-    <!-- /.container -->
 </div>
 
 <div class="call-to-action">
@@ -242,5 +225,6 @@
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
 <script src="<c:url value="/resources/js/app/index.js"/>"></script>
+<script src="<c:url value="/resources/js/app/reservation.js"/>"></script>
 </body>
 </html>

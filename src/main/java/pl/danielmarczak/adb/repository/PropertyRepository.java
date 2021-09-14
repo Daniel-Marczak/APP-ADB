@@ -21,4 +21,10 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 
     List<Property> findAllByIsAvailableEquals(Boolean isAvailable);
 
+    @Query(
+            value = "SELECT p FROM Property p JOIN PropertyAddress pa ON p.propertyAddress.propertyAddressId = pa.propertyAddressId " +
+                    "WHERE pa.location = ?1 OR pa.province = ?1 OR pa.region = ?1 OR pa.country.countryName = ?1"
+    )
+    List<Property> findAllByLocationName(String locationName);
+
 }
