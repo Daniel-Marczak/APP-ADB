@@ -1202,11 +1202,7 @@ a.fc-col-header-cell-cushion {
 
 .location-item-span:hover {
     cursor: pointer;
-}
-
-.location-item-span:hover .match-span,
-.location-item-span:hover .suggestion-span {
-    text-decoration: underline;
+    background-color: ghostwhite;
 }
 
 .match-span {
@@ -1222,6 +1218,10 @@ a.fc-col-header-cell-cushion {
     color: grey;
     font-weight: 600;
     font-family: 'Work Sans', sans-serif;
+}
+
+.location-item-span-focus {
+    background-color: ghostwhite;
 }
 
 .date-selection-div {

@@ -30,7 +30,7 @@
             <form class="reservation-form" method="get" action="<c:url value="/reservation/search-result"/>">
                 <div class="location-input-div">
                     <label class="location-input-label">
-                        <input type="text" name="location" class="location-input">
+                        <input type="text" name="location" class="location-input" autoComplete="off">
                     </label>
                     <div class="location-item-span-box">
                     </div>
