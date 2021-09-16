@@ -585,6 +585,10 @@ body::-webkit-scrollbar-thumb {
 
 }
 
+.location-name-input:hover,
+.event-start-input:hover,
+.event-end-input:hover,
+.search-bar-form-submit-btn:hover,
 .login-form input:hover,
 .registration-form input:hover,
 .update-user-form input:hover,
@@ -1146,7 +1150,6 @@ a.fc-col-header-cell-cushion {
     float: none;
     width: min-content;
     height: 80px;
-    background-color: yellow;
 }
 
 .host-dropdown-content:hover {
@@ -1170,82 +1173,151 @@ a.fc-col-header-cell-cushion {
 
 }
 
-.location-input-div {
+.location-input-box {
     display: inline-block;
-    background-color: bisque;
+    padding-top: 4px;
+    vertical-align: middle;
+}
+
+.date-selection-box {
+    display: inline-block;
 }
 
 .location-input-label {
-    display: block
+    display: inline-block;
+    float: bottom;
 }
 
-.location-input {
-    margin: 15px;
+.event-start-input-label {
+    display: inline-block;
+}
+
+.event-end-input-label {
+    display: inline-block;
+}
+
+.location-name-input {
+    display: block;
+    height: 50px;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    border-radius: 25px 0px 0px 25px;
+    color: rgba(255, 255, 255, 1);
+    font-size: 15px;
+    transition-duration: 0.5s;
+    width: 300px;
+    outline: none;
+    text-align: center;
+    font-weight: 600;
+    background: none;
+}
+
+.event-start-input,
+.event-end-input {
+    height: 50px;
+    width: 150px;
+    margin-left: -5px;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    color: rgba(255, 255, 255, 1);
+    font-size: 15px;
+    transition-duration: 0.5s;
+    outline: none;
+    text-align: center;
+    font-weight: 600;
+    background: none;
 }
 
 .location-item-span-box {
-    width: 225px;
+    padding-left: 10px;
+    width: 300px;
     display: block;
     position: absolute;
     z-index: 1;
     float: none;
-    padding: 15px;
+    overflow-y: scroll;
+    height:200px;
+}
+
+.location-item-span-box::-webkit-scrollbar {
+    display: none;
 }
 
 .location-item-span {
-    padding: 2px 0px 2px 1px;
-    border: none;
+    display: block;
     float: left;
-    width: 100%;
-    background-color: white;
+    margin: 0px 0px 1px 0px;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    border-radius: 25px 0px 0px 25px;
+    transition-duration: 0.5s;
+    height: 25px;
+    width: 300px;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: rgb(204, 204, 204);
 }
 
 .location-item-span:hover {
     cursor: pointer;
-    background-color: ghostwhite;
+    background-color: rgba(240, 240, 240, 1);
+    color: rgb(0, 0, 0);
+}
+
+.location-item-span:hover .suggestion-span {
+    color: black;
+    font-weight: 600;
 }
 
 .match-span {
     float: left;
-    color: black;
-    font-weight: 700;
+    margin-left: 15px;
+    color: rgb(0, 0, 0);
     font-family: 'Work Sans', sans-serif;
-
+    font-size: 15px;
 }
 
 .suggestion-span {
     float: left;
-    color: grey;
-    font-weight: 600;
+    color: rgb(75, 75, 75);
     font-family: 'Work Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
 }
 
-.location-item-span-focus {
-    background-color: ghostwhite;
+.item-focus {
+    background-color: rgba(240, 240, 240, 1);
 }
 
-.date-selection-div {
+.item-focus .suggestion-span {
+    color: rgb(0, 0, 0);
+    font-weight: 600;
+}
+
+.search-bar-form-submit-btn {
+    height: 50px;
+    margin-left: -5px;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    border-radius: 0px 25px 25px 0px;
+    color: rgba(255, 255, 255, 1);
     display: inline-block;
-    background-color: wheat;
-    position:relative;
+    font-size: 15px;
+    transition-duration: 0.5s;
+    width: 150px;
+    text-align: center;
+    font-weight: 600;
+    background: none;
 }
 
-.event-start-input-label {
-
+.banner-reservation-search-bar {
+    margin-top: 100px;
 }
 
-.event-start-input{
-    margin: 15px 0px 15px 15px;
+.date-error-span {
+    padding-left: 10px;
+    width: 290px;
+    display: block;
+    position: absolute;
+    z-index: 1;
+    float: none;
 }
-.event-end-input-label {
-
-}
-
-.event-end-input {
-    margin: 15px 15px 15px 0px;
-}
-
-
 
 
 
