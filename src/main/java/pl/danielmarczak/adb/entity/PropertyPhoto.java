@@ -20,5 +20,8 @@ public class PropertyPhoto {
     private String fileName;
     private String fileType;
 
+    @Transient
+    private String imgSrc;
+
 
 }

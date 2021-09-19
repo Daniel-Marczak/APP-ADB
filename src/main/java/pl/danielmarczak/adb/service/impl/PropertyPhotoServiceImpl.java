@@ -24,5 +24,10 @@ public class PropertyPhotoServiceImpl implements PropertyPhotoService {
         return propertyPhotoRepository.save(propertyPhoto);
     }
 
+    @Override
+    public String convertFileDataToImgSrc(byte[] fileData) {
+        return java.util.Base64.getEncoder().encodeToString(fileData);
+    }
+
 
 }

@@ -115,4 +115,18 @@ public class PropertyServiceImpl implements PropertyService {
     public List<Property> findAllByLocationName(String locationName) {
         return propertyRepository.findAllByLocationName(locationName);
     }
+
+    @Override
+    public Price calculateStayPrice(Property property, int days, int guests) {
+        Price stayPrice = new Price();
+        stayPrice.setCurrency(property.getPrice().getCurrency());
+
+        if (property.getRateType().getRateTypeId() == 1) {  //per night
+            stayPrice.setAmount(days * property.getPrice().getAmount());
+        }
+        if (property.getRateType().getRateTypeId() == 2) {  //per person per night
+            stayPrice.setAmount(days * property.getPrice().getAmount() * guests);
+        }
+        return stayPrice;
+    }
 }

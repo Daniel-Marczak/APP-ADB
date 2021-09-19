@@ -1,0 +1,41 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<!DOCTYPE html>
+<div class="main-header" id="main-header">
+    <nav class="navbar mynav navbar-fixed-top">
+        <div class="container">
+            <c:set var="home" value="http://localhost:8080/"/>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                <a class="navbar-brand" onclick="document.location='${home}'" href="">Accommodation Cloud</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a onclick="document.location='${home}'" href="">Home</a>
+                    </li>
+                    <li>
+                        <a href="<c:url value="/#contact"/>">Contact Us</a>
+                    </li>
+                    <sec:authorize access="!hasRole('USER')">
+                        <li>
+                            <a class="smooth-scroll-off host-dropdown">Host</a>
+                            <div class="host-dropdown-content">
+                                <a class="login-a smooth-scroll-off" href="<c:url value="/login"/>">Sign in</a>
+                                <a class="registration-a smooth-scroll-off" href="<c:url value="/registration"/>">Register</a>
+                            </div>
+                        </li>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('USER')">
+                        <li>
+                            <a class="smooth-scroll-off" href="<c:url value='/properties/user-properties'/>">Property manager</a>
+                        </li>
+                        <li>
+                            <a href="#" data-target=".bs-example-modal-sm" data-toggle="modal">Sign out</a>
+                        </li>
+                    </sec:authorize>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>

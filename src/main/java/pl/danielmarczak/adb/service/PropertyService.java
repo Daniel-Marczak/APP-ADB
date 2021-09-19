@@ -1,5 +1,6 @@
 package pl.danielmarczak.adb.service;
 
+import pl.danielmarczak.adb.entity.Price;
 import pl.danielmarczak.adb.entity.Property;
 import pl.danielmarczak.adb.model.PropertyForm;
 
@@ -21,7 +22,9 @@ public interface PropertyService {
 
     List<Property> findAllByIsAvailableEquals(Boolean isAvailable);
 
-    List<Property> findAllByLocationName(String locationName);
+   List<Property> findAllByLocationName(String locationName);
+
+    Price calculateStayPrice(Property property, int days, int guests);
 
 
 

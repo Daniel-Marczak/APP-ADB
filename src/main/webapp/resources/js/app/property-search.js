@@ -5,18 +5,25 @@ $(document).ready(function () {
 
     $('.search-bar-form-submit-btn').click(function (event){
         event.preventDefault();
-        if (validateLocationName() && validateStartAndEndDate()) {
-            $('.reservation-form').submit()
+        if (validateLocationName() && validateStartAndEndDate() && validateNumberOfGuests()) {
+            $('.search-form').submit();
         }
         if (!validateLocationName()) {
-            $('.location-error-span').remove();
             $('.location-item-span-box').append(createLocationErrorSpan());
+        } else {
+            $('.location-error-span').remove();
         }
         if (!validateStartAndEndDate()) {
+            $('.date-guest-selection-box').append(createDateErrorSpan());
+        } else {
             $('.date-error-span').remove();
-            $('.date-selection-box').append(createDateErrorSpan());
         }
-    })
+        if (!validateNumberOfGuests()) {
+            $('.date-guest-selection-box').append(createGuestErrorSpan());
+        } else {
+            $('.guest-error-span').remove();
+        }
+    });
 
     $.get('http://localhost:8080/api/reservation/available-locations-names', function (names) {
         locationsNames = names;
@@ -25,11 +32,11 @@ $(document).ready(function () {
             .on('keydown', function (event) {toggleLocationItemSpanFocus(event);})
             .on('keydown', function (event) {onKeydownAutofillLocationInput(event)});
 
-        $('.event-start-input').val(getCurrentDate()).attr('min', getCurrentDate());
-        $('.event-end-input').val(getCurrentDate()).attr('min', getCurrentDate());
+        $('.event-start-input').val(setStartDateValue()).attr('min', getCurrentDate());
+        $('.event-end-input').val(setEndDateValue()).attr('min', setEndDateMinVal());
     });
 
-    $('.reservation-form').keydown(function (event){
+    $('.search-form').keydown(function (event){
         if (event.keyCode === 13){
             event.preventDefault();
         }
@@ -127,36 +134,75 @@ $(document).ready(function () {
         return currentDate.getFullYear() + '-' + String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getDate()).padStart(2, '0');
     }
 
+    function setStartDateValue(){
+        const currentDate = new Date();
+        const eventStartInput  =$('.event-start-input').val();
+        currentDate.setDate(currentDate.getDate() + 1);
+        if (!eventStartInput) {
+            return getCurrentDate();
+        } else {
+            return eventStartInput;
+        }
+    }
+
+    function setEndDateValue(){
+        const currentDate = new Date();
+        const eventEndInput = $('.event-end-input').val();
+        currentDate.setDate(currentDate.getDate() + 1);
+        if (!eventEndInput) {
+            return currentDate.getFullYear() + '-' + String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getDate()).padStart(2, '0');
+        } else {
+            return eventEndInput;
+        }
+    }
+
+    function setEndDateMinVal(){
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 1);
+        return currentDate.getFullYear() + '-' + String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getDate()).padStart(2, '0');
+    }
+
     function validateStartAndEndDate(){
         const currentDate = new Date(getCurrentDate());
-        const startDate = new Date($('.event-start-input').val());
-        const endDate = new Date($('.event-end-input').val());
-        let isDateValid = false;
+        const eventStart = new Date($('.event-start-input').val());
+        const eventEnd = new Date($('.event-end-input').val());
+        const timeDifference = eventEnd.getTime() - eventStart.getTime();
+        $('.days-input').val(timeDifference / 86400000);
+        $('.search-event-start').val(eventStart.getFullYear() + '-' + String(eventStart.getMonth() + 1).padStart(2, '0') + '-' + String(eventStart.getDate()).padStart(2, '0'));
+        $('.search-event-end').val(eventEnd.getFullYear() + '-' + String(eventEnd.getMonth() + 1).padStart(2, '0') + '-' + String(eventEnd.getDate()).padStart(2, '0'));
+        return eventStart.getTime() >= currentDate.getTime() && eventStart.getTime() < eventEnd.getTime();
+    }
 
-        if (startDate.getTime() >= currentDate.getTime() && startDate.getTime() <= endDate.getTime() && endDate.getFullYear() - startDate.getFullYear() < 2){
-            isDateValid = true;
-        }
-        
-        return isDateValid;
+    function validateNumberOfGuests(){
+        return $('.guests-input').val() > 0;
     }
 
     function createLocationErrorSpan(){
+        $('.location-error-span').remove();
         return $(`
-            <span class="text-error location-error-span" style="display: block">
+            <span class="text-error location-error-span">
                 This location is not available.
             </span>
         `);
     }
 
     function createDateErrorSpan(){
+        $('.date-error-span').remove();
         return $(`
             <span class="text-error date-error-span">
                 The difference between selected dates<br>
-                cannot be greater than one year.
+                cannot be smaller than one day.<br>
             </span>
         `);
     }
 
-
+    function createGuestErrorSpan(){
+        $('.guest-error-span').remove();
+        return $(`
+            <span class="text-error guest-error-span">
+                Required.
+            </span>
+        `);
+    }
 
 });

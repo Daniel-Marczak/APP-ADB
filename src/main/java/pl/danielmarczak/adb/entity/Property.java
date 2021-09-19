@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "properties")
 @Data
-public class Property {
+public class Property implements Comparable<Property> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,4 +51,11 @@ public class Property {
     @JoinColumn(name = "fk_property_price_id")
     private Price price;
 
+    @Transient
+    private Price stayPrice;
+
+    @Override
+    public int compareTo(Property property) {
+        return this.getStayPrice().getAmount().compareTo(property.getStayPrice().getAmount());
+    }
 }

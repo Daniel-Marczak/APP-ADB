@@ -17,11 +17,14 @@
                 <div class="col-md-12">
                     <div class="banner-text">
                         <h2>Welcome to <span>Accommodation Cloud</span></h2>
-                        <p>We make managing your accommodation business simple.</p>
+                        <p>This text has to be changed</p>
                     </div>
-                    <div class="banner-reservation-search-bar">
-                        <form class="reservation-form" method="get"
-                              action="<c:url value="/reservation/search-result"/>">
+                    <div class="index-banner-search-bar">
+                        <form class="search-form" method="get" action="<c:url value="/reservation/search-result"/>">
+                            <input type="hidden" class="days-input" name="days">
+                            <input type="hidden" class="search-page" name="page" value="0">
+                            <input type="hidden" class="search-event-start" name="eventStart">
+                            <input type="hidden" class="search-event-end" name="eventEnd">
                             <div class="location-input-box">
                                 <label class="location-input-label">
                                     <input type="text" name="location" class="location-name-input" autoComplete="off" placeholder="location" required>
@@ -29,12 +32,17 @@
                                 <div class="location-item-span-box">
                                 </div>
                             </div>
-                            <div class="date-selection-box" >
+                            <div class="date-guest-selection-box">
                                 <label class="event-start-input-label">
-                                    <input type="date" name="eventStart" class="event-start-input" required>
+                                    <input type="date" class="event-start-input" required>
                                 </label>
                                 <label class="event-end-input-label">
-                                    <input type="date" name="eventEnd" class="event-end-input" required>
+                                    <input type="date" class="event-end-input" required>
+                                </label>
+                                <label class="guest-input-label">
+                                    <button type="button" class="guests-spin-btn" onclick="this.parentNode.querySelector('.guests-input').stepDown();"> - </button>
+                                    <input class="guests-input" type="number" name="guests" step="1" placeholder="guests" min="1" required>
+                                    <button type="button" class="guests-spin-btn" onclick="this.parentNode.querySelector('.guests-input').stepUp();"> + </button>
                                 </label>
                                 <button type="submit" class="search-bar-form-submit-btn">Search</button>
                             </div>
@@ -276,6 +284,6 @@
     </footer>
     <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
     <script src="<c:url value="/resources/js/app/index.js"/>"></script>
-    <script src="<c:url value="/resources/js/app/reservation.js"/>"></script>
+    <script src="<c:url value="/resources/js/app/property-search.js"/>"></script>
 </body>
 </html>

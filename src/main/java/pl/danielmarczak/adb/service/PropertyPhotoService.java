@@ -7,4 +7,6 @@ public interface PropertyPhotoService {
     PropertyPhoto getPropertyPhotoById(Long propertyPhotoId);
 
     PropertyPhoto savePropertyPhoto(PropertyPhoto propertyPhoto);
+
+    String convertFileDataToImgSrc(byte [] fileData);
 }

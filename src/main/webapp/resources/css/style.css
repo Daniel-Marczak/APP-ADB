@@ -156,7 +156,7 @@ a {
 /*-----Portfolio or Work Starts-------*/
 
 .portfolio {
-    padding: 50px 0;
+    padding: 0px 0;
     background-color: rgba(235, 213, 235, 0.26);
     float: left;
     width: 100%;
@@ -524,7 +524,7 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
         border-bottom: none;;
     }
 
-    .features, .about, .portfolio, .contact, .testimonials {
+    .features, .about,.contact, .testimonials {
         padding: 50px 0px;
     }
 }
@@ -556,7 +556,7 @@ body::-webkit-scrollbar-thumb {
     width: max-content;
     border: rgba(204, 204, 204, 0.18) 1px solid;
     padding: 12px 35px;
-    color: #ccc;
+    color: rgb(204, 204, 204);
     display: inline-block;
     border-radius: 25px 25px 25px 25px;
     font-size: 15px;
@@ -571,7 +571,7 @@ body::-webkit-scrollbar-thumb {
 .password-reset-form input {
     border: rgba(204, 204, 204, 0.18) 1px solid;
     padding: 12px 35px;
-    color: #ccc;
+    color: rgb(204, 204, 204);
     display: block;
     border-radius: 25px 25px 25px 25px;
     font-size: 15px;
@@ -594,7 +594,7 @@ body::-webkit-scrollbar-thumb {
 .update-user-form input:hover,
 .password-reset-request input:hover,
 .password-reset-form input:hover {
-    background-color: #ccc;
+    background-color: rgb(204, 204, 204);
     color: rgb(0, 0, 0);
 }
 
@@ -603,7 +603,7 @@ body::-webkit-scrollbar-thumb {
 .update-user-form input::-webkit-input-placeholder,
 .password-reset-request input::-webkit-input-placeholder,
 .password-reset-form input::-webkit-input-placeholder {
-    color: #ccc !important;
+    color: rgb(204, 204, 204) !important;
     font-weight: 400;
 }
 
@@ -612,7 +612,7 @@ body::-webkit-scrollbar-thumb {
 .update-user-form input:-moz-placeholder, textarea:-moz-placeholder,
 .password-reset-request input:-moz-placeholder,
 .password-reset-form input:-moz-placeholder { /* Firefox 18- */
-    color: #ccc !important;
+    color: rgb(204, 204, 204) !important;
     font-weight: 400;
 }
 
@@ -621,7 +621,7 @@ body::-webkit-scrollbar-thumb {
 .update-user-form input::-moz-placeholder, textarea::-moz-placeholder,
 .password-reset-request input::-moz-placeholder,
 .password-reset-form input::-moz-placeholder { /* Firefox 19+ */
-    color: #ccc !important;
+    color: rgb(204, 204, 204) !important;
     font-weight: 400;
 }
 
@@ -630,7 +630,7 @@ body::-webkit-scrollbar-thumb {
 .update-user-form input:-ms-input-placeholder, textarea:-ms-input-placeholder,
 .password-reset-request input:-ms-input-placeholder,
 .password-reset-form input:-ms-input-placeholder {
-    color: #ccc !important;
+    color:rgb(204, 204, 204) !important;
     font-weight: 400;
 }
 
@@ -640,7 +640,7 @@ body::-webkit-scrollbar-thumb {
 .add-property-btn {
     border: rgba(204, 204, 204, 0.18) 1px solid;
     padding: 12px 35px;
-    color: #ccc;
+    color:rgb(204, 204, 204);
     display: inline-block;
     border-radius: 25px 25px 25px 25px;
     font-size: 15px;
@@ -656,7 +656,7 @@ body::-webkit-scrollbar-thumb {
 .update-user-form button:hover,
 .password-reset-request button:hover,
 .password-reset-form button:hover {
-    background-color: #ccc;
+    background-color: rgb(204, 204, 204);
     color: #000;
 }
 
@@ -664,7 +664,7 @@ body::-webkit-scrollbar-thumb {
 .update-user-form input {
     border: rgba(204, 204, 204, 0.18) 1px solid;
     padding: 12px 35px;
-    color: #ccc;
+    color: rgb(204, 204, 204);
     display: inline-block;
     border-radius: 25px 25px 25px 25px;
     font-size: 15px;
@@ -689,7 +689,7 @@ body::-webkit-scrollbar-thumb {
     padding-top: 2px;
     width: 300px;
     height: 25px;
-    color: red;
+    color: rgb(255, 0, 0);
     font-weight: 500;
     font-size: 14px;
 }
@@ -711,7 +711,6 @@ body::-webkit-scrollbar-thumb {
 .password-reset-link {
     float: right;
     color: rgb(100, 100, 100);
-    text-decoration: underline;
     text-decoration: underline;
     transition-duration: 0.5s;
 }
@@ -884,7 +883,7 @@ a.fc-col-header-cell-cushion {
 .add-property-btn {
     border: rgba(204, 204, 204, 0.18) 1px solid;
     padding: 12px 35px;
-    color: #ccc;
+    color: rgb(204, 204, 204);
     display: inline-block;
     border-radius: 25px 25px 25px 25px;
     font-size: 15px;
@@ -896,8 +895,8 @@ a.fc-col-header-cell-cushion {
 }
 
 .add-property-btn:hover {
-    background-color: #ccc;
-    color: #000;
+    background-color: rgb(204, 204, 204);
+    color: rgb(0, 0, 0);
 }
 
 .property-info-box {
@@ -938,8 +937,8 @@ a.fc-col-header-cell-cushion {
 .add-property-photo-form label {
     padding: 2px;
     float: left;
-    background-color: white;
-    color: black;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     border-radius: 5px;
     width: 100px;
     height: 15px;
@@ -948,8 +947,8 @@ a.fc-col-header-cell-cushion {
 
 .add-property-photo-form input[type=submit]{
     float: right;
-    background-color: white;
-    color: black;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     border-radius: 5px;
     border: none;
     outline: none;
@@ -962,7 +961,7 @@ a.fc-col-header-cell-cushion {
     background-size: 60px;
     background-repeat: no-repeat;
     background-position: center;
-    background-color:white;
+    background-color:rgb(255, 255, 255);
     width: 160px;
     height: 160px;
     display: block;
@@ -973,7 +972,7 @@ a.fc-col-header-cell-cushion {
     margin-top: 0px;
     width: 312px;
     height: 180px;
-    background-color: whitesmoke;
+    background-color: rgb(245, 245, 245);
     cursor: pointer;
     border-radius: 5px;
 }
@@ -1033,7 +1032,7 @@ a.fc-col-header-cell-cushion {
 }
 
 .property-description {
-    background-color: whitesmoke;
+    background-color: rgb(245, 245, 245);
 }
 
 .yes-btn,
@@ -1069,7 +1068,7 @@ a.fc-col-header-cell-cushion {
 }
 
 .modal textarea::-webkit-scrollbar-track {
-    background-color: whitesmoke;
+    background-color: rgb(245, 245, 245);
     border: rgb(204, 204, 204) solid 1px;
     border-radius: 5px;
 }
@@ -1128,7 +1127,7 @@ a.fc-col-header-cell-cushion {
 }
 
 .text-error {
-    color: red;
+    color: rgb(255, 0, 0);
 }
 
 .d-inline-block {
@@ -1165,12 +1164,14 @@ a.fc-col-header-cell-cushion {
     width: 100px;
     text-decoration: none;
     text-align: center;
-    color: whitesmoke;
+    color: rgb(245, 245, 245);
     background: rgb(68, 51, 68) none repeat scroll 0% 0%;
 }
 
-.reservation-form {
-
+.search-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .location-input-box {
@@ -1179,13 +1180,32 @@ a.fc-col-header-cell-cushion {
     vertical-align: middle;
 }
 
-.date-selection-box {
+.guests-input-box {
+    display: inline-block;
+    vertical-align: middle;
+    width: 100px;
+}
+
+.date-guest-selection-box {
     display: inline-block;
 }
 
 .location-input-label {
     display: inline-block;
-    float: bottom;
+}
+
+.guest-input-label {
+    display: inline-block;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    height: 50px;
+    margin-left: -5px;
+    vertical-align: middle;
+    margin-top: 3px;
+}
+
+.guest-input-label:hover .guests-spin-btn,
+.guest-input-label:hover .guests-input {
+    color: rgb(0, 0, 0);
 }
 
 .event-start-input-label {
@@ -1211,7 +1231,50 @@ a.fc-col-header-cell-cushion {
     background: none;
 }
 
-.event-start-input,
+.guests-input {
+    height: 50px;
+    width: 50px;
+    border: none;
+    margin-left: -5px;
+    color: rgba(255, 255, 255, 1);
+    font-size: 15px;
+    transition-duration: 0.5s;
+    outline: none;
+    text-align: center;
+    font-weight: 600;
+    background: none;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.guests-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.guests-spin-btn {
+    display: inline-block;
+    background: transparent;
+    outline: none;
+    border: none;
+    color: transparent;
+    height: 50px;
+    width: 15px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.event-start-input {
+    height: 50px;
+    width: 150px;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    color: rgba(255, 255, 255, 1);
+    font-size: 15px;
+    transition-duration: 0.5s;
+    outline: none;
+    text-align: center;
+    font-weight: 600;
+    background: none;
+}
 .event-end-input {
     height: 50px;
     width: 150px;
@@ -1255,6 +1318,7 @@ a.fc-col-header-cell-cushion {
     background-color: rgb(204, 204, 204);
 }
 
+.guest-input-label:hover,
 .location-item-span:hover {
     cursor: pointer;
     background-color: rgba(240, 240, 240, 1);
@@ -1262,7 +1326,7 @@ a.fc-col-header-cell-cushion {
 }
 
 .location-item-span:hover .suggestion-span {
-    color: black;
+    color: rgb(0, 0, 0);
     font-weight: 600;
 }
 
@@ -1306,9 +1370,15 @@ a.fc-col-header-cell-cushion {
     background: none;
 }
 
-.banner-reservation-search-bar {
+.index-banner-search-bar {
     margin-top: 100px;
 }
+
+.search-banner-search-bar {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
 
 .date-error-span {
     padding-left: 10px;
@@ -1319,7 +1389,192 @@ a.fc-col-header-cell-cushion {
     float: none;
 }
 
+.guest-error-span {
+    margin-left: 200px;
+    width: 290px;
+    display: block;
+    position: absolute;
+    z-index: 1;
+    float: none;
+}
 
+.search-banner {
+    background-attachment: fixed;
+    background-color: rgb(100, 88, 98);
+    background-image: url(/resources/img/background.jpg);
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    cursor: default;
+    text-align: center;
+    width: 100%;
+    float: left;
+}
+
+.search-bg-overlay {
+    padding: 120px 0 20px;
+    background-color: rgba(15, 5, 20, 0.84);
+}
+
+.search-property-row {
+    padding: 10px 10px 10px 10px;
+    background-color: rgb(245, 245, 245);
+    display: table;
+    min-width: 100%;
+    margin: 5px;
+}
+
+.search-property-photo-box {
+    display: table-cell;
+    vertical-align: middle;
+    width: 320px;
+    height: 180px;
+}
+
+.search-property-img {
+    display: inline-block;
+    width: 320px;
+    height: 180px;
+    vertical-align: middle;
+}
+
+.search-property-details-box {
+    display: table-cell;
+    height: 180px;
+    float: left;
+    width: 100%;
+}
+
+.search-property-name-box {
+    display: block;
+    padding-left: 3%;
+    padding-top: 1%;
+}
+
+.search-property-name-box h3.search-property-name {
+    font-family: 'Oleo Script Swash Caps', cursive;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    border-bottom: 2px solid #EB233C;
+    display: inline-block;
+    line-height: 20px;
+}
+
+.search-property-name-box span.search-property-type {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 15px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    display: inline-block;
+    line-height: 20px;
+    float: right;
+}
+
+.search-property-name-box span.search-property-type:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.search-property-type-span {
+
+}
+
+.search-property-address-box {
+    display: block;
+    padding-left: 3%;
+}
+
+.search-property-address-box span {
+    color: rgb(0, 0, 0);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 12px;
+}
+
+.search-property-address-box span:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.search-property-description-box {
+    display: inline-block;
+    width: 65%;
+    padding-left: 3%;
+    padding-top: 2%;
+}
+
+.search-property-description-box h4 {
+    font-family: 'Oleo Script Swash Caps', cursive;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    display: inline-block;
+    line-height: 20px;
+}
+
+.search-property-description-box p {
+    color: rgb(0, 0, 0);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 12px;
+}
+
+.search-stay-price-box {
+    display: inline-block;
+    float: right;
+    width: 35%;
+}
+
+.search-stay-price-box span.search-stay-price-amount {
+    float: right;
+    color: rgb(0, 0, 0);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 18px;
+
+}
+.search-stay-price-box span.search-stay-price-currency {
+    float: right;
+    color: rgb(0, 0, 0);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 18px;
+}
+
+.page-request-container {
+    padding-top: 50px;
+    text-align: center;
+}
+
+.page-request-box {
+    position: relative;
+    display: inline-block;
+}
+
+.page-request-form {
+    display: inline-block;
+}
+
+.page-request-btn {
+    width: 35px;
+    height: 25px;
+    color: rgb(245, 245, 245);
+    background: rgb(68, 51, 68) none repeat scroll 0% 0%;
+    outline: none;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+}
+
+.page-request-btn:hover {
+    background-color: rgb(102, 85, 102);
+    color: rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(235, 35, 60);
+}
+
+.page-request-btn-current {
+    width: 35px;
+    height: 25px;
+    color: rgb(68, 51, 68);
+    background: rgb(245, 245, 245) none repeat scroll 0% 0%;
+    cursor: initial;
+    outline: none;
+    border: rgb(180, 180, 180) 1px solid;
+}
 
 
 
