@@ -1,5 +1,8 @@
 package pl.danielmarczak.adb.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.danielmarczak.adb.entity.*;
 import pl.danielmarczak.adb.model.PropertyForm;
@@ -112,21 +115,21 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public List<Property> findAllByLocationName(String locationName) {
-        return propertyRepository.findAllByLocationName(locationName);
+    public Page<Property> getAllPropertiesByLocationProvinceRegionOrCountry(String location, int guests, int days, int requestedPage) {
+        Pageable pageable = PageRequest.of(requestedPage, 3);
+        return propertyRepository.getAllPropertiesByLocationProvinceRegionOrCountry(location, guests, days, pageable);
     }
 
     @Override
-    public Price calculateStayPrice(Property property, int days, int guests) {
-        Price stayPrice = new Price();
-        stayPrice.setCurrency(property.getPrice().getCurrency());
-
-        if (property.getRateType().getRateTypeId() == 1) {  //per night
-            stayPrice.setAmount(days * property.getPrice().getAmount());
-        }
-        if (property.getRateType().getRateTypeId() == 2) {  //per person per night
-            stayPrice.setAmount(days * property.getPrice().getAmount() * guests);
-        }
-        return stayPrice;
+    public void updatePropertyStayPriceByPropertyLocationProvinceRegionOrCountry(String location, int guests, int days) {
+        propertyRepository.updatePropertyStayPriceByPropertyLocationProvinceRegionOrCountry(location, guests, days);
     }
+
+    @Override
+    public Page<Property> getAllPropertiesByLocationProvinceRegionOrCountryWithUpdatedStayPrice(String location, int guests, int days, int requestedPage) {
+        updatePropertyStayPriceByPropertyLocationProvinceRegionOrCountry(location, guests, days);
+        return getAllPropertiesByLocationProvinceRegionOrCountry(location, guests, days, requestedPage);
+    }
+
+
 }

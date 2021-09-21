@@ -51,11 +51,10 @@ public class Property implements Comparable<Property> {
     @JoinColumn(name = "fk_property_price_id")
     private Price price;
 
-    @Transient
-    private Price stayPrice;
+    private Double stayPrice;
 
     @Override
     public int compareTo(Property property) {
-        return this.getStayPrice().getAmount().compareTo(property.getStayPrice().getAmount());
+        return this.stayPrice.compareTo(property.stayPrice);
     }
 }

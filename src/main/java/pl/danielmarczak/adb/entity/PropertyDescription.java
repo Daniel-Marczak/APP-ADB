@@ -14,8 +14,6 @@ public class PropertyDescription {
     @Column(unique = true, nullable = false, name = "property_description_id")
     private Long propertyDescriptionId;
 
-    private String descriptionHeader;
-
     private String descriptionText;
 
 

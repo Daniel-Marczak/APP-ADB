@@ -5,6 +5,10 @@ $(document).ready(function () {
 
     $('.search-bar-form-submit-btn').click(function (event){
         event.preventDefault();
+        validateAndSubmitSearchForm();
+    });
+
+    function validateAndSubmitSearchForm(){
         if (validateLocationName() && validateStartAndEndDate() && validateNumberOfGuests()) {
             $('.search-form').submit();
         }
@@ -23,7 +27,7 @@ $(document).ready(function () {
         } else {
             $('.guest-error-span').remove();
         }
-    });
+    }
 
     $.get('http://localhost:8080/api/reservation/available-locations-names', function (names) {
         locationsNames = names;
@@ -167,7 +171,7 @@ $(document).ready(function () {
         const eventStart = new Date($('.event-start-input').val());
         const eventEnd = new Date($('.event-end-input').val());
         const timeDifference = eventEnd.getTime() - eventStart.getTime();
-        $('.days-input').val(timeDifference / 86400000);
+        $('.total-days-input').val(timeDifference / 86400000);
         $('.search-event-start').val(eventStart.getFullYear() + '-' + String(eventStart.getMonth() + 1).padStart(2, '0') + '-' + String(eventStart.getDate()).padStart(2, '0'));
         $('.search-event-end').val(eventEnd.getFullYear() + '-' + String(eventEnd.getMonth() + 1).padStart(2, '0') + '-' + String(eventEnd.getDate()).padStart(2, '0'));
         return eventStart.getTime() >= currentDate.getTime() && eventStart.getTime() < eventEnd.getTime();
@@ -204,5 +208,22 @@ $(document).ready(function () {
             </span>
         `);
     }
+
+    // when a 'span.search-address-property' element is clicked, its text is set as the value
+    // of the 'input.location-name-input' and the 'form.search-form' is submitted;
+    $('.search-address-property').click(function () {
+        $('.location-name-input').val($(this).text().replace(',', '').trim());
+        validateAndSubmitSearchForm();
+    });
+
+
+    // when a 'button.page-request-btn' is clicked, its number is set as the value
+    // of the 'input.page-request-input' and the 'form.search-form' is submitted;
+    $('.page-request-btn').click(function (){
+        $('.page-request-input').val(parseInt($(this).text()) -1);
+        validateAndSubmitSearchForm();
+    });
+
+
 
 });

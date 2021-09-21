@@ -1,6 +1,6 @@
 package pl.danielmarczak.adb.service;
 
-import pl.danielmarczak.adb.entity.Price;
+import org.springframework.data.domain.Page;
 import pl.danielmarczak.adb.entity.Property;
 import pl.danielmarczak.adb.model.PropertyForm;
 
@@ -22,9 +22,11 @@ public interface PropertyService {
 
     List<Property> findAllByIsAvailableEquals(Boolean isAvailable);
 
-   List<Property> findAllByLocationName(String locationName);
+    Page<Property> getAllPropertiesByLocationProvinceRegionOrCountry(String location, int guests, int days, int requestedPage);
 
-    Price calculateStayPrice(Property property, int days, int guests);
+    void updatePropertyStayPriceByPropertyLocationProvinceRegionOrCountry(String location, int guests, int days);
+
+    Page<Property> getAllPropertiesByLocationProvinceRegionOrCountryWithUpdatedStayPrice(String location, int guests, int days, int requestedPage);
 
 
 

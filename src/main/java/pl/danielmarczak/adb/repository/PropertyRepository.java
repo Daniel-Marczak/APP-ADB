@@ -1,5 +1,7 @@
 package pl.danielmarczak.adb.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,9 +24,33 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findAllByIsAvailableEquals(Boolean isAvailable);
 
     @Query(
-            value = "SELECT p FROM Property p JOIN PropertyAddress pa ON p.propertyAddress.propertyAddressId = pa.propertyAddressId " +
-                    "WHERE pa.location = ?1 OR pa.province = ?1 OR pa.region = ?1 OR pa.country.countryName = ?1"
+            value = "SELECT p FROM Property p " +
+                    "WHERE  p.propertyAddress.location = ?1 " +
+                    "OR p.propertyAddress.province = ?1 " +
+                    "OR p.propertyAddress.region = ?1 " +
+                    "OR p.propertyAddress.country.countryName = ?1 " +
+                    "AND p.isAvailable = true " +
+                    "AND p.isEnabled = true " +
+                    "ORDER BY p.stayPrice"
     )
-    List<Property> findAllByLocationName(String locationName);
+    Page<Property> getAllPropertiesByLocationProvinceRegionOrCountry(String location, int guests, int days, Pageable pageable);
+
+    @Modifying
+    @Query(
+            nativeQuery = true,
+            value = "UPDATE properties" +
+                    "    JOIN properties_addresses pa on pa.property_address_id = properties.fk_address_id " +
+                    "    JOIN countries c on pa.fk_country_id = c.country_id " +
+                    "    JOIN prices price on price.price_id = properties.fk_property_price_id " +
+                    "    JOIN properties_types pt on properties.fk_type_id = pt.property_type_id " +
+                    "SET stay_price = IF(properties.fk_rate_type_id = 1, price.amount * ?3, price.amount * ?3 * ?2) " +
+                    "WHERE pa.location = ?1 " +
+                    "   OR pa.province = ?1 " +
+                    "   OR pa.region = ?1 " +
+                    "   OR c.country_name = ?1 " +
+                    "    AND is_available = true "
+    )
+    void updatePropertyStayPriceByPropertyLocationProvinceRegionOrCountry(String location, int guests, int days);
+
 
 }

@@ -9,7 +9,7 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="<c:url value="/properties/user-properties"/>">Properties</a>
+                        <a href="<c:url value="/property/user-properties"/>">Properties</a>
                     </li>
                     <li>
                         <a href="<c:url value="/user/update"/>">Account</a>

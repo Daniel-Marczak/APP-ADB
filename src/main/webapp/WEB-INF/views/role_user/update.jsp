@@ -155,6 +155,6 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
-<script src="<c:url value="/resources/js/app/role-user-update.js"/>"></script>
+<script src="<c:url value="/resources/js/app/role_user/update.js"/>"></script>
 </body>
 </html>

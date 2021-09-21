@@ -110,7 +110,7 @@
     </div>
 </footer>
 <%@include file="/WEB-INF/views/jspf/footer.jspf"%>
-<script src="<c:url value="/resources/js/app/password-reset-form.js"/>"></script>
+<script src="<c:url value="/resources/js/app/password_reset/form.js"/>"></script>
 
 </body>
 </html>

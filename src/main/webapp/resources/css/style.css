@@ -970,11 +970,17 @@ a.fc-col-header-cell-cushion {
 
 .property-img {
     margin-top: 0px;
-    width: 312px;
-    height: 180px;
+    /*width: 312px;*/
+    /*height: 180px;*/
     background-color: rgb(245, 245, 245);
     cursor: pointer;
     border-radius: 5px;
+
+    width: auto;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
 .property-address-table {
@@ -1426,20 +1432,26 @@ a.fc-col-header-cell-cushion {
 }
 
 .search-property-photo-box {
+    background-color: rgb(240, 240, 240);
     display: table-cell;
     vertical-align: middle;
     width: 320px;
     height: 180px;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
 }
 
 .search-property-img {
-    display: inline-block;
-    width: 320px;
-    height: 180px;
-    vertical-align: middle;
+    /*display: inline-block;*/
+    background-color: transparent;
+    width: auto;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
-.search-property-details-box {
+.search-property-info-box {
+    position: relative;
     display: table-cell;
     height: 180px;
     float: left;
@@ -1469,11 +1481,6 @@ a.fc-col-header-cell-cushion {
     display: inline-block;
     line-height: 20px;
     float: right;
-}
-
-.search-property-name-box span.search-property-type:hover {
-    text-decoration: underline;
-    cursor: pointer;
 }
 
 .search-property-type-span {
@@ -1517,20 +1524,20 @@ a.fc-col-header-cell-cushion {
     font-size: 12px;
 }
 
-.search-stay-price-box {
+.search-stay-price-details-btn-box {
     display: inline-block;
     float: right;
-    width: 35%;
+    width: 75px;
 }
 
-.search-stay-price-box span.search-stay-price-amount {
+.search-stay-price-details-btn-box span.search-stay-price-amount {
     float: right;
     color: rgb(0, 0, 0);
     font-family: 'Work Sans', sans-serif;
     font-size: 18px;
 
 }
-.search-stay-price-box span.search-stay-price-currency {
+.search-stay-price-details-btn-box span.search-stay-price-currency {
     float: right;
     color: rgb(0, 0, 0);
     font-family: 'Work Sans', sans-serif;
@@ -1575,6 +1582,30 @@ a.fc-col-header-cell-cushion {
     outline: none;
     border: rgb(180, 180, 180) 1px solid;
 }
+
+.search-details-btn {
+    width: 60px;
+    height: 25px;
+    color: rgb(245, 245, 245);
+    background: rgb(68, 51, 68) none repeat scroll 0% 0%;
+    outline: none;
+    border: rgba(204, 204, 204, 0.18) 1px solid;
+    display: block;
+    float:right;
+}
+
+.search-details-btn:hover {
+    background-color: rgb(102, 85, 102);
+    color: rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(235, 35, 60);
+}
+
+.search-stay-price-and-details-btn-ul {
+    list-style-type: none;
+    width: 100%;
+    text-align: center;
+}
+
 
 
 

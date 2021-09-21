@@ -19,11 +19,9 @@
                         <h2>Accommodations available in <span>${requestScope.location}</span></h2>
                     </div>
                     <div class="search-banner-search-bar">
-                        <form class="search-form" method="get" action="<c:url value="/reservation/search-result"/>">
-                            <input type="hidden" class="days-input" name="days" value="1">
-                            <input type="hidden" class="search-page" name="page" value="0">
-                            <input type="hidden" class="search-event-start" name="eventStart">
-                            <input type="hidden" class="search-event-end" name="eventEnd">
+                        <form class="search-form" method="get" action="<c:url value="/property/search"/>">
+                            <input type="hidden" class="total-days-input" name="days" value="1">
+                            <input type="hidden" class="page-request-input" name="pageRequest" value="0">
                             <div class="location-input-box">
                                 <label class="location-input-label">
                                     <input type="text" name="location" value="${requestScope.location}" class="location-name-input" autoComplete="off" placeholder="location" required>
@@ -33,10 +31,10 @@
                             </div>
                             <div class="date-guest-selection-box">
                                 <label class="event-start-input-label">
-                                    <input type="date" class="event-start-input" required value='${requestScope.eventStart}'>
+                                    <input type="date" class="event-start-input" name="eventStart" required value='${requestScope.eventStart}'>
                                 </label>
                                 <label class="event-end-input-label">
-                                    <input type="date" class="event-end-input" required value='${requestScope.eventEnd}'>
+                                    <input type="date" class="event-end-input" name="eventEnd" required value='${requestScope.eventEnd}'>
                                 </label>
                                 <label class="guest-input-label">
                                     <button type="button" class="guests-spin-btn" onclick="this.parentNode.querySelector('.guests-input').stepDown();"> - </button>
@@ -61,46 +59,51 @@
                             <div class="search-property-photo-box">
                                 <img class="search-property-img" src="data:image/jpg;base64,${property.propertyPhoto.imgSrc}" alt="${property.propertyPhoto.fileName}">
                             </div>
-                            <div class="search-property-details-box">
+                            <div class="search-property-info-box">
                                 <div class="search-property-name-box">
                                     <h3 class="search-property-name">
                                         <c:out value="${property.propertyName}"/>
                                     </h3>
                                     <span class="search-property-type">
-                                    <c:out value="${property.propertyType.propertyTypeName}"/>
-                                </span>
-
+                                        <c:out value="${property.propertyType.propertyTypeName}"/>
+                                    </span>
                                 </div>
                                 <div class="search-property-address-box">
-                                <span>
-                                    <c:out value="${property.propertyAddress.country.countryName}"/>,&nbsp;
-                                </span>
-                                    <span>
-                                    <c:out value="${property.propertyAddress.location}"/>,&nbsp;
-                                </span>
-                                    <span>
-                                    <c:out value="${property.propertyAddress.province}"/>,&nbsp;
-                                </span>
-                                    <span>
-                                    <c:out value="${property.propertyAddress.region}"/>
-                                </span>
+                                    <span class="search-address-property">
+                                        <c:out value="${property.propertyAddress.country.countryName}"/>,&nbsp;
+                                    </span>
+                                    <span class="search-address-property">
+                                        <c:out value="${property.propertyAddress.location}"/>,&nbsp;
+                                    </span>
+                                    <span class="search-address-property">
+                                        <c:out value="${property.propertyAddress.province}"/>,&nbsp;
+                                    </span>
+                                    <span class="search-address-property">
+                                        <c:out value="${property.propertyAddress.region}"/>
+                                    </span>
                                 </div>
                                 <div class="search-property-description-box">
-                                    <h4 class="search-description-header">
-                                        <c:out value="${property.propertyDescription.descriptionHeader}"/>
-                                    </h4>
                                     <p class="search-description-text">
                                         <c:out value="${property.propertyDescription.descriptionText}"/>
                                     </p>
                                 </div>
-
-                                <div class="search-stay-price-box">
-                                <span class="search-stay-price-currency">
-                                    &nbsp;<c:out value="${property.stayPrice.currency}"/>
-                                </span>
-                                    <span class="search-stay-price-amount">
-                                    <fmt:formatNumber type="number" maxFractionDigits="2" value="${property.stayPrice.amount}" />
-                                </span>
+                                <div class="search-stay-price-details-btn-box">
+                                    <ul class="search-stay-price-and-details-btn-ul">
+                                        <li>
+                                            <span class="search-stay-price-currency">
+                                                &nbsp;<c:out value="${property.propertyAddress.country.currencyCode}"/>
+                                            </span>
+                                            <span class="search-stay-price-amount">
+                                                <fmt:formatNumber type="number" maxFractionDigits="2" value="${property.stayPrice}"/>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <form method="GET" action="<c:url value="/property/details"/>" target="_blank">
+                                                <input type="submit" value="Details" class="search-details-btn">
+                                                <input type="hidden" value="${property.propertyId}" name="propertyId">
+                                            </form>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -111,22 +114,14 @@
             <div class="row page-request-container">
                 <c:forEach begin="1" end="${requestScope.totalPages}" varStatus="pageNumber">
                     <div class="page-request-box">
-                        <form class="page-request-form" action="<c:url value="/reservation/search-result"/>">
-                            <input type="hidden" name="location" value="${requestScope.location}">
-                            <input type="hidden" name="guests" value="${requestScope.guests}">
-                            <input type="hidden" name="days" value="${requestScope.days}">
-                            <input type="hidden" name="page" value="${pageNumber.index - 1}">
-                            <input type="hidden" name="eventStart" value="${requestScope.eventStart}">
-                            <input type="hidden" name="eventEnd" value="${requestScope.eventEnd}">
-                            <c:choose>
-                                <c:when test="${pageNumber.index - 1 != requestScope.currentPage}">
-                                    <button type="submit" class="page-request-btn">${pageNumber.index}</button>
-                                </c:when>
-                                <c:when test="${pageNumber.index - 1 == requestScope.currentPage}">
-                                    <button type="submit" class="page-request-btn-current" disabled>${pageNumber.index}</button>
-                                </c:when>
-                            </c:choose>
-                        </form>
+                        <c:choose>
+                            <c:when test="${pageNumber.index - 1 != requestScope.currentPage}">
+                                <button type="submit" class="page-request-btn">${pageNumber.index}</button>
+                            </c:when>
+                            <c:when test="${pageNumber.index - 1 == requestScope.currentPage}">
+                                <button type="submit" class="page-request-btn-current" disabled>${pageNumber.index}</button>
+                            </c:when>
+                        </c:choose>
                     </div>
                 </c:forEach>
             </div>
@@ -206,6 +201,6 @@
     </footer>
     <%@include file="/WEB-INF/views/jspf/footer.jspf" %>
     <script src="<c:url value="/resources/js/app/index.js"/>"></script>
-    <script src="<c:url value="/resources/js/app/property-search.js"/>"></script>
+    <script src="<c:url value="/resources/js/app/property/search.js"/>"></script>
 </body>
 </html>
